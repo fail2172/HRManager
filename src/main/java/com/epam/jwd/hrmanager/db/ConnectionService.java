@@ -1,6 +1,6 @@
 package com.epam.jwd.hrmanager.db;
 
-import com.epam.jwd.hrmanager.exeption.CouldNotInitialisationConnectionService;
+import com.epam.jwd.hrmanager.exeption.CouldNotInitialiseConnectionService;
 import com.epam.jwd.hrmanager.exeption.NotIllegalParameters;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,56 +13,65 @@ import java.util.*;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class ConnectionService implements ConnectionPool {
 
-    private static final Logger LOG = LogManager.getLogger(ConnectionService.class);
+    private volatile static ConnectionService instance;
+
+    private static final Logger LOGGER = LogManager.getLogger(ConnectionService.class);
     private static final ReentrantLock lock = new ReentrantLock();
     private static final Condition haveConnections = lock.newCondition();
 
-    private volatile static ConnectionService instance;
-
-    private final Queue<ProxyConnection> availableConnections;
-    private final List<ProxyConnection> givenAwayConnections;
+    private final Queue<ProxyConnection> availableConnections = new ArrayDeque<>();
+    private final List<ProxyConnection> givenAwayConnections = new ArrayList<>();
     private final String DB_URL = "jdbc:mysql://localhost:3306/jwd";
     private final String DB_USER = "root";
-    private final String DB_PASSWORD = "12345678";
+    private final String DB_PASSWORD = "1234";
+    private final int MINIMAL_CONNECTIONS_NUM;
+    private final long COLLECTOR_TIME_INTERVAL;
+    private final double EXPANSION_LEVEL;
+    private final double EXPANSION_RATIO;
+    private final double COMPRESSION_RATIO;
     private final Consumer<Integer> CONNECTIONS_CREATION = (Integer amount) -> {
         List<ProxyConnection> connections = new ArrayList<>();
         try {
             for (int i = 0; i < amount; i++) {
-                LOG.trace("Open connection");
                 Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
                 connections.add(new ProxyConnection(connection, this));
             }
             insertConnections(connections);
         } catch (SQLException e) {
-            LOG.error("Error occurred creating Connection");
+            LOGGER.error("Error occurred creating Connection");
         }
     };
 
-
     private boolean initialized = false;
     private volatile boolean creatingConnections = false;
-    private int MINIMAL_CONNECTIONS_NUM = 8;
+    private ConnectionCollector collector;
 
-    private ConnectionService() {
-        availableConnections = new ArrayDeque<>();
-        givenAwayConnections = new ArrayList<>();
+    ConnectionService(ConnectionServiceContext serviceContext) {
+        MINIMAL_CONNECTIONS_NUM = serviceContext.getMinimalConnectionNum().orElse(8);
+        COLLECTOR_TIME_INTERVAL = serviceContext.getCollectorTimeInterval().orElse(60000L);
+        EXPANSION_LEVEL = serviceContext.getExpansionLevel().orElse(0.75);
+        EXPANSION_RATIO = serviceContext.getExpansionRatio().orElse(0.2);
+        COMPRESSION_RATIO = serviceContext.getCompressionRatio().orElse(0.2);
     }
 
-    public static ConnectionService getInstance() {
+    public static ConnectionService getInstance(ConnectionServiceContext serviceContext) {
         if (instance == null) {
             lock.lock();
             {
                 if (instance == null) {
-                    instance = new ConnectionService();
+                    instance = new ConnectionService(serviceContext);
                 }
             }
             lock.unlock();
         }
         return instance;
+    }
+
+    public static ConnectionService getInstance() {
+        return getInstance(ConnectionServiceContext.of().build());
     }
 
     @Override
@@ -71,9 +80,9 @@ public class ConnectionService implements ConnectionPool {
         try {
             if (!initialized) {
                 registerDrivers();
-                initialisationConnections(MINIMAL_CONNECTIONS_NUM, true);
+                initialisationConnections();
+                collector = new ConnectionCollector();
                 initialized = true;
-                lock.unlock();
                 return true;
             }
             return false;
@@ -89,13 +98,13 @@ public class ConnectionService implements ConnectionPool {
             if (initialized) {
                 deregisterDrivers();
                 closeConnections();
+                collector.shutDown();
                 initialized = false;
                 return true;
             }
             return false;
-        } catch (NotIllegalParameters notIllegalParameters) {
-            LOG.error("Incorrect connection closing");
-            notIllegalParameters.printStackTrace();
+        } catch (NotIllegalParameters e) {
+            LOGGER.error("Incorrect connection closing", e);
             return true;
         } finally {
             lock.unlock();
@@ -123,8 +132,8 @@ public class ConnectionService implements ConnectionPool {
             givenAwayConnections.add(connection);
             return connection;
         } finally {
-            if ((calculateConnectionsAmount() * 0.75 == givenAwayConnections.size() && !creatingConnections)) {
-                initialisationConnections();
+            if ((calculateConnectionsAmount() * EXPANSION_LEVEL == givenAwayConnections.size() && !creatingConnections)) {
+                initialisationAdditionalConnections();
             }
             lock.unlock();
         }
@@ -138,36 +147,33 @@ public class ConnectionService implements ConnectionPool {
                 availableConnections.add((ProxyConnection) connection);
                 haveConnections.signalAll();
             } else {
-                LOG.warn("Attempt to add unknown connection to Connection Pool. Connection");
+                LOGGER.warn("Attempt to add unknown connection to Connection Pool. Connection");
             }
         } finally {
             lock.unlock();
         }
     }
 
-    private int calculateConnectionsAmount(){
+    private int calculateConnectionsAmount() {
         return availableConnections.size() + givenAwayConnections.size();
     }
 
-    private void initialisationConnections(int amount, boolean firstInitialisationConnections) {
+    private void initialisationConnections() {
         try {
-            for (int i = 0; i < amount; i++) {
-                LOG.trace("Open connection");
+            for (int i = 0; i < MINIMAL_CONNECTIONS_NUM; i++) {
                 Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
                 availableConnections.add(new ProxyConnection(connection, this));
             }
         } catch (SQLException e) {
-            LOG.error("Error occurred creating Connection");
-            if (firstInitialisationConnections) {
-                throw new CouldNotInitialisationConnectionService("Failed to create connection", e);
-            }
+            LOGGER.error("Error occurred creating Connection");
+            throw new CouldNotInitialiseConnectionService("Failed to create connection", e);
         }
     }
 
-    private void initialisationConnections() {
+    private void initialisationAdditionalConnections() {
         creatingConnections = true;
         new Thread(() -> CONNECTIONS_CREATION
-                .accept((int) (calculateConnectionsAmount() * 1.5)))
+                .accept((int) (calculateConnectionsAmount() * EXPANSION_RATIO)))
                 .start();
     }
 
@@ -176,9 +182,9 @@ public class ConnectionService implements ConnectionPool {
         try {
             availableConnections.addAll(connections);
         } finally {
-            lock.unlock();
             haveConnections.signalAll();
             creatingConnections = false;
+            lock.unlock();
         }
     }
 
@@ -203,31 +209,65 @@ public class ConnectionService implements ConnectionPool {
 
     private void closeConnection(ProxyConnection connection) {
         try {
-            LOG.trace("Close connection");
             connection.realClose();
         } catch (SQLException e) {
-            LOG.error("Could not close connection", e);
+            LOGGER.error("Could not close connection", e);
         }
     }
 
     private void registerDrivers() {
-        LOG.trace("driver registration");
+        LOGGER.trace("driver registration");
         try {
             DriverManager.registerDriver(DriverManager.getDriver(DB_URL));
         } catch (SQLException e) {
-            throw new CouldNotInitialisationConnectionService("Failed to register driver", e);
+            throw new CouldNotInitialiseConnectionService("Failed to register driver", e);
         }
     }
 
     private void deregisterDrivers() {
-        LOG.trace("deregister drivers");
+        LOGGER.trace("deregister drivers");
         final Enumeration<Driver> driverEnumeration = DriverManager.getDrivers();
         while (driverEnumeration.hasMoreElements()) {
             try {
                 DriverManager.deregisterDriver(driverEnumeration.nextElement());
             } catch (SQLException e) {
-                LOG.error("could no deregister driver", e);
+                LOGGER.error("could no deregister driver", e);
             }
+        }
+    }
+
+    private class ConnectionCollector {
+
+        private final Timer timer = new Timer();
+
+        public ConnectionCollector() {
+            TimerTask timerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    if (availableConnections.size() > MINIMAL_CONNECTIONS_NUM) {
+                        LOGGER.trace("Compression of connection pool");
+                        try {
+                            closeConnections(availableConnections, removedConnectionsNum());
+                        } catch (NotIllegalParameters e) {
+                            LOGGER.error("Incorrect connection closing", e);
+                        }
+                    }
+                }
+            };
+            timer.schedule(timerTask, COLLECTOR_TIME_INTERVAL, COLLECTOR_TIME_INTERVAL);
+        }
+
+        private int removedConnectionsNum() {
+            final int removedConnectionsNum = (int) (availableConnections.size() * COMPRESSION_RATIO);
+            if (availableConnections.size() - removedConnectionsNum >= MINIMAL_CONNECTIONS_NUM) {
+                return removedConnectionsNum;
+            } else {
+                return availableConnections.size() - MINIMAL_CONNECTIONS_NUM;
+            }
+        }
+
+        private void shutDown() {
+            timer.cancel();
         }
     }
 }

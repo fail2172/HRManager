@@ -1,12 +1,12 @@
 package com.epam.jwd.hrmanager.db;
 
-import com.epam.jwd.hrmanager.exeption.CouldNotInitialisationConnectionService;
+import com.epam.jwd.hrmanager.exeption.CouldNotInitialiseConnectionService;
 
 import java.sql.Connection;
 
 public interface ConnectionPool {
 
-    boolean init() throws CouldNotInitialisationConnectionService;
+    boolean init() throws CouldNotInitialiseConnectionService;
 
     boolean shutDown();
 
