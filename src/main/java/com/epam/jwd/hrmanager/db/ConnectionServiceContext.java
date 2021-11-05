@@ -7,7 +7,8 @@ import java.util.Optional;
 
 public class ConnectionServiceContext {
 
-    private final static Logger LOGGER = LogManager.getLogger(ConnectionServiceContext.class);
+    private static final Logger LOGGER = LogManager.getLogger(ConnectionServiceContext.class);
+    private static final int MAX_PERCENT = 100;
 
     private Integer minimalConnectionNum;
     private Long collectorTimeInterval;
@@ -57,7 +58,7 @@ public class ConnectionServiceContext {
 
         public Builder setExpansionLevel(double percent) {
             if (validatePercent(percent)) {
-                expansionLevel = percent;
+                expansionLevel = percent / MAX_PERCENT;
             } else {
                 expansionLevel = null;
             }
@@ -66,7 +67,7 @@ public class ConnectionServiceContext {
 
         public Builder setExpansionRatio(double percent) {
             if (validatePercent(percent)) {
-                expansionRatio = percent;
+                expansionRatio = percent / MAX_PERCENT;
             } else {
                 expansionRatio = null;
             }
@@ -75,7 +76,7 @@ public class ConnectionServiceContext {
 
         public Builder setCompressionRatio(double percent) {
             if (validatePercent(percent)) {
-                compressionRatio = percent;
+                compressionRatio = percent / MAX_PERCENT;
             } else {
                 expansionRatio = null;
             }

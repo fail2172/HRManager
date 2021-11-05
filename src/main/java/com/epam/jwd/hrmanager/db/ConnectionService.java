@@ -126,6 +126,7 @@ public class ConnectionService implements ConnectionPool {
         lock.lock();
         try {
             while (availableConnections.isEmpty()) {
+                LOGGER.warn("No free connections!");
                 haveConnections.await();
             }
             final ProxyConnection connection = availableConnections.poll();
