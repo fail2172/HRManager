@@ -16,4 +16,11 @@ public interface ConnectionPool {
 
     void returnConnection(Connection connection);
 
+    static ConnectionService getInstance(ConnectionServiceContext context){
+        return ConnectionService.getInstance(context);
+    }
+    static ConnectionPool getInstance(){
+        return ConnectionService.getInstance();
+    }
+
 }

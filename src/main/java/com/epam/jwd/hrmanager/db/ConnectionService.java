@@ -57,7 +57,7 @@ public class ConnectionService implements ConnectionPool {
         COMPRESSION_RATIO = serviceContext.getCompressionRatio().orElse(0.2);
     }
 
-    public static ConnectionService getInstance(ConnectionServiceContext serviceContext) {
+    static ConnectionService getInstance(ConnectionServiceContext serviceContext) {
         if (instance == null) {
             lock.lock();
             {
@@ -70,7 +70,7 @@ public class ConnectionService implements ConnectionPool {
         return instance;
     }
 
-    public static ConnectionService getInstance() {
+    static ConnectionService getInstance() {
         return getInstance(ConnectionServiceContext.of().build());
     }
 
@@ -145,11 +145,14 @@ public class ConnectionService implements ConnectionPool {
         lock.lock();
         try {
             if (givenAwayConnections.remove((ProxyConnection) connection)) {
+                connection.setAutoCommit(true);
                 availableConnections.add((ProxyConnection) connection);
                 haveConnections.signalAll();
             } else {
                 LOGGER.warn("Attempt to add unknown connection to Connection Pool. Connection");
             }
+        } catch (SQLException throwables) {
+            LOGGER.error("failed set auto commit mode of connection");
         } finally {
             lock.unlock();
         }

@@ -1,6 +1,5 @@
 package com.epam.jwd.hrmanager.model;
 
-import java.util.Objects;
 import java.util.Optional;
 
 public class User implements Entity{
@@ -8,19 +7,15 @@ public class User implements Entity{
     private final Long id;
     private final String login;
     private final String email;
-    private final Name name;
-    private final int age;
 
-    public User(Long id, String login, String email, Name name, int age) {
+    public User(Long id, String login, String email) {
         this.id = id;
         this.login = login;
         this.email = email;
-        this.name = name;
-        this.age = age;
     }
 
-    public User(String login, String email, Name name, int age) {
-        this(null, login, email, name, age);
+    public User(String login, String email) {
+        this(null, login, email);
     }
 
     public String getLogin() {
@@ -29,14 +24,6 @@ public class User implements Entity{
 
     public String getEmail() {
         return email;
-    }
-
-    public Name getName() {
-        return name;
-    }
-
-    public int getAge() {
-        return age;
     }
 
     @Override
@@ -51,20 +38,16 @@ public class User implements Entity{
 
         User user = (User) o;
 
-        if (age != user.age) return false;
-        if (!Objects.equals(id, user.id)) return false;
+        if (!id.equals(user.id)) return false;
         if (!login.equals(user.login)) return false;
-        if (!email.equals(user.email)) return false;
-        return name.equals(user.name);
+        return email.equals(user.email);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.requireNonNull(id).hashCode();
+        int result = id.hashCode();
         result = 31 * result + login.hashCode();
         result = 31 * result + email.hashCode();
-        result = 31 * result + name.hashCode();
-        result = 31 * result + age;
         return result;
     }
 
@@ -74,8 +57,6 @@ public class User implements Entity{
                 "id=" + id +
                 ", login='" + login + '\'' +
                 ", email='" + email + '\'' +
-                ", name=" + name +
-                ", age=" + age +
                 '}';
     }
 }
