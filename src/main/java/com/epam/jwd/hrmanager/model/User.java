@@ -6,18 +6,16 @@ public class User implements Entity{
     private final Role role;
     private final String firstName;
     private final String secondName;
-    private final String password;
 
-    public User(Long id, Role role, String firstName, String secondName, String password) {
+    public User(Long id, Role role, String firstName, String secondName) {
         this.id = id;
         this.role = role;
         this.firstName = firstName;
         this.secondName = secondName;
-        this.password = password;
     }
 
-    public User(Role role, String firstName, String secondName, String password) {
-        this(null, role, firstName, secondName, password);
+    public User(Role role, String firstName, String secondName) {
+        this(null, role, firstName, secondName);
     }
 
     @Override
@@ -37,14 +35,6 @@ public class User implements Entity{
         return secondName;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public User withRole(Role role) {
-        return new User(id, role, firstName, secondName, password);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -53,6 +43,7 @@ public class User implements Entity{
         User user = (User) o;
 
         if (!id.equals(user.id)) return false;
+        if (role != user.role) return false;
         if (!firstName.equals(user.firstName)) return false;
         return secondName.equals(user.secondName);
     }
@@ -60,6 +51,7 @@ public class User implements Entity{
     @Override
     public int hashCode() {
         int result = id.hashCode();
+        result = 31 * result + role.hashCode();
         result = 31 * result + firstName.hashCode();
         result = 31 * result + secondName.hashCode();
         return result;
@@ -72,7 +64,6 @@ public class User implements Entity{
                 ", role=" + role +
                 ", firstName='" + firstName + '\'' +
                 ", secondName='" + secondName + '\'' +
-                ", password='" + password + '\'' +
                 '}';
     }
 }

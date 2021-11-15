@@ -2,7 +2,6 @@ package com.epam.jwd.hrmanager.dao.impl;
 
 import com.epam.jwd.hrmanager.dao.DaoFactory;
 import com.epam.jwd.hrmanager.dao.EntityDao;
-import com.epam.jwd.hrmanager.dao.UserDao;
 import com.epam.jwd.hrmanager.model.Entity;
 
 import java.util.Map;
@@ -34,7 +33,7 @@ public class DaoFactoryImpl implements DaoFactory {
             final String className = clazz.getSimpleName();
             switch (className) {
                 case "User":
-                    return UserDao.getInstance();
+                    return MethodUserDao.getInstance();
                 case "City":
                     return MethodCityDao.getInstance();
                 case "Street":
@@ -47,6 +46,8 @@ public class DaoFactoryImpl implements DaoFactory {
                     return MethodVacancyDao.getInstance();
                 case "Interview":
                     return MethodInterviewDao.getInstance();
+                case "Account":
+                    return MethodAccountDao.getInstance();
                 default:
                     throw new IllegalStateException(String.format(DAO_NOT_FOUND, className));
             }

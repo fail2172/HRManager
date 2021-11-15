@@ -1,7 +1,7 @@
 package com.epam.jwd.hrmanager.dao.impl;
 
 import com.epam.jwd.hrmanager.dao.CommonDao;
-import com.epam.jwd.hrmanager.dao.UserDao;
+import com.epam.jwd.hrmanager.dao.EntityDao;
 import com.epam.jwd.hrmanager.db.ConnectionPool;
 import com.epam.jwd.hrmanager.db.ConnectionPoolFactory;
 import com.epam.jwd.hrmanager.db.ConnectionPoolType;
@@ -12,17 +12,15 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Optional;
 
-public class MethodUserDao extends CommonDao<User> implements UserDao {
+public class MethodUserDao extends CommonDao<User> implements EntityDao<User> {
 
     private static final Logger LOGGER = LogManager.getLogger(MethodUserDao.class);
     private static final String USER_TABLE_NAME = "hr_user";
     private static final String ID_FIELD_NAME = "id";
     private static final String FIRST_NAME_FIELD_NAME = "first_name";
     private static final String SECOND_NAME_FIELD_NAME = "second_name";
-    public static final String PASSWORD_FIELD_NAME = "password";
-    public static final String ROLE_ID_FIELD_NAME = "role_id";
+    private static final String U_ROLE_FIELD_NAME = "u_role";
 
     private MethodUserDao(ConnectionPool connectionPool) {
         super(LOGGER, connectionPool);
@@ -30,11 +28,6 @@ public class MethodUserDao extends CommonDao<User> implements UserDao {
 
     public static MethodUserDao getInstance() {
         return Holder.INSTANCE;
-    }
-
-    @Override
-    public Optional<Long> receiveRoleId(User user) {
-        return receiveForeignKey(user, ROLE_ID_FIELD_NAME);
     }
 
     @Override
@@ -46,10 +39,9 @@ public class MethodUserDao extends CommonDao<User> implements UserDao {
     protected User extractResultSet(ResultSet resultSet) throws SQLException {
         return new User(
                 resultSet.getLong(ID_FIELD_NAME),
-                Role.of(resultSet.getString("u_role")),
+                Role.of(resultSet.getString(U_ROLE_FIELD_NAME)),
                 resultSet.getString(FIRST_NAME_FIELD_NAME),
-                resultSet.getString(SECOND_NAME_FIELD_NAME),
-                resultSet.getString(PASSWORD_FIELD_NAME)
+                resultSet.getString(SECOND_NAME_FIELD_NAME)
         );
     }
 

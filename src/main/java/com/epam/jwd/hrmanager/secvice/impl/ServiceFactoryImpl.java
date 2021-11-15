@@ -40,6 +40,8 @@ public class ServiceFactoryImpl implements ServiceFactory {
                     return VacancyService.getInstance();
                 case "Interview":
                     return InterviewService.getInstance();
+                case "Account":
+                    return AccountService.getInstance();
                 default:
                     throw new IllegalStateException(String.format(SERVICE_NOT_FOUND, className));
             }

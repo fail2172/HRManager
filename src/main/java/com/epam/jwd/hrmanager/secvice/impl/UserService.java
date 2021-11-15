@@ -1,18 +1,17 @@
 package com.epam.jwd.hrmanager.secvice.impl;
 
 import com.epam.jwd.hrmanager.dao.DaoFactory;
-import com.epam.jwd.hrmanager.dao.UserDao;
+import com.epam.jwd.hrmanager.dao.EntityDao;
 import com.epam.jwd.hrmanager.model.User;
 import com.epam.jwd.hrmanager.secvice.EntityService;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class UserService implements EntityService<User> {
 
-    private final UserDao userDao;
+    private final EntityDao<User> userDao;
 
-    UserService(UserDao userDao) {
+    UserService(EntityDao<User> userDao) {
         this.userDao = userDao;
     }
 
@@ -27,14 +26,12 @@ public class UserService implements EntityService<User> {
 
     @Override
     public List<User> findAll() {
-        return userDao.read().stream()
-                .map(user -> get(user.getId()))
-                .collect(Collectors.toList());
+        return userDao.read();
     }
 
     private static class Holder {
         private static final UserService INSTANCE = new UserService(
-                (UserDao) DaoFactory.getInstance().daoFor(User.class)
+                DaoFactory.getInstance().daoFor(User.class)
         );
     }
 }
