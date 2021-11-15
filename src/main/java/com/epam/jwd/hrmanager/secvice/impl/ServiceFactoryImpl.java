@@ -1,7 +1,8 @@
-package com.epam.jwd.hrmanager.secvice;
+package com.epam.jwd.hrmanager.secvice.impl;
 
-import com.epam.jwd.hrmanager.dao.UserDao;
 import com.epam.jwd.hrmanager.model.Entity;
+import com.epam.jwd.hrmanager.secvice.EntityService;
+import com.epam.jwd.hrmanager.secvice.ServiceFactory;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,7 +17,7 @@ public class ServiceFactoryImpl implements ServiceFactory {
 
     }
 
-    static ServiceFactoryImpl getInstance(){
+    public static ServiceFactoryImpl getInstance(){
         return Holder.INSTANCE;
     }
 
@@ -24,15 +25,21 @@ public class ServiceFactoryImpl implements ServiceFactory {
     @SuppressWarnings("unchecked")
     public <T extends Entity> EntityService<T> serviceFor(Class<T> modelClass) {
         return (EntityService<T>) serviceByEntity
-                .computeIfAbsent(modelClass, createServiceFromClass());
+                .computeIfAbsent(modelClass, createServiceForEntity());
     }
 
-    private Function<Class<?>, EntityService<?>> createServiceFromClass() {
+    private Function<Class<?>, EntityService<?>> createServiceForEntity() {
         return clazz -> {
             final String className = clazz.getSimpleName();
             switch (className) {
                 case "User":
-                    return new UserService(UserDao.getInstance());
+                    return UserService.getInstance();
+                case "Address":
+                    return AddressService.getInstance();
+                case "Vacancy":
+                    return VacancyService.getInstance();
+                case "Interview":
+                    return InterviewService.getInstance();
                 default:
                     throw new IllegalStateException(String.format(SERVICE_NOT_FOUND, className));
             }

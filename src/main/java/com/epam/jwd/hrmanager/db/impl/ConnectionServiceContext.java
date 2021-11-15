@@ -1,4 +1,4 @@
-package com.epam.jwd.hrmanager.db;
+package com.epam.jwd.hrmanager.db.impl;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

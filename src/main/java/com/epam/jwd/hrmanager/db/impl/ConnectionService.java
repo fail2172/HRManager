@@ -1,7 +1,7 @@
-package com.epam.jwd.hrmanager.db;
+package com.epam.jwd.hrmanager.db.impl;
 
+import com.epam.jwd.hrmanager.db.ConnectionPool;
 import com.epam.jwd.hrmanager.exeption.CouldNotInitialiseConnectionService;
-import com.epam.jwd.hrmanager.exeption.NotIllegalParameters;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -41,7 +41,7 @@ public class ConnectionService implements ConnectionPool {
             }
             insertConnections(connections);
         } catch (SQLException e) {
-            LOGGER.error("Error occurred creating Connection");
+            LOGGER.error("Error occurred creating connection");
         }
     };
 
@@ -49,7 +49,7 @@ public class ConnectionService implements ConnectionPool {
     private volatile boolean creatingConnections = false;
     private ConnectionCollector collector;
 
-    ConnectionService(ConnectionServiceContext serviceContext) {
+    private ConnectionService(ConnectionServiceContext serviceContext) {
         MINIMAL_CONNECTIONS_NUM = serviceContext.getMinimalConnectionNum().orElse(8);
         COLLECTOR_TIME_INTERVAL = serviceContext.getCollectorTimeInterval().orElse(60000L);
         EXPANSION_LEVEL = serviceContext.getExpansionLevel().orElse(0.75);
@@ -57,7 +57,7 @@ public class ConnectionService implements ConnectionPool {
         COMPRESSION_RATIO = serviceContext.getCompressionRatio().orElse(0.2);
     }
 
-    static ConnectionService getInstance(ConnectionServiceContext serviceContext) {
+    public static ConnectionService getInstance(ConnectionServiceContext serviceContext) {
         if (instance == null) {
             lock.lock();
             {
@@ -70,7 +70,7 @@ public class ConnectionService implements ConnectionPool {
         return instance;
     }
 
-    static ConnectionService getInstance() {
+    public static ConnectionService getInstance() {
         return getInstance(ConnectionServiceContext.of().build());
     }
 
@@ -103,9 +103,6 @@ public class ConnectionService implements ConnectionPool {
                 return true;
             }
             return false;
-        } catch (NotIllegalParameters e) {
-            LOGGER.error("Incorrect connection closing", e);
-            return true;
         } finally {
             lock.unlock();
         }
@@ -133,7 +130,7 @@ public class ConnectionService implements ConnectionPool {
             givenAwayConnections.add(connection);
             return connection;
         } finally {
-            if ((calculateConnectionsAmount() * EXPANSION_LEVEL == givenAwayConnections.size() && !creatingConnections)) {
+            if ((calculateConnectionsAmount() * EXPANSION_LEVEL <= givenAwayConnections.size() && !creatingConnections)) {
                 initialisationAdditionalConnections();
             }
             lock.unlock();
@@ -151,8 +148,8 @@ public class ConnectionService implements ConnectionPool {
             } else {
                 LOGGER.warn("Attempt to add unknown connection to Connection Pool. Connection");
             }
-        } catch (SQLException throwables) {
-            LOGGER.error("failed set auto commit mode of connection");
+        } catch (SQLException e) {
+            LOGGER.error("failed set auto commit mode of connection", e);
         } finally {
             lock.unlock();
         }
@@ -192,14 +189,14 @@ public class ConnectionService implements ConnectionPool {
         }
     }
 
-    private void closeConnections() throws NotIllegalParameters {
+    private void closeConnections() {
         closeConnections(this.availableConnections, this.availableConnections.size());
         closeConnections(this.givenAwayConnections, this.givenAwayConnections.size());
     }
 
-    private void closeConnections(Collection<ProxyConnection> connections, int amount) throws NotIllegalParameters {
+    private void closeConnections(Collection<ProxyConnection> connections, int amount) {
         if (connections.size() < amount) {
-            throw new NotIllegalParameters("Incomplete number of removed connections");
+            throw new IllegalStateException("Incomplete number of removed connections");
         }
 
         Iterator<ProxyConnection> it = connections.iterator();
@@ -250,11 +247,7 @@ public class ConnectionService implements ConnectionPool {
                 public void run() {
                     if (availableConnections.size() > MINIMAL_CONNECTIONS_NUM) {
                         LOGGER.trace("Compression of connection pool");
-                        try {
-                            closeConnections(availableConnections, removedConnectionsNum());
-                        } catch (NotIllegalParameters e) {
-                            LOGGER.error("Incorrect connection closing", e);
-                        }
+                        closeConnections(availableConnections, removedConnectionsNum());
                     }
                 }
             };

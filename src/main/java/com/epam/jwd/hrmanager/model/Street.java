@@ -2,17 +2,17 @@ package com.epam.jwd.hrmanager.model;
 
 import java.util.Optional;
 
-public class City implements Entity{
+public class Street implements Entity{
 
     private final Long id;
     private final String name;
 
-    public City(Long id, String name) {
+    public Street(Long id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public City(String name) {
+    public Street(String name){
         this(null, name);
     }
 
@@ -30,10 +30,10 @@ public class City implements Entity{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        City city = (City) o;
+        Street street = (Street) o;
 
-        if (!id.equals(city.id)) return false;
-        return name.equals(city.name);
+        if (!id.equals(street.id)) return false;
+        return name.equals(street.name);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class City implements Entity{
 
     @Override
     public String toString() {
-        return "City{" +
+        return "Street{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';

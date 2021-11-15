@@ -1,7 +1,7 @@
 package com.epam.jwd.hrmanager.db;
 
 import com.epam.jwd.hrmanager.exeption.EntityExtractionFailedException;
-import com.epam.jwd.hrmanager.model.Entity;
+import com.epam.jwd.hrmanager.exeption.IdExtractionFailedException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @FunctionalInterface
-public interface ResultSetExtractor <T extends Entity>{
+public interface ResultSetExtractor<T> {
 
     T extract(ResultSet resultSet) throws EntityExtractionFailedException;
 

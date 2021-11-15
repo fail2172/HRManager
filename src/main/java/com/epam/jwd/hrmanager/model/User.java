@@ -1,34 +1,48 @@
 package com.epam.jwd.hrmanager.model;
 
-import java.util.Optional;
-
 public class User implements Entity{
 
     private final Long id;
-    private final String login;
-    private final String email;
+    private final Role role;
+    private final String firstName;
+    private final String secondName;
+    private final String password;
 
-    public User(Long id, String login, String email) {
+    public User(Long id, Role role, String firstName, String secondName, String password) {
         this.id = id;
-        this.login = login;
-        this.email = email;
+        this.role = role;
+        this.firstName = firstName;
+        this.secondName = secondName;
+        this.password = password;
     }
 
-    public User(String login, String email) {
-        this(null, login, email);
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public String getEmail() {
-        return email;
+    public User(Role role, String firstName, String secondName, String password) {
+        this(null, role, firstName, secondName, password);
     }
 
     @Override
-    public Optional<Long> getId() {
-        return Optional.ofNullable(id);
+    public Long getId() {
+        return id;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getSecondName() {
+        return secondName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public User withRole(Role role) {
+        return new User(id, role, firstName, secondName, password);
     }
 
     @Override
@@ -39,15 +53,15 @@ public class User implements Entity{
         User user = (User) o;
 
         if (!id.equals(user.id)) return false;
-        if (!login.equals(user.login)) return false;
-        return email.equals(user.email);
+        if (!firstName.equals(user.firstName)) return false;
+        return secondName.equals(user.secondName);
     }
 
     @Override
     public int hashCode() {
         int result = id.hashCode();
-        result = 31 * result + login.hashCode();
-        result = 31 * result + email.hashCode();
+        result = 31 * result + firstName.hashCode();
+        result = 31 * result + secondName.hashCode();
         return result;
     }
 
@@ -55,8 +69,10 @@ public class User implements Entity{
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", login='" + login + '\'' +
-                ", email='" + email + '\'' +
+                ", role=" + role +
+                ", firstName='" + firstName + '\'' +
+                ", secondName='" + secondName + '\'' +
+                ", password='" + password + '\'' +
                 '}';
     }
 }

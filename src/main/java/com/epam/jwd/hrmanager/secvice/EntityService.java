@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface EntityService<T extends Entity> {
 
+    T get(Long id);
+
     List<T> findAll();
 
 }

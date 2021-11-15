@@ -1,4 +1,6 @@
-package com.epam.jwd.hrmanager.db;
+package com.epam.jwd.hrmanager.db.impl;
+
+import com.epam.jwd.hrmanager.db.impl.ConnectionService;
 
 import java.sql.*;
 import java.util.Map;
