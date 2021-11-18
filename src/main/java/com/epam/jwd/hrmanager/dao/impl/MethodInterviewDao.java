@@ -12,18 +12,24 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 public class MethodInterviewDao extends CommonDao<Interview> implements InterviewDao {
 
     private static final Logger LOGGER = LogManager.getLogger(MethodInterviewDao.class);
-    private static final String INTERVIEW_TABLE_NAME = "interview";
-    private static final String ID_FIELD_NAME = "id";
-    private static final String DATE_FIELD_NAME = "i_date";
-    private static final String ADDRESS_ID_FIELD_NAME = "address_id";
-    private static final String USER_ID_FIELD_NAME = "user_id";
-    private static final String VACANCY_ID_FIELD_NAME = "vacancy_id";
-    private static final String STATUS_FIELD_NAME = "status";
+    private static final String INTERVIEW_TABLE_NAME = "interview i join interview_status s on i.status_id = s.id";
+    private static final String ID_FIELD_NAME = "i.id";
+    private static final String DATE_FIELD_NAME = "i.i_date";
+    private static final String ADDRESS_ID_FIELD_NAME = "i.address_id";
+    private static final String USER_ID_FIELD_NAME = "i.user_id";
+    private static final String VACANCY_ID_FIELD_NAME = "i.vacancy_id";
+    private static final String STATUS_FIELD_NAME = "s.s_name";
+    private static final List<String> FIELDS = Arrays.asList(
+            ID_FIELD_NAME, DATE_FIELD_NAME, ADDRESS_ID_FIELD_NAME,
+            USER_ID_FIELD_NAME, VACANCY_ID_FIELD_NAME, STATUS_FIELD_NAME
+    );
 
     private MethodInterviewDao(ConnectionPool connectionPool){
         super(LOGGER, connectionPool);
@@ -36,6 +42,16 @@ public class MethodInterviewDao extends CommonDao<Interview> implements Intervie
     @Override
     protected String getTableName() {
         return INTERVIEW_TABLE_NAME;
+    }
+
+    @Override
+    protected String getIdFieldName() {
+        return ID_FIELD_NAME;
+    }
+
+    @Override
+    protected List<String> getFields() {
+        return FIELDS;
     }
 
     @Override

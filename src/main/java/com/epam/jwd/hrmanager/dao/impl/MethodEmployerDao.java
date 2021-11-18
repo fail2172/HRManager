@@ -11,6 +11,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 
 public class MethodEmployerDao extends CommonDao<Employer> implements EntityDao<Employer> {
 
@@ -19,6 +21,7 @@ public class MethodEmployerDao extends CommonDao<Employer> implements EntityDao<
     private static final String ID_FIELD_NAME = "id";
     private static final String EMPLOYER_NAME_FIELD = "e_name";
     private static final String DESCRIPTION_FIELD_NAME = "description";
+    private static final List<String> FIELDS = Arrays.asList(ID_FIELD_NAME, EMPLOYER_NAME_FIELD,DESCRIPTION_FIELD_NAME);
 
     private MethodEmployerDao(ConnectionPool connectionPool){
         super(LOGGER, connectionPool);
@@ -31,6 +34,16 @@ public class MethodEmployerDao extends CommonDao<Employer> implements EntityDao<
     @Override
     protected String getTableName() {
         return EMPLOYER_TABLE_NAME;
+    }
+
+    @Override
+    protected String getIdFieldName() {
+        return ID_FIELD_NAME;
+    }
+
+    @Override
+    protected List<String> getFields() {
+        return FIELDS;
     }
 
     @Override

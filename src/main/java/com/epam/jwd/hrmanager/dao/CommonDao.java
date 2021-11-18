@@ -16,15 +16,28 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
+import static java.lang.String.format;
+import static java.lang.String.join;
+
 public abstract class CommonDao<T extends Entity> implements EntityDao<T> {
 
-    public static final String SELECT_ALL_FROM = "select * from ";
+    private static final String SELECT_ALL_FROM = "select %s from";
+    private static final String SELECT_FOREIGN_KEY = "select %s as foreignKey from";
+    private static final String FOREIGN_KEY_NAME = "foreignKey";
+    private static final String WHERE_FIELD = "where %s = ?";
+    private static final String COMMA = ", ";
+    private static final String SPACE = " ";
+
     private final Logger logger;
-    protected final ConnectionPool connectionPool;
+    private final ConnectionPool connectionPool;
+    private final String selectAllExpression;
+    private final String selectByIdExpression;
 
     protected CommonDao(Logger logger, ConnectionPool connectionPool) {
         this.logger = logger;
         this.connectionPool = connectionPool;
+        this.selectAllExpression = format(SELECT_ALL_FROM, join(COMMA, getFields())) + SPACE + getTableName();
+        this.selectByIdExpression = this.selectAllExpression + SPACE + format(WHERE_FIELD, getIdFieldName());
     }
 
     @Override
@@ -36,7 +49,7 @@ public abstract class CommonDao<T extends Entity> implements EntityDao<T> {
     public Optional<T> read(Long id) {
         try {
             return searchParameterizedEntity(
-                    SELECT_ALL_FROM + getTableName() + " where id = ?",
+                    selectByIdExpression,
                     this::extractResultCheckingException,
                     preparedStatement -> preparedStatement.setLong(1, id)
             );
@@ -50,7 +63,7 @@ public abstract class CommonDao<T extends Entity> implements EntityDao<T> {
     @Override
     public List<T> read() {
         try {
-            return searchEntityList(SELECT_ALL_FROM + getTableName(), this::extractResultCheckingException);
+            return searchEntityList(selectAllExpression, this::extractResultCheckingException);
         } catch (InterruptedException e) {
             logger.warn("take connection interrupted");
             Thread.currentThread().interrupt();
@@ -75,7 +88,7 @@ public abstract class CommonDao<T extends Entity> implements EntityDao<T> {
     }
 
     protected List<T> searchEntityList(String sql, ResultSetExtractor<T> extractor) throws InterruptedException {
-        MultipleContext<T> context = (MultipleContext<T>) executeStatement(sql, receiveMultipleExtraction(sql, extractor))
+        MultipleContext<T> context = (MultipleContext<T>) executeStatement(sql, receiveMultipleExtraction(extractor))
                 .orElse(ResultSetContext.multiple(Collections.emptyList()));
         return context.getContext();
     }
@@ -92,7 +105,7 @@ public abstract class CommonDao<T extends Entity> implements EntityDao<T> {
                                                     ResultSetExtractor<T> extractor,
                                                     StatementPreparator statementPreparation) throws InterruptedException {
         MultipleContext<T> context = (MultipleContext<T>) executePrepared(sql, statementPreparation,
-                receiveMultipleExtraction(sql, extractor)).orElse(ResultSetContext.multiple(Collections.emptyList()));
+                receiveMultipleExtraction(extractor)).orElse(ResultSetContext.multiple(Collections.emptyList()));
         return context.getContext();
     }
 
@@ -119,7 +132,8 @@ public abstract class CommonDao<T extends Entity> implements EntityDao<T> {
 
     protected Optional<Long> receiveForeignKey(Entity entity, String fieldName) {
         try {
-            return entityParameter("select " + fieldName + " as id from " + getTableName() + " where id = ?",
+            return entityParameter(format(SELECT_FOREIGN_KEY, fieldName) + SPACE
+                            + getTableName() + SPACE + format(WHERE_FIELD, getIdFieldName()),
                     statement -> statement.setLong(1, entity.getId()), this::extractForeignKey);
         } catch (InterruptedException e) {
             logger.warn("take connection interrupted");
@@ -130,7 +144,7 @@ public abstract class CommonDao<T extends Entity> implements EntityDao<T> {
 
     private Long extractForeignKey(ResultSet resultSet) throws EntityExtractionFailedException {
         try {
-            return resultSet.getLong("id");
+            return resultSet.getLong(FOREIGN_KEY_NAME);
         } catch (SQLException e) {
             logger.error("sql exception occurred extracting entity from ResultSet", e);
             throw new EntityExtractionFailedException("failed to extract entity parameter id", e);
@@ -152,7 +166,7 @@ public abstract class CommonDao<T extends Entity> implements EntityDao<T> {
         });
     }
 
-    private Function<ResultSet, Optional<ResultSetContext<T>>> receiveMultipleExtraction(String sql, ResultSetExtractor<T> extractor) {
+    private Function<ResultSet, Optional<ResultSetContext<T>>> receiveMultipleExtraction(ResultSetExtractor<T> extractor) {
         return (resultSet -> {
             try {
                 return Optional.of(ResultSetContext.multiple(extractor.extractAll(resultSet)));
@@ -208,6 +222,10 @@ public abstract class CommonDao<T extends Entity> implements EntityDao<T> {
     }
 
     protected abstract String getTableName();
+
+    protected abstract String getIdFieldName();
+
+    protected abstract List<String> getFields();
 
     protected abstract T extractResultSet(ResultSet resultSet) throws SQLException;
 

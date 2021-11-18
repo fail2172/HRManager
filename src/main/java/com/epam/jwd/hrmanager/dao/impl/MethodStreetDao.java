@@ -11,13 +11,16 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 
 public class MethodStreetDao extends CommonDao<Street> implements EntityDao<Street> {
 
     private static final Logger LOGGER = LogManager.getLogger(MethodStreetDao.class);
     private static final String STREET_TABLE_NAME = "street";
     private static final String ID_FIELD_NAME = "id";
-    private static final String CITY_NAME_FIELD = "s_name";
+    private static final String STREET_NAME_FIELD = "s_name";
+    private static final List<String> FIELDS = Arrays.asList(ID_FIELD_NAME, STREET_NAME_FIELD);
 
     private MethodStreetDao(ConnectionPool connectionPool) {
         super(LOGGER, connectionPool);
@@ -33,10 +36,20 @@ public class MethodStreetDao extends CommonDao<Street> implements EntityDao<Stre
     }
 
     @Override
+    protected String getIdFieldName() {
+        return ID_FIELD_NAME;
+    }
+
+    @Override
+    protected List<String> getFields() {
+        return FIELDS;
+    }
+
+    @Override
     protected Street extractResultSet(ResultSet resultSet) throws SQLException {
         return new Street(
                 resultSet.getLong(ID_FIELD_NAME),
-                resultSet.getString(CITY_NAME_FIELD)
+                resultSet.getString(STREET_NAME_FIELD)
         );
     }
 

@@ -12,15 +12,20 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 
 public class MethodUserDao extends CommonDao<User> implements EntityDao<User> {
 
     private static final Logger LOGGER = LogManager.getLogger(MethodUserDao.class);
-    private static final String USER_TABLE_NAME = "hr_user";
-    private static final String ID_FIELD_NAME = "id";
-    private static final String FIRST_NAME_FIELD_NAME = "first_name";
-    private static final String SECOND_NAME_FIELD_NAME = "second_name";
-    private static final String U_ROLE_FIELD_NAME = "u_role";
+    private static final String USER_TABLE_NAME = "hr_user u join user_role r on role_id = r.id";
+    private static final String ID_FIELD_NAME = "u.id";
+    private static final String FIRST_NAME_FIELD_NAME = "u.first_name";
+    private static final String SECOND_NAME_FIELD_NAME = "u.second_name";
+    private static final String U_ROLE_FIELD_NAME = "r.r_name";
+    private static final List<String> FIELDS = Arrays.asList(
+            ID_FIELD_NAME, FIRST_NAME_FIELD_NAME, SECOND_NAME_FIELD_NAME, U_ROLE_FIELD_NAME
+    );
 
     private MethodUserDao(ConnectionPool connectionPool) {
         super(LOGGER, connectionPool);
@@ -33,6 +38,16 @@ public class MethodUserDao extends CommonDao<User> implements EntityDao<User> {
     @Override
     protected String getTableName() {
         return USER_TABLE_NAME;
+    }
+
+    @Override
+    protected String getIdFieldName() {
+        return ID_FIELD_NAME;
+    }
+
+    @Override
+    protected List<String> getFields() {
+        return FIELDS;
     }
 
     @Override

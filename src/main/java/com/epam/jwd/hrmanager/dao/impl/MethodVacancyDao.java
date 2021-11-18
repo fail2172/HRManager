@@ -11,6 +11,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 public class MethodVacancyDao extends CommonDao<Vacancy> implements VacancyDao {
@@ -21,8 +23,13 @@ public class MethodVacancyDao extends CommonDao<Vacancy> implements VacancyDao {
     private static final String TITLE_NAME_FIELD = "title";
     private static final String SALARY_FIELD_NAME = "salary";
     private static final String DESCRIPTION_FIELD_NAME = "description";
-    public static final String CITY_ID_FIELD_NAME = "city_id";
-    public static final String EMPLOYER_ID_FIELD_NAME = "employer_id";
+    private static final String CITY_ID_FIELD_NAME = "city_id";
+    private static final String EMPLOYER_ID_FIELD_NAME = "employer_id";
+    private static final List<String> FIELDS = Arrays.asList(
+            ID_FIELD_NAME, TITLE_NAME_FIELD, SALARY_FIELD_NAME,
+            DESCRIPTION_FIELD_NAME, CITY_ID_FIELD_NAME, EMPLOYER_ID_FIELD_NAME
+    );
+
 
     private MethodVacancyDao(ConnectionPool connectionPool){
         super(LOGGER, connectionPool);
@@ -35,6 +42,16 @@ public class MethodVacancyDao extends CommonDao<Vacancy> implements VacancyDao {
     @Override
     protected String getTableName() {
         return VACANCY_TABLE_NAME;
+    }
+
+    @Override
+    protected String getIdFieldName() {
+        return ID_FIELD_NAME;
+    }
+
+    @Override
+    protected List<String> getFields() {
+        return FIELDS;
     }
 
     @Override
