@@ -3,8 +3,6 @@ package com.epam.jwd.hrmanager.dao.impl;
 import com.epam.jwd.hrmanager.dao.AddressDao;
 import com.epam.jwd.hrmanager.dao.CommonDao;
 import com.epam.jwd.hrmanager.db.ConnectionPool;
-import com.epam.jwd.hrmanager.db.ConnectionPoolFactory;
-import com.epam.jwd.hrmanager.db.ConnectionPoolType;
 import com.epam.jwd.hrmanager.model.Address;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,9 +12,12 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class MethodAddressDao extends CommonDao<Address> implements AddressDao {
 
+    private static MethodAddressDao instance;
+    private static final ReentrantLock lock = new ReentrantLock();
     private static final Logger LOGGER = LogManager.getLogger(MethodAddressDao.class);
     private static final String ADDRESS_TABLE_NAME = "address";
     private static final String ID_FIELD_NAME = "id";
@@ -34,8 +35,17 @@ public class MethodAddressDao extends CommonDao<Address> implements AddressDao {
         super(LOGGER, connectionPool);
     }
 
-    static MethodAddressDao getInstance() {
-        return Holder.INSTANCE;
+    static MethodAddressDao getInstance(ConnectionPool connectionPool){
+        if(instance == null){
+            lock.lock();
+            {
+                if(instance == null){
+                    instance = new MethodAddressDao(connectionPool);
+                }
+            }
+            lock.unlock();
+        }
+        return instance;
     }
 
     @Override
@@ -71,10 +81,5 @@ public class MethodAddressDao extends CommonDao<Address> implements AddressDao {
     @Override
     public Optional<Long> receiveStreetId(Address address) {
         return receiveForeignKey(address, STREET_ID_FIELD_NAME);
-    }
-
-    private static class Holder {
-        private static final MethodAddressDao INSTANCE = new MethodAddressDao(ConnectionPoolFactory.getInstance()
-                .getBy(ConnectionPoolType.TRANSACTION_CONNECTION_POOL));
     }
 }

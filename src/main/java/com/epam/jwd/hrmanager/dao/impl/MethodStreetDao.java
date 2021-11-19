@@ -3,8 +3,6 @@ package com.epam.jwd.hrmanager.dao.impl;
 import com.epam.jwd.hrmanager.dao.CommonDao;
 import com.epam.jwd.hrmanager.dao.EntityDao;
 import com.epam.jwd.hrmanager.db.ConnectionPool;
-import com.epam.jwd.hrmanager.db.ConnectionPoolFactory;
-import com.epam.jwd.hrmanager.db.ConnectionPoolType;
 import com.epam.jwd.hrmanager.model.Street;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,9 +11,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class MethodStreetDao extends CommonDao<Street> implements EntityDao<Street> {
 
+    private static MethodStreetDao instance;
+    private static final ReentrantLock lock = new ReentrantLock();
     private static final Logger LOGGER = LogManager.getLogger(MethodStreetDao.class);
     private static final String STREET_TABLE_NAME = "street";
     private static final String ID_FIELD_NAME = "id";
@@ -26,8 +27,17 @@ public class MethodStreetDao extends CommonDao<Street> implements EntityDao<Stre
         super(LOGGER, connectionPool);
     }
 
-    static MethodStreetDao getInstance() {
-        return Holder.INSTANCE;
+    static MethodStreetDao getInstance(ConnectionPool connectionPool){
+        if(instance == null){
+            lock.lock();
+            {
+                if(instance == null){
+                    instance = new MethodStreetDao(connectionPool);
+                }
+            }
+            lock.unlock();
+        }
+        return instance;
     }
 
     @Override
@@ -51,10 +61,5 @@ public class MethodStreetDao extends CommonDao<Street> implements EntityDao<Stre
                 resultSet.getLong(ID_FIELD_NAME),
                 resultSet.getString(STREET_NAME_FIELD)
         );
-    }
-
-    private static class Holder {
-        private static final MethodStreetDao INSTANCE = new MethodStreetDao(ConnectionPoolFactory.getInstance()
-                .getBy(ConnectionPoolType.TRANSACTION_CONNECTION_POOL));
     }
 }

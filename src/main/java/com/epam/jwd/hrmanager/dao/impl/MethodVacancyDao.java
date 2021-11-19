@@ -3,8 +3,6 @@ package com.epam.jwd.hrmanager.dao.impl;
 import com.epam.jwd.hrmanager.dao.CommonDao;
 import com.epam.jwd.hrmanager.dao.VacancyDao;
 import com.epam.jwd.hrmanager.db.ConnectionPool;
-import com.epam.jwd.hrmanager.db.ConnectionPoolFactory;
-import com.epam.jwd.hrmanager.db.ConnectionPoolType;
 import com.epam.jwd.hrmanager.model.Vacancy;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,9 +12,12 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class MethodVacancyDao extends CommonDao<Vacancy> implements VacancyDao {
 
+    private static MethodVacancyDao instance;
+    private static final ReentrantLock lock = new ReentrantLock();
     private static final Logger LOGGER = LogManager.getLogger(MethodVacancyDao.class);
     private static final String VACANCY_TABLE_NAME = "vacancy";
     private static final String ID_FIELD_NAME = "id";
@@ -35,8 +36,17 @@ public class MethodVacancyDao extends CommonDao<Vacancy> implements VacancyDao {
         super(LOGGER, connectionPool);
     }
 
-    static MethodVacancyDao getInstance(){
-        return Holder.INSTANCE;
+    static MethodVacancyDao getInstance(ConnectionPool connectionPool){
+        if(instance == null){
+            lock.lock();
+            {
+                if(instance == null){
+                    instance = new MethodVacancyDao(connectionPool);
+                }
+            }
+            lock.unlock();
+        }
+        return instance;
     }
 
     @Override
@@ -74,10 +84,5 @@ public class MethodVacancyDao extends CommonDao<Vacancy> implements VacancyDao {
     @Override
     public Optional<Long> receiveCityId(Vacancy vacancy) {
         return receiveForeignKey(vacancy, CITY_ID_FIELD_NAME);
-    }
-
-    private static class Holder {
-        private static final MethodVacancyDao INSTANCE = new MethodVacancyDao(ConnectionPoolFactory.getInstance()
-                .getBy(ConnectionPoolType.TRANSACTION_CONNECTION_POOL));
     }
 }

@@ -2,6 +2,9 @@ package com.epam.jwd.hrmanager.dao.impl;
 
 import com.epam.jwd.hrmanager.dao.DaoFactory;
 import com.epam.jwd.hrmanager.dao.EntityDao;
+import com.epam.jwd.hrmanager.db.ConnectionPool;
+import com.epam.jwd.hrmanager.db.ConnectionPoolFactory;
+import com.epam.jwd.hrmanager.db.ConnectionPoolType;
 import com.epam.jwd.hrmanager.model.Entity;
 
 import java.util.Map;
@@ -13,9 +16,10 @@ public class DaoFactoryImpl implements DaoFactory {
     private static final String DAO_NOT_FOUND = "Could not create dao for %s class";
 
     private final Map<Class<?>, EntityDao<?>> daoByEntity = new ConcurrentHashMap<>();
+    private final ConnectionPool connectionPool;
 
-    private DaoFactoryImpl() {
-
+    private DaoFactoryImpl(ConnectionPool connectionPool) {
+        this.connectionPool = connectionPool;
     }
 
     public static DaoFactoryImpl getInstance() {
@@ -33,21 +37,21 @@ public class DaoFactoryImpl implements DaoFactory {
             final String className = clazz.getSimpleName();
             switch (className) {
                 case "User":
-                    return MethodUserDao.getInstance();
+                    return MethodUserDao.getInstance(connectionPool);
                 case "City":
-                    return MethodCityDao.getInstance();
+                    return MethodCityDao.getInstance(connectionPool);
                 case "Street":
-                    return MethodStreetDao.getInstance();
+                    return MethodStreetDao.getInstance(connectionPool);
                 case "Address":
-                    return MethodAddressDao.getInstance();
+                    return MethodAddressDao.getInstance(connectionPool);
                 case "Employer":
-                    return MethodEmployerDao.getInstance();
+                    return MethodEmployerDao.getInstance(connectionPool);
                 case "Vacancy":
-                    return MethodVacancyDao.getInstance();
+                    return MethodVacancyDao.getInstance(connectionPool);
                 case "Interview":
-                    return MethodInterviewDao.getInstance();
+                    return MethodInterviewDao.getInstance(connectionPool);
                 case "Account":
-                    return MethodAccountDao.getInstance();
+                    return MethodAccountDao.getInstance(connectionPool);
                 default:
                     throw new IllegalStateException(String.format(DAO_NOT_FOUND, className));
             }
@@ -55,6 +59,7 @@ public class DaoFactoryImpl implements DaoFactory {
     }
 
     private static class Holder {
-        private static final DaoFactoryImpl INSTANCE = new DaoFactoryImpl();
+        private static final DaoFactoryImpl INSTANCE = new DaoFactoryImpl(ConnectionPoolFactory.getInstance()
+                .getBy(ConnectionPoolType.TRANSACTION_CONNECTION_POOL));
     }
 }

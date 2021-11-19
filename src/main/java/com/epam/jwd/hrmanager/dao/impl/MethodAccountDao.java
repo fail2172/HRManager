@@ -3,8 +3,6 @@ package com.epam.jwd.hrmanager.dao.impl;
 import com.epam.jwd.hrmanager.dao.AccountDao;
 import com.epam.jwd.hrmanager.dao.CommonDao;
 import com.epam.jwd.hrmanager.db.ConnectionPool;
-import com.epam.jwd.hrmanager.db.ConnectionPoolFactory;
-import com.epam.jwd.hrmanager.db.ConnectionPoolType;
 import com.epam.jwd.hrmanager.model.Account;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,9 +12,12 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class MethodAccountDao extends CommonDao<Account> implements AccountDao {
 
+    private static MethodAccountDao instance;
+    private static final ReentrantLock lock = new ReentrantLock();
     private static final Logger LOGGER = LogManager.getLogger(MethodAccountDao.class);
     private static final String ACCOUNT_TABLE_NAME = "account";
     private static final String ID_FIELD_NAME = "id";
@@ -34,8 +35,17 @@ public class MethodAccountDao extends CommonDao<Account> implements AccountDao {
         super(LOGGER, connectionPool);
     }
 
-    static MethodAccountDao getInstance(){
-        return Holder.INSTANCE;
+    static MethodAccountDao getInstance(ConnectionPool connectionPool){
+        if(instance == null){
+            lock.lock();
+            {
+                if(instance == null){
+                    instance = new MethodAccountDao(connectionPool);
+                }
+            }
+            lock.unlock();
+        }
+        return instance;
     }
 
     @Override
@@ -68,10 +78,4 @@ public class MethodAccountDao extends CommonDao<Account> implements AccountDao {
                 null
         );
     }
-
-    private static class Holder {
-        private static final MethodAccountDao INSTANCE = new MethodAccountDao(ConnectionPoolFactory.getInstance()
-                .getBy(ConnectionPoolType.TRANSACTION_CONNECTION_POOL));
-    }
-
 }

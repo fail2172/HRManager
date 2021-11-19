@@ -2,6 +2,7 @@ package com.epam.jwd.hrmanager.secvice.impl;
 
 import com.epam.jwd.hrmanager.dao.DaoFactory;
 import com.epam.jwd.hrmanager.dao.InterviewDao;
+import com.epam.jwd.hrmanager.db.TransactionManager;
 import com.epam.jwd.hrmanager.model.Address;
 import com.epam.jwd.hrmanager.model.Interview;
 import com.epam.jwd.hrmanager.model.User;
@@ -18,6 +19,7 @@ public class InterviewService implements EntityService<Interview> {
     private final EntityService<Address> addressService;
     private final EntityService<User> userService;
     private final EntityService<Vacancy> vacancyService;
+    private static final TransactionManager transactionManager = TransactionManager.getInstance();
 
     private InterviewService(InterviewDao interviewDao, EntityService<Address> addressService,
                              EntityService<User> userService, EntityService<Vacancy> vacancyService){
@@ -33,6 +35,7 @@ public class InterviewService implements EntityService<Interview> {
 
     @Override
     public Interview get(Long id) {
+        transactionManager.initTransaction();
         Interview interview = interviewDao.read(id).orElse(null);
         final Long addressId = interviewDao.receiveAddressId(interview).orElse(null);
         final Long userId = interviewDao.receiveUserId(interview).orElse(null);
@@ -40,6 +43,7 @@ public class InterviewService implements EntityService<Interview> {
         Address address = addressService.get(addressId);
         User user = userService.get(userId);
         Vacancy vacancy = vacancyService.get(vacancyId);
+        transactionManager.commitTransaction();
         return Objects.requireNonNull(interview).withAddress(address).withUser(user).withVacancy(vacancy);
     }
 

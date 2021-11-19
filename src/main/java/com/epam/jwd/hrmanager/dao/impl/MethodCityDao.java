@@ -3,8 +3,7 @@ package com.epam.jwd.hrmanager.dao.impl;
 import com.epam.jwd.hrmanager.dao.CommonDao;
 import com.epam.jwd.hrmanager.dao.EntityDao;
 import com.epam.jwd.hrmanager.db.ConnectionPool;
-import com.epam.jwd.hrmanager.db.ConnectionPoolFactory;
-import com.epam.jwd.hrmanager.db.ConnectionPoolType;
+
 import com.epam.jwd.hrmanager.model.City;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,9 +12,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class MethodCityDao extends CommonDao<City> implements EntityDao<City> {
 
+    private static MethodCityDao instance;
+    private static final ReentrantLock lock = new ReentrantLock();
     private static final Logger LOGGER = LogManager.getLogger(MethodCityDao.class);
     private static final String CITY_TABLE_NAME = "city";
     private static final String ID_FIELD_NAME = "id";
@@ -26,8 +28,17 @@ public class MethodCityDao extends CommonDao<City> implements EntityDao<City> {
         super(LOGGER, connectionPool);
     }
 
-    static MethodCityDao getInstance() {
-        return Holder.INSTANCE;
+    static MethodCityDao getInstance(ConnectionPool connectionPool) {
+        if (instance == null) {
+            lock.lock();
+            {
+                if (instance == null) {
+                    instance = new MethodCityDao(connectionPool);
+                }
+            }
+            lock.unlock();
+        }
+        return instance;
     }
 
     @Override
@@ -51,10 +62,5 @@ public class MethodCityDao extends CommonDao<City> implements EntityDao<City> {
                 resultSet.getLong(ID_FIELD_NAME),
                 resultSet.getString(CITY_NAME_FIELD)
         );
-    }
-
-    private static class Holder {
-        private static final MethodCityDao INSTANCE = new MethodCityDao(ConnectionPoolFactory.getInstance()
-                .getBy(ConnectionPoolType.TRANSACTION_CONNECTION_POOL));
     }
 }

@@ -3,8 +3,6 @@ package com.epam.jwd.hrmanager.dao.impl;
 import com.epam.jwd.hrmanager.dao.CommonDao;
 import com.epam.jwd.hrmanager.dao.InterviewDao;
 import com.epam.jwd.hrmanager.db.ConnectionPool;
-import com.epam.jwd.hrmanager.db.ConnectionPoolFactory;
-import com.epam.jwd.hrmanager.db.ConnectionPoolType;
 import com.epam.jwd.hrmanager.model.Interview;
 import com.epam.jwd.hrmanager.model.InterviewStatus;
 import org.apache.logging.log4j.LogManager;
@@ -15,9 +13,12 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class MethodInterviewDao extends CommonDao<Interview> implements InterviewDao {
 
+    private static MethodInterviewDao instance;
+    private static final ReentrantLock lock = new ReentrantLock();
     private static final Logger LOGGER = LogManager.getLogger(MethodInterviewDao.class);
     private static final String INTERVIEW_TABLE_NAME = "interview i join interview_status s on i.status_id = s.id";
     private static final String ID_FIELD_NAME = "i.id";
@@ -35,8 +36,17 @@ public class MethodInterviewDao extends CommonDao<Interview> implements Intervie
         super(LOGGER, connectionPool);
     }
 
-    static MethodInterviewDao getInstance(){
-        return Holder.INSTANCE;
+    static MethodInterviewDao getInstance(ConnectionPool connectionPool){
+        if(instance == null){
+            lock.lock();
+            {
+                if(instance == null){
+                    instance = new MethodInterviewDao(connectionPool);
+                }
+            }
+            lock.unlock();
+        }
+        return instance;
     }
 
     @Override
@@ -79,10 +89,5 @@ public class MethodInterviewDao extends CommonDao<Interview> implements Intervie
     @Override
     public Optional<Long> receiveVacancyId(Interview interview) {
         return receiveForeignKey(interview, VACANCY_ID_FIELD_NAME);
-    }
-
-    private static class Holder {
-        private static final MethodInterviewDao INSTANCE = new MethodInterviewDao(ConnectionPoolFactory.getInstance()
-                .getBy(ConnectionPoolType.TRANSACTION_CONNECTION_POOL));
     }
 }

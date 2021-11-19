@@ -3,8 +3,6 @@ package com.epam.jwd.hrmanager.dao.impl;
 import com.epam.jwd.hrmanager.dao.CommonDao;
 import com.epam.jwd.hrmanager.dao.EntityDao;
 import com.epam.jwd.hrmanager.db.ConnectionPool;
-import com.epam.jwd.hrmanager.db.ConnectionPoolFactory;
-import com.epam.jwd.hrmanager.db.ConnectionPoolType;
 import com.epam.jwd.hrmanager.model.Role;
 import com.epam.jwd.hrmanager.model.User;
 import org.apache.logging.log4j.LogManager;
@@ -14,9 +12,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class MethodUserDao extends CommonDao<User> implements EntityDao<User> {
 
+    private static MethodUserDao instance;
+    private static final ReentrantLock lock = new ReentrantLock();
     private static final Logger LOGGER = LogManager.getLogger(MethodUserDao.class);
     private static final String USER_TABLE_NAME = "hr_user u join user_role r on role_id = r.id";
     private static final String ID_FIELD_NAME = "u.id";
@@ -31,8 +32,17 @@ public class MethodUserDao extends CommonDao<User> implements EntityDao<User> {
         super(LOGGER, connectionPool);
     }
 
-    public static MethodUserDao getInstance() {
-        return Holder.INSTANCE;
+    static MethodUserDao getInstance(ConnectionPool connectionPool){
+        if(instance == null){
+            lock.lock();
+            {
+                if(instance == null){
+                    instance = new MethodUserDao(connectionPool);
+                }
+            }
+            lock.unlock();
+        }
+        return instance;
     }
 
     @Override
@@ -59,10 +69,4 @@ public class MethodUserDao extends CommonDao<User> implements EntityDao<User> {
                 resultSet.getString(SECOND_NAME_FIELD_NAME)
         );
     }
-
-    private static class Holder {
-        public static final MethodUserDao INSTANCE = new MethodUserDao(ConnectionPoolFactory.getInstance()
-                .getBy(ConnectionPoolType.TRANSACTION_CONNECTION_POOL));
-    }
-
 }
