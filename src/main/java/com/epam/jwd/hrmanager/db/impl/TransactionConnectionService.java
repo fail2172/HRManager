@@ -7,19 +7,33 @@ import com.epam.jwd.hrmanager.exeption.CouldNotInitialiseConnectionService;
 
 import java.sql.Connection;
 import java.util.Optional;
+import java.util.concurrent.locks.ReentrantLock;
 
-public final class TransactionConnectionPool implements ConnectionPool {
+public final class TransactionConnectionService implements ConnectionPool {
 
+    private static final ReentrantLock lock = new ReentrantLock();
+
+    private static TransactionConnectionService instance;
     private final ConnectionPool connectionPool;
     private final TransactionManager transactionManager;
 
-    private TransactionConnectionPool(ConnectionPool connectionPool, TransactionManager transactionManager) {
+    private TransactionConnectionService(ConnectionPool connectionPool, TransactionManager transactionManager) {
         this.connectionPool = connectionPool;
         this.transactionManager = transactionManager;
     }
 
-    public static TransactionConnectionPool getInstance() {
-        return Holder.INSTANCE;
+    public static TransactionConnectionService getInstance(ConnectionPool connectionPool,
+                                                           TransactionManager transactionManager) {
+        if (instance == null) {
+            lock.lock();
+            {
+                if (instance == null) {
+                    instance = new TransactionConnectionService(connectionPool, transactionManager);
+                }
+            }
+            lock.unlock();
+        }
+        return instance;
     }
 
     @Override
@@ -55,10 +69,5 @@ public final class TransactionConnectionPool implements ConnectionPool {
 
     public static ConnectionService getInstance(ConnectionServiceContext context) {
         return ConnectionPool.getInstance(context);
-    }
-
-    private static class Holder {
-        private static final TransactionConnectionPool INSTANCE =
-                new TransactionConnectionPool(ConnectionPool.getInstance(), TransactionManager.getInstance());
     }
 }

@@ -2,7 +2,7 @@ package com.epam.jwd.hrmanager.db;
 
 import com.epam.jwd.hrmanager.db.impl.ConnectionService;
 import com.epam.jwd.hrmanager.db.impl.ConnectionServiceContext;
-import com.epam.jwd.hrmanager.db.impl.TransactionConnectionPool;
+import com.epam.jwd.hrmanager.db.impl.TransactionConnectionService;
 import com.epam.jwd.hrmanager.exeption.CouldNotInitialiseConnectionService;
 
 import java.sql.Connection;
@@ -25,10 +25,6 @@ public interface ConnectionPool {
 
     static ConnectionPool getInstance(){
         return ConnectionService.getInstance();
-    }
-
-    static ConnectionPool transactional() {
-        return TransactionConnectionPool.getInstance();
     }
 
 }

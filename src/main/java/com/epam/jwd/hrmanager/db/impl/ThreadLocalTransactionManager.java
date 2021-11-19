@@ -1,8 +1,6 @@
 package com.epam.jwd.hrmanager.db.impl;
 
-import com.epam.jwd.hrmanager.db.ConnectionPool;
-import com.epam.jwd.hrmanager.db.TransactionId;
-import com.epam.jwd.hrmanager.db.TransactionManager;
+import com.epam.jwd.hrmanager.db.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,7 +18,9 @@ public class ThreadLocalTransactionManager implements TransactionManager {
 
     private static final ThreadLocal<TransactionId> THREAD_CONNECTION = ThreadLocal.withInitial(() -> {
         try {
-            return new TransactionIdImpl(ConnectionPool.transactional().takeConnection());
+            ConnectionPool connectionPool = ConnectionPoolFactory.getInstance()
+                    .getBy(ConnectionPoolType.TRANSACTION_CONNECTION_POOL);
+            return new TransactionIdImpl(connectionPool.takeConnection());
         } catch (InterruptedException e) {
             LOGGER.warn("Thread was interrupted");
             Thread.currentThread().interrupt();
