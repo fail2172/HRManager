@@ -1,7 +1,6 @@
 package com.epam.jwd.hrmanager.secvice.impl;
 
 import com.epam.jwd.hrmanager.dao.AddressDao;
-import com.epam.jwd.hrmanager.dao.DaoFactory;
 import com.epam.jwd.hrmanager.dao.EntityDao;
 import com.epam.jwd.hrmanager.model.Address;
 import com.epam.jwd.hrmanager.model.City;
@@ -10,9 +9,13 @@ import com.epam.jwd.hrmanager.secvice.EntityService;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 public class AddressService implements EntityService<Address> {
+
+    private static AddressService instance;
+    private static final ReentrantLock lock = new ReentrantLock();
 
     private final AddressDao addressDao;
     private final EntityDao<City> cityDao;
@@ -24,8 +27,17 @@ public class AddressService implements EntityService<Address> {
         this.streetDao = streetDao;
     }
 
-    static AddressService getInstance() {
-        return Holder.INSTANCE;
+    static AddressService getInstance(AddressDao addressDao, EntityDao<City> cityDao, EntityDao<Street> streetDao){
+        if(instance == null){
+            lock.lock();
+            {
+                if(instance == null){
+                    instance = new AddressService(addressDao, cityDao, streetDao);
+                }
+            }
+            lock.unlock();
+        }
+        return instance;
     }
 
     @Override
@@ -43,13 +55,5 @@ public class AddressService implements EntityService<Address> {
         return addressDao.read().stream()
                 .map(address -> this.get(address.getId()))
                 .collect(Collectors.toList());
-    }
-
-    private static class Holder {
-        private static final AddressService INSTANCE = new AddressService(
-                (AddressDao) DaoFactory.getInstance().daoFor(Address.class),
-                DaoFactory.getInstance().daoFor(City.class),
-                DaoFactory.getInstance().daoFor(Street.class)
-        );
     }
 }

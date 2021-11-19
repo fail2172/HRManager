@@ -1,13 +1,16 @@
 package com.epam.jwd.hrmanager.secvice.impl;
 
-import com.epam.jwd.hrmanager.dao.DaoFactory;
 import com.epam.jwd.hrmanager.dao.EntityDao;
 import com.epam.jwd.hrmanager.model.User;
 import com.epam.jwd.hrmanager.secvice.EntityService;
 
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class UserService implements EntityService<User> {
+
+    private static UserService instance;
+    private static final ReentrantLock lock = new ReentrantLock();
 
     private final EntityDao<User> userDao;
 
@@ -15,8 +18,17 @@ public class UserService implements EntityService<User> {
         this.userDao = userDao;
     }
 
-    static UserService getInstance() {
-        return Holder.INSTANCE;
+    static UserService getInstance(EntityDao<User> userDao){
+        if(instance == null){
+            lock.lock();
+            {
+                if(instance == null){
+                    instance = new UserService(userDao);
+                }
+            }
+            lock.unlock();
+        }
+        return instance;
     }
 
     @Override
@@ -27,11 +39,5 @@ public class UserService implements EntityService<User> {
     @Override
     public List<User> findAll() {
         return userDao.read();
-    }
-
-    private static class Holder {
-        private static final UserService INSTANCE = new UserService(
-                DaoFactory.getInstance().daoFor(User.class)
-        );
     }
 }

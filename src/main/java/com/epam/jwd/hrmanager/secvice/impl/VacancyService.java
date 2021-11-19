@@ -1,6 +1,5 @@
 package com.epam.jwd.hrmanager.secvice.impl;
 
-import com.epam.jwd.hrmanager.dao.DaoFactory;
 import com.epam.jwd.hrmanager.dao.EntityDao;
 import com.epam.jwd.hrmanager.dao.VacancyDao;
 import com.epam.jwd.hrmanager.model.City;
@@ -10,9 +9,13 @@ import com.epam.jwd.hrmanager.secvice.EntityService;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 public class VacancyService implements EntityService<Vacancy> {
+
+    private static VacancyService instance;
+    private static final ReentrantLock lock = new ReentrantLock();
 
     private final VacancyDao vacancyDao;
     private final EntityDao<Employer> employerDao;
@@ -24,8 +27,17 @@ public class VacancyService implements EntityService<Vacancy> {
         this.cityDao = cityDao;
     }
 
-    static VacancyService getInstance(){
-        return Holder.INSTANCE;
+    static VacancyService getInstance(VacancyDao vacancyDao, EntityDao<Employer> employerDao, EntityDao<City> cityDao){
+        if(instance == null){
+            lock.lock();
+            {
+                if(instance == null){
+                    instance = new VacancyService(vacancyDao, employerDao, cityDao);
+                }
+            }
+            lock.unlock();
+        }
+        return instance;
     }
 
     @Override
@@ -43,12 +55,5 @@ public class VacancyService implements EntityService<Vacancy> {
         return vacancyDao.read().stream()
                 .map(vacancy -> get(vacancy.getId()))
                 .collect(Collectors.toList());
-    }
-
-    private static class Holder {
-        private static final VacancyService INSTANCE = new VacancyService(
-                (VacancyDao) DaoFactory.getInstance().daoFor(Vacancy.class),
-                DaoFactory.getInstance().daoFor(Employer.class),
-                DaoFactory.getInstance().daoFor(City.class));
     }
 }

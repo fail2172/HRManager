@@ -1,19 +1,19 @@
 package com.epam.jwd.hrmanager.secvice.impl;
 
-import com.epam.jwd.hrmanager.dao.DaoFactory;
 import com.epam.jwd.hrmanager.dao.InterviewDao;
 import com.epam.jwd.hrmanager.db.TransactionManager;
-import com.epam.jwd.hrmanager.model.Address;
-import com.epam.jwd.hrmanager.model.Interview;
-import com.epam.jwd.hrmanager.model.User;
-import com.epam.jwd.hrmanager.model.Vacancy;
+import com.epam.jwd.hrmanager.model.*;
 import com.epam.jwd.hrmanager.secvice.EntityService;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 public class InterviewService implements EntityService<Interview> {
+
+    private static InterviewService instance;
+    private static final ReentrantLock lock = new ReentrantLock();
 
     private final InterviewDao interviewDao;
     private final EntityService<Address> addressService;
@@ -29,8 +29,18 @@ public class InterviewService implements EntityService<Interview> {
         this.vacancyService = vacancyService;
     }
 
-    static InterviewService getInstance(){
-        return Holder.INSTANCE;
+    static InterviewService getInstance(InterviewDao interviewDao, EntityService<Address> addressService,
+                                        EntityService<User> userService, EntityService<Vacancy> vacancyService){
+        if(instance == null){
+            lock.lock();
+            {
+                if(instance == null){
+                    instance = new InterviewService(interviewDao, addressService, userService, vacancyService);
+                }
+            }
+            lock.unlock();
+        }
+        return instance;
     }
 
     @Override
@@ -52,13 +62,5 @@ public class InterviewService implements EntityService<Interview> {
         return interviewDao.read().stream()
                 .map(interview -> get(interview.getId()))
                 .collect(Collectors.toList());
-    }
-
-    private static class Holder {
-        private static final InterviewService INSTANCE = new InterviewService(
-                (InterviewDao) DaoFactory.getInstance().daoFor(Interview.class),
-                AddressService.getInstance(),
-                UserService.getInstance(),
-                VacancyService.getInstance());
     }
 }
