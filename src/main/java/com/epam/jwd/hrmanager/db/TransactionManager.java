@@ -1,5 +1,9 @@
 package com.epam.jwd.hrmanager.db;
 
+import com.epam.jwd.hrmanager.db.impl.ThreadLocalTransactionManager;
+
+import java.util.Optional;
+
 public interface TransactionManager {
 
     void initTransaction();
@@ -9,7 +13,9 @@ public interface TransactionManager {
     boolean isTransaction();
 
     static TransactionManager getInstance(){
-        return null;
+        return ThreadLocalTransactionManager.getInstance();
     }
+
+    Optional<TransactionId> getTransactionId();
 
 }

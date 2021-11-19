@@ -1,6 +1,6 @@
 package com.epam.jwd.hrmanager.db.impl;
 
-import com.epam.jwd.hrmanager.db.impl.ConnectionService;
+import com.epam.jwd.hrmanager.db.ConnectionPool;
 
 import java.sql.*;
 import java.util.Map;
@@ -10,11 +10,19 @@ import java.util.concurrent.Executor;
 public class ProxyConnection implements Connection {
 
     private final Connection connection;
-    private final ConnectionService service;
+    private final ConnectionPool service;
 
-    public ProxyConnection(Connection connection, ConnectionService service) {
+    public ProxyConnection(Connection connection, ConnectionPool service) {
         this.connection = connection;
         this.service = service;
+    }
+
+    public Connection getConnection() {
+        return connection;
+    }
+
+    public ConnectionPool getService() {
+        return service;
     }
 
     @Override

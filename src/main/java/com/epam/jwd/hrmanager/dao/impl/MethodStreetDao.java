@@ -55,6 +55,6 @@ public class MethodStreetDao extends CommonDao<Street> implements EntityDao<Stre
 
     private static class Holder {
         private static final MethodStreetDao INSTANCE = new MethodStreetDao(ConnectionPoolFactory.getInstance()
-                .getBy(ConnectionPoolType.SIMPLE_CONNECTION_POOL));
+                .getBy(ConnectionPoolType.TRANSACTION_CONNECTION_POOL));
     }
 }

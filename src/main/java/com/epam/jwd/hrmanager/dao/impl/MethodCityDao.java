@@ -55,6 +55,6 @@ public class MethodCityDao extends CommonDao<City> implements EntityDao<City> {
 
     private static class Holder {
         private static final MethodCityDao INSTANCE = new MethodCityDao(ConnectionPoolFactory.getInstance()
-                .getBy(ConnectionPoolType.SIMPLE_CONNECTION_POOL));
+                .getBy(ConnectionPoolType.TRANSACTION_CONNECTION_POOL));
     }
 }

@@ -142,6 +142,7 @@ public class ConnectionService implements ConnectionPool {
         lock.lock();
         try {
             if (givenAwayConnections.remove((ProxyConnection) connection)) {
+                LOGGER.info("Connection return");
                 connection.setAutoCommit(true);
                 availableConnections.add((ProxyConnection) connection);
                 haveConnections.signalAll();

@@ -75,6 +75,6 @@ public class MethodAddressDao extends CommonDao<Address> implements AddressDao {
 
     private static class Holder {
         private static final MethodAddressDao INSTANCE = new MethodAddressDao(ConnectionPoolFactory.getInstance()
-                .getBy(ConnectionPoolType.SIMPLE_CONNECTION_POOL));
+                .getBy(ConnectionPoolType.TRANSACTION_CONNECTION_POOL));
     }
 }

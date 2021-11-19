@@ -1,19 +1,24 @@
 package com.epam.jwd.hrmanager.db.impl;
 
 import com.epam.jwd.hrmanager.db.ConnectionPool;
+import com.epam.jwd.hrmanager.db.TransactionId;
+import com.epam.jwd.hrmanager.db.TransactionManager;
 import com.epam.jwd.hrmanager.exeption.CouldNotInitialiseConnectionService;
 
 import java.sql.Connection;
+import java.util.Optional;
 
 public final class TransactionConnectionPool implements ConnectionPool {
 
     private final ConnectionPool connectionPool;
+    private final TransactionManager transactionManager;
 
-    private TransactionConnectionPool(ConnectionPool connectionPool) {
+    private TransactionConnectionPool(ConnectionPool connectionPool, TransactionManager transactionManager) {
         this.connectionPool = connectionPool;
+        this.transactionManager = transactionManager;
     }
 
-    public static TransactionConnectionPool getInstance(){
+    public static TransactionConnectionPool getInstance() {
         return Holder.INSTANCE;
     }
 
@@ -34,12 +39,18 @@ public final class TransactionConnectionPool implements ConnectionPool {
 
     @Override
     public Connection takeConnection() throws InterruptedException {
-        return connectionPool.takeConnection();
+        Optional<TransactionId> transactionId = transactionManager.getTransactionId();
+        return transactionId.isPresent()
+                ? transactionId.get().getConnection()
+                : new ProxyConnection(connectionPool.takeConnection(), this);
     }
 
     @Override
     public void returnConnection(Connection connection) {
-        connectionPool.returnConnection(connection);
+        Optional<TransactionId> transactionId = transactionManager.getTransactionId();
+        if (!transactionId.isPresent()){
+            connectionPool.returnConnection(((ProxyConnection) connection).getConnection());
+        }
     }
 
     public static ConnectionService getInstance(ConnectionServiceContext context) {
@@ -47,6 +58,7 @@ public final class TransactionConnectionPool implements ConnectionPool {
     }
 
     private static class Holder {
-        private static final TransactionConnectionPool INSTANCE = new TransactionConnectionPool(ConnectionPool.getInstance());
+        private static final TransactionConnectionPool INSTANCE =
+                new TransactionConnectionPool(ConnectionPool.getInstance(), TransactionManager.getInstance());
     }
 }

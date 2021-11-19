@@ -55,7 +55,6 @@ public class InterviewService implements EntityService<Interview> {
                 (InterviewDao) DaoFactory.getInstance().daoFor(Interview.class),
                 AddressService.getInstance(),
                 UserService.getInstance(),
-                VacancyService.getInstance()
-        );
+                VacancyService.getInstance());
     }
 }
