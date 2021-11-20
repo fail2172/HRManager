@@ -290,42 +290,12 @@ public class ProxyConnection implements Connection {
     }
 
     @Override
-    public void beginRequest() throws SQLException {
-        connection.beginRequest();
+    public <T> T unwrap(Class<T> face) {
+        return null;
     }
 
     @Override
-    public void endRequest() throws SQLException {
-        connection.endRequest();
-    }
-
-    @Override
-    public boolean setShardingKeyIfValid(ShardingKey shardingKey, ShardingKey superShardingKey, int timeout) throws SQLException {
-        return connection.setShardingKeyIfValid(shardingKey, superShardingKey, timeout);
-    }
-
-    @Override
-    public boolean setShardingKeyIfValid(ShardingKey shardingKey, int timeout) throws SQLException {
-        return connection.setShardingKeyIfValid(shardingKey, timeout);
-    }
-
-    @Override
-    public void setShardingKey(ShardingKey shardingKey, ShardingKey superShardingKey) throws SQLException {
-        connection.setShardingKey(shardingKey, superShardingKey);
-    }
-
-    @Override
-    public void setShardingKey(ShardingKey shardingKey) throws SQLException {
-        connection.setShardingKey(shardingKey);
-    }
-
-    @Override
-    public <T> T unwrap(Class<T> iface) throws SQLException {
-        return connection.unwrap(iface);
-    }
-
-    @Override
-    public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        return connection.isWrapperFor(iface);
+    public boolean isWrapperFor(Class<?> face) {
+        return false;
     }
 }
