@@ -54,7 +54,7 @@ public abstract class CommonDao<T extends Entity> implements EntityDao<T> {
                     preparedStatement -> preparedStatement.setLong(1, id)
             );
         } catch (InterruptedException e) {
-            logger.info("takeConnection interrupted", e);
+            logger.info("take connection interrupted", e);
             Thread.currentThread().interrupt();
             return Optional.empty();
         }
@@ -65,7 +65,7 @@ public abstract class CommonDao<T extends Entity> implements EntityDao<T> {
         try {
             return searchEntityList(selectAllExpression, this::extractResultCheckingException);
         } catch (InterruptedException e) {
-            logger.warn("take connection interrupted");
+            logger.warn("take connection interrupted", e);
             Thread.currentThread().interrupt();
         }
         return Collections.emptyList();
