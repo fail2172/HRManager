@@ -35,6 +35,18 @@ public class User implements Entity{
         return secondName;
     }
 
+    public User withRole(Role role){
+        return new User(id, role, firstName, secondName);
+    }
+
+    public User withFirstName(String firstName){
+        return new User(id, role, firstName, secondName);
+    }
+
+    public User withSecondName(String secondName){
+        return new User(id, role, firstName, secondName);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

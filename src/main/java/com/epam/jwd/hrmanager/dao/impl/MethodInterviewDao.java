@@ -80,13 +80,14 @@ public class MethodInterviewDao extends CommonDao<Interview> implements Intervie
      */
     @Override
     protected void fillEntity(PreparedStatement statement, Interview interview) throws SQLException {
-        statement.setLong(1, ZERO);
-        statement.setDate(2, interview.getDate());
-        statement.setLong(3, interview.getAddress().getId());
-        statement.setLong(4, interview.getUser().getId());
-        statement.setLong(5, interview.getVacancy().getId());
-        statement.setString(6, interview.getStatus().toString());
-        statement.setString(7, composeHashCode(interview));
+        fillFields(statement, interview);
+    }
+
+    @Override
+    protected void updateEntity(PreparedStatement statement, Interview interview) throws SQLException {
+        fillFields(statement, interview);
+        statement.setLong(1, interview.getId());
+        statement.setLong(8, interview.getId());
     }
 
     @Override
@@ -119,6 +120,16 @@ public class MethodInterviewDao extends CommonDao<Interview> implements Intervie
     @Override
     public Optional<Long> receiveVacancyId(Interview interview) {
         return receiveForeignKey(interview, VACANCY_ID_FIELD_NAME);
+    }
+
+    private void fillFields(PreparedStatement statement, Interview interview) throws SQLException {
+        statement.setLong(1, ZERO);
+        statement.setDate(2, interview.getDate());
+        statement.setLong(3, interview.getAddress().getId());
+        statement.setLong(4, interview.getUser().getId());
+        statement.setLong(5, interview.getVacancy().getId());
+        statement.setString(6, interview.getStatus().toString());
+        statement.setString(7, composeHashCode(interview));
     }
 
     private String composeHashCode(Interview interview){

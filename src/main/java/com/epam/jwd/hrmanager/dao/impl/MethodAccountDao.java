@@ -81,11 +81,14 @@ public class MethodAccountDao extends CommonDao<Account> implements AccountDao {
      */
     @Override
     protected void fillEntity(PreparedStatement statement, Account account) throws SQLException {
-        statement.setLong(1, ZERO);
-        statement.setLong(2, account.getUser().getId());
-        statement.setString(3, account.getLogin());
-        statement.setString(4, account.getEmail());
-        statement.setString(5, account.getPassword());
+        fillFields(statement, account);
+    }
+
+    @Override
+    protected void updateEntity(PreparedStatement statement, Account account) throws SQLException {
+        fillFields(statement, account);
+        statement.setLong(1, account.getId());
+        statement.setLong(6, account.getId());
     }
 
     @Override
@@ -102,5 +105,13 @@ public class MethodAccountDao extends CommonDao<Account> implements AccountDao {
                 resultSet.getString(PASSWORD_FIELD_NAME),
                 null
         );
+    }
+
+    private void fillFields(PreparedStatement statement, Account account) throws SQLException {
+        statement.setLong(1, ZERO);
+        statement.setLong(2, account.getUser().getId());
+        statement.setString(3, account.getLogin());
+        statement.setString(4, account.getEmail());
+        statement.setString(5, account.getPassword());
     }
 }

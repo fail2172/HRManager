@@ -7,14 +7,14 @@ public class Address implements Entity {
     private final Long id;
     private final City city;
     private final Street street;
-    private final int hoseNumber;
+    private final int houseNumber;
     private final Integer flatNumber;
 
     public Address(Long id, City city, Street street, int hoseNumber, Integer flatNumber) {
         this.id = id;
         this.city = city;
         this.street = street;
-        this.hoseNumber = hoseNumber;
+        this.houseNumber = hoseNumber;
         this.flatNumber = flatNumber;
     }
 
@@ -22,8 +22,8 @@ public class Address implements Entity {
         this(null, city, street, hoseNumber, flatNumber);
     }
 
-    public int getHoseNumber() {
-        return hoseNumber;
+    public int getHouseNumber() {
+        return houseNumber;
     }
 
 
@@ -45,11 +45,19 @@ public class Address implements Entity {
     }
 
     public Address withCity(City city) {
-        return new Address(id, city, street, hoseNumber, flatNumber);
+        return new Address(id, city, street, houseNumber, flatNumber);
     }
 
     public Address withStreet(Street street) {
-        return new Address(id, city, street, hoseNumber, flatNumber);
+        return new Address(id, city, street, houseNumber, flatNumber);
+    }
+
+    public Address withHouseNumber(int houseNumber){
+        return new Address(id, city, street, houseNumber, flatNumber);
+    }
+
+    public Address withFlatNumber(Integer flatNumber){
+        return new Address(id, city, street, houseNumber, flatNumber);
     }
 
     @Override
@@ -59,7 +67,7 @@ public class Address implements Entity {
 
         Address address = (Address) o;
 
-        if (hoseNumber != address.hoseNumber) return false;
+        if (houseNumber != address.houseNumber) return false;
         if (!id.equals(address.id)) return false;
         if (!city.equals(address.city)) return false;
         if (!street.equals(address.street)) return false;
@@ -71,7 +79,7 @@ public class Address implements Entity {
         int result = id.hashCode();
         result = 31 * result + city.hashCode();
         result = 31 * result + street.hashCode();
-        result = 31 * result + hoseNumber;
+        result = 31 * result + houseNumber;
         result = 31 * result + flatNumber.hashCode();
         return result;
     }
@@ -82,7 +90,7 @@ public class Address implements Entity {
                 "id=" + id +
                 ", city=" + city +
                 ", street=" + street +
-                ", hoseNumber=" + hoseNumber +
+                ", hoseNumber=" + houseNumber +
                 ", flatNumber=" + flatNumber +
                 '}';
     }

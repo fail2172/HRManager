@@ -3,6 +3,7 @@ package com.epam.jwd.hrmanager.secvice.impl;
 import com.epam.jwd.hrmanager.dao.InterviewDao;
 import com.epam.jwd.hrmanager.db.TransactionManager;
 import com.epam.jwd.hrmanager.exeption.EntityUpdateException;
+import com.epam.jwd.hrmanager.exeption.NotFoundEntityException;
 import com.epam.jwd.hrmanager.model.*;
 import com.epam.jwd.hrmanager.secvice.EntityService;
 import org.apache.logging.log4j.LogManager;
@@ -89,6 +90,28 @@ public class InterviewService implements EntityService<Interview> {
 
     @Override
     public Interview update(Interview interview) {
+        try {
+            transactionManager.initTransaction();
+            Address updateAddress = addressService.update(interview.getAddress());
+            User updateUser = userService.update(interview.getUser());
+            Vacancy updateVacancy = vacancyService.update(interview.getVacancy());
+            Interview updatedInterview = interviewDao.update(interview
+                    .withInterviewStatus(interview.getStatus())
+                    .withAddress(updateAddress)
+                    .withUser(updateUser)
+                    .withVacancy(updateVacancy)
+                    .withData(interview.getDate()));
+            return get(updatedInterview.getId());
+        } catch (InterruptedException e) {
+            LOGGER.warn("take connection interrupted");
+            Thread.currentThread().interrupt();
+        } catch (EntityUpdateException e) {
+            LOGGER.error("Failed to update interview information", e);
+        } catch (NotFoundEntityException e) {
+            LOGGER.error("there is no such interview in the database", e);
+        } finally {
+            transactionManager.commitTransaction();
+        }
         return null;
     }
 }

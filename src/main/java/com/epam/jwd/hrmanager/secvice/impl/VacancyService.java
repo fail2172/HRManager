@@ -4,10 +4,8 @@ import com.epam.jwd.hrmanager.dao.EntityDao;
 import com.epam.jwd.hrmanager.dao.VacancyDao;
 import com.epam.jwd.hrmanager.db.TransactionManager;
 import com.epam.jwd.hrmanager.exeption.EntityUpdateException;
-import com.epam.jwd.hrmanager.model.Account;
-import com.epam.jwd.hrmanager.model.City;
-import com.epam.jwd.hrmanager.model.Employer;
-import com.epam.jwd.hrmanager.model.Vacancy;
+import com.epam.jwd.hrmanager.exeption.NotFoundEntityException;
+import com.epam.jwd.hrmanager.model.*;
 import com.epam.jwd.hrmanager.secvice.EntityService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -81,6 +79,24 @@ public class VacancyService implements EntityService<Vacancy> {
 
     @Override
     public Vacancy update(Vacancy vacancy) {
+        try {
+            Employer updateEmployer = employerDao.create(vacancy.getEmployer());
+            City updateCity = cityDao.create(vacancy.getCity());
+            Vacancy updatedVacancy = vacancyDao.update(vacancy
+                    .withTitle(vacancy.getTitle())
+                    .withSalary(vacancy.getSalary())
+                    .withEmployer(updateEmployer))
+                    .withCity(updateCity)
+                    .withDescription(vacancy.getDescription().orElse(null));
+            return get(updatedVacancy.getId());
+        } catch (InterruptedException e) {
+            LOGGER.warn("take connection interrupted");
+            Thread.currentThread().interrupt();
+        } catch (EntityUpdateException e) {
+            LOGGER.error("Failed to update vacancy information", e);
+        } catch (NotFoundEntityException e) {
+            LOGGER.error("there is no such vacancy in the database", e);
+        }
         return null;
     }
 }

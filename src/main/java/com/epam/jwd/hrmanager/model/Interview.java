@@ -1,6 +1,5 @@
 package com.epam.jwd.hrmanager.model;
 
-
 import java.sql.Date;
 
 public class Interview implements Entity{
@@ -50,6 +49,10 @@ public class Interview implements Entity{
         return date;
     }
 
+    public Interview withInterviewStatus(InterviewStatus status) {
+        return new Interview(id, status, address, user, vacancy, date);
+    }
+
     public Interview withAddress(Address address) {
         return new Interview(id, status, address, user, vacancy, date);
     }
@@ -59,6 +62,10 @@ public class Interview implements Entity{
     }
 
     public Interview withVacancy(Vacancy vacancy) {
+        return new Interview(id, status, address, user, vacancy, date);
+    }
+
+    public Interview withData(Date date) {
         return new Interview(id, status, address, user, vacancy, date);
     }
 

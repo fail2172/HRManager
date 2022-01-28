@@ -36,15 +36,15 @@ public class MethodVacancyDao extends CommonDao<Vacancy> implements VacancyDao {
     );
 
 
-    private MethodVacancyDao(ConnectionPool connectionPool){
+    private MethodVacancyDao(ConnectionPool connectionPool) {
         super(LOGGER, connectionPool);
     }
 
-    static MethodVacancyDao getInstance(ConnectionPool connectionPool){
-        if(instance == null){
+    static MethodVacancyDao getInstance(ConnectionPool connectionPool) {
+        if (instance == null) {
             lock.lock();
             {
-                if(instance == null){
+                if (instance == null) {
                     instance = new MethodVacancyDao(connectionPool);
                 }
             }
@@ -79,13 +79,14 @@ public class MethodVacancyDao extends CommonDao<Vacancy> implements VacancyDao {
      */
     @Override
     protected void fillEntity(PreparedStatement statement, Vacancy vacancy) throws SQLException {
-        statement.setLong(1, ZERO);
-        statement.setString(2, vacancy.getTitle());
-        statement.setBigDecimal(3, vacancy.getSalary());
-        statement.setString(4, vacancy.getDescription().orElse(EMPTY_LINE));
-        statement.setLong(5, vacancy.getCity().getId());
-        statement.setLong(6, vacancy.getEmployer().getId());
-        statement.setString(7, composeHashCode(vacancy));
+        fillFields(statement, vacancy);
+    }
+
+    @Override
+    protected void updateEntity(PreparedStatement statement, Vacancy vacancy) throws SQLException {
+        fillFields(statement, vacancy);
+        statement.setLong(1, vacancy.getId());
+        statement.setLong(8, vacancy.getId());
     }
 
     @Override
@@ -115,7 +116,17 @@ public class MethodVacancyDao extends CommonDao<Vacancy> implements VacancyDao {
         return receiveForeignKey(vacancy, CITY_ID_FIELD_NAME);
     }
 
-    private String composeHashCode(Vacancy vacancy){
+    private void fillFields(PreparedStatement statement, Vacancy vacancy) throws SQLException {
+        statement.setLong(1, ZERO);
+        statement.setString(2, vacancy.getTitle());
+        statement.setBigDecimal(3, vacancy.getSalary());
+        statement.setString(4, vacancy.getDescription().orElse(EMPTY_LINE));
+        statement.setLong(5, vacancy.getCity().getId());
+        statement.setLong(6, vacancy.getEmployer().getId());
+        statement.setString(7, composeHashCode(vacancy));
+    }
+
+    private String composeHashCode(Vacancy vacancy) {
         return vacancy.getTitle() + vacancy.getSalary() + vacancy.getCity().getId() + vacancy.getEmployer().getId();
     }
 }

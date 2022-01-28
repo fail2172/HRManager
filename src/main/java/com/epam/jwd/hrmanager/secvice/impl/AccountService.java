@@ -4,6 +4,7 @@ import com.epam.jwd.hrmanager.dao.AccountDao;
 import com.epam.jwd.hrmanager.dao.EntityDao;
 import com.epam.jwd.hrmanager.db.TransactionManager;
 import com.epam.jwd.hrmanager.exeption.EntityUpdateException;
+import com.epam.jwd.hrmanager.exeption.NotFoundEntityException;
 import com.epam.jwd.hrmanager.model.Account;
 import com.epam.jwd.hrmanager.model.User;
 import com.epam.jwd.hrmanager.secvice.EntityService;
@@ -45,9 +46,11 @@ public class AccountService implements EntityService<Account> {
 
     @Override
     public Account get(Long id) {
+        transactionManager.initTransaction();
         Account account = accountDao.read(id).orElse(null);
         final Long userId = accountDao.receiveUserId(account).orElse(null);
         User user = userDao.read(userId).orElse(null);
+        transactionManager.commitTransaction();
         return Objects.requireNonNull(account).withUser(user);
     }
 
@@ -61,6 +64,7 @@ public class AccountService implements EntityService<Account> {
     @Override
     public Account add(Account account) {
         try {
+            transactionManager.initTransaction();
             final Account addedAccount = accountDao.create(account
                     .withUser(userDao.create(account.getUser())));
             return get(addedAccount.getId());
@@ -68,12 +72,33 @@ public class AccountService implements EntityService<Account> {
             LOGGER.error("Error adding address to database", e);
         } catch (InterruptedException e) {
             LOGGER.warn("take connection interrupted");
+        } finally {
+            transactionManager.commitTransaction();
         }
         return null;
     }
 
     @Override
     public Account update(Account account) {
+        try {
+            transactionManager.initTransaction();
+            User updateUser = userDao.create(account.getUser());
+            Account updatedAccount = accountDao.update(account
+                    .withLogin(account.getLogin())
+                    .withEmail(account.getEmail())
+                    .withPassword(account.getPassword())
+                    .withUser(updateUser));
+            return get(updatedAccount.getId());
+        } catch (InterruptedException e) {
+            LOGGER.warn("take connection interrupted");
+            Thread.currentThread().interrupt();
+        } catch (EntityUpdateException e) {
+            LOGGER.error("Failed to update account information", e);
+        } catch (NotFoundEntityException e) {
+            LOGGER.error("there is no such account in the database", e);
+        } finally {
+            transactionManager.commitTransaction();
+        }
         return null;
     }
 }

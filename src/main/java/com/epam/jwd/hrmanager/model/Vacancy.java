@@ -51,11 +51,23 @@ public class Vacancy implements Entity{
         return city;
     }
 
+    public Vacancy withTitle(String title){
+        return new Vacancy(id, title, salary, employer, city, description);
+    }
+
+    public Vacancy withSalary(BigDecimal salary){
+        return new Vacancy(id, title, salary, employer, city, description);
+    }
+
     public Vacancy withEmployer(Employer employer){
         return new Vacancy(id, title, salary, employer, city, description);
     }
 
     public Vacancy withCity(City city){
+        return new Vacancy(id, title, salary, employer, city, description);
+    }
+
+    public Vacancy withDescription(String description){
         return new Vacancy(id, title, salary, employer, city, description);
     }
 

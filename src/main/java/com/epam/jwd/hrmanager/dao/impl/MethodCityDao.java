@@ -74,6 +74,13 @@ public class MethodCityDao extends CommonDao<City> implements EntityDao<City> {
     }
 
     @Override
+    protected void updateEntity(PreparedStatement statement, City city) throws SQLException {
+        statement.setLong(1, city.getId());
+        statement.setString(2, city.getName());
+        statement.setLong(3, city.getId());
+    }
+
+    @Override
     protected void fillUniqueField(PreparedStatement statement, City city) throws SQLException {
         statement.setString(1, city.getName());
     }

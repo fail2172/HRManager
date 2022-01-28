@@ -76,6 +76,14 @@ public class MethodEmployerDao extends CommonDao<Employer> implements EntityDao<
     }
 
     @Override
+    protected void updateEntity(PreparedStatement statement, Employer employer) throws SQLException {
+        statement.setLong(1, employer.getId());
+        statement.setString(2, employer.getName());
+        statement.setString(3, employer.getDescription().orElse(EMPTY_LINE));
+        statement.setLong(4, employer.getId());
+    }
+
+    @Override
     protected void fillUniqueField(PreparedStatement statement, Employer employer) throws SQLException {
         statement.setString(1, employer.getName());
     }

@@ -2,6 +2,8 @@ package com.epam.jwd.hrmanager.secvice.impl;
 
 import com.epam.jwd.hrmanager.dao.EntityDao;
 import com.epam.jwd.hrmanager.exeption.EntityUpdateException;
+import com.epam.jwd.hrmanager.exeption.NotFoundEntityException;
+import com.epam.jwd.hrmanager.model.Interview;
 import com.epam.jwd.hrmanager.model.User;
 import com.epam.jwd.hrmanager.secvice.EntityService;
 import org.apache.logging.log4j.LogManager;
@@ -60,6 +62,20 @@ public class UserService implements EntityService<User> {
 
     @Override
     public User update(User user) {
+        try {
+            User updatedUser = userDao.update(user
+                    .withRole(user.getRole())
+                    .withFirstName(user.getFirstName())
+                    .withSecondName(user.getSecondName()));
+            return get(updatedUser.getId());
+        } catch (InterruptedException e) {
+            LOGGER.warn("take connection interrupted");
+            Thread.currentThread().interrupt();
+        } catch (EntityUpdateException e) {
+            LOGGER.error("Failed to update user information", e);
+        } catch (NotFoundEntityException e) {
+            LOGGER.error("there is no such user in the database", e);
+        }
         return null;
     }
 }

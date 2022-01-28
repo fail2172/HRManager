@@ -73,6 +73,13 @@ public class MethodStreetDao extends CommonDao<Street> implements EntityDao<Stre
     }
 
     @Override
+    protected void updateEntity(PreparedStatement statement, Street street) throws SQLException {
+        statement.setLong(1, street.getId());
+        statement.setString(2, street.getName());
+        statement.setLong(3, street.getId());
+    }
+
+    @Override
     protected void fillUniqueField(PreparedStatement statement, Street entity) throws SQLException {
         statement.setString(1, entity.getName());
     }

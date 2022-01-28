@@ -49,7 +49,7 @@ public abstract class CommonDao<T extends Entity> implements EntityDao<T> {
         this.selectByIdExpression = this.selectAllExpression + SPACE + format(WHERE_FIELD, getIdFieldName());
         this.insertSql = format(INSERT_INTO, getTableName(), join(COMMA, getFields()), join(COMMA, insertParams()));
         this.selectByUField = this.selectAllExpression + SPACE + format(WHERE_FIELD, getUniqueFieldName());
-        this.updateExpression = format(UPDATE_SET, getTableName(), updateParams()) + format(WHERE_FIELD, getUniqueFieldName());
+        this.updateExpression = format(UPDATE_SET, getTableName(), join(COMMA, updateParams())) + SPACE + format(WHERE_FIELD, getIdFieldName());
     }
 
     private List<String> insertParams() {
@@ -110,14 +110,20 @@ public abstract class CommonDao<T extends Entity> implements EntityDao<T> {
         return Collections.emptyList();
     }
 
+    /**
+     * Метод получает сущность с её реальным id и проверяет есть ли такой в базе.
+     * Далее он обновляет все поля сущности.
+     * Если оказалось так, что новая обновлённая сущность является копией уже существующей,
+     * то обновление не будет произведено, а просто вернётся сущность которая уже существовала
+     * в базе(с другим идентификатором)
+     */
     @Override
     public T update(T t) throws InterruptedException, EntityUpdateException, NotFoundEntityException {
         try {
             search(selectByIdExpression, ps -> ps.setLong(1, t.getId()), this::extractResultCheckingException)
                     .orElseThrow(() -> new NotFoundEntityException("This entity is not in the database"));
-            executePreparedUpdate(updateExpression, ps -> fillUniqueField(ps, t));
-            return search(selectByUField, ps -> fillEntity(ps, t), this::extractResultCheckingException)
-                    .orElseThrow(() -> new EntityUpdateException("Unable to add changes to database"));
+            executePreparedUpdate(updateExpression, ps -> updateEntity(ps, t));
+            return search(selectByUField, st -> fillUniqueField(st, t), this::extractResultCheckingException).orElseThrow(() -> new EntityUpdateException("Unable to add changes to database"));
         } catch (InterruptedException e) {
             logger.warn("take connection interrupted");
             Thread.currentThread().interrupt();
@@ -294,6 +300,8 @@ public abstract class CommonDao<T extends Entity> implements EntityDao<T> {
     protected abstract List<String> getFields();
 
     protected abstract void fillEntity(PreparedStatement statement, T entity) throws SQLException;
+
+    protected abstract void updateEntity(PreparedStatement statement, T entity) throws SQLException;
 
     protected abstract void fillUniqueField(PreparedStatement statement, T entity) throws SQLException;
 

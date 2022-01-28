@@ -41,6 +41,18 @@ public class Account implements Entity {
         return user;
     }
 
+    public Account withLogin(String login) {
+        return new Account(id, login, email, password, user);
+    }
+
+    public Account withEmail(String email) {
+        return new Account(id, login, email, password, user);
+    }
+
+    public Account withPassword(String password) {
+        return new Account(id, login, email, password, user);
+    }
+
     public Account withUser(User user) {
         return new Account(id, login, email, password, user);
     }

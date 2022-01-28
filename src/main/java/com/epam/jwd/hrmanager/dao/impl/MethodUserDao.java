@@ -75,11 +75,14 @@ public class MethodUserDao extends CommonDao<User> implements EntityDao<User> {
      */
     @Override
     protected void fillEntity(PreparedStatement statement, User user) throws SQLException {
-        statement.setLong(1, ZERO);
-        statement.setString(2, user.getFirstName());
-        statement.setString(3, user.getSecondName());
-        statement.setString(4, user.getRole().toString());
-        statement.setString(5, composeHashCode(user));
+        fillFields(statement, user);
+    }
+
+    @Override
+    protected void updateEntity(PreparedStatement statement, User user) throws SQLException {
+        fillFields(statement, user);
+        statement.setLong(1, user.getId());
+        statement.setLong(6, user.getId());
     }
 
     @Override
@@ -95,6 +98,14 @@ public class MethodUserDao extends CommonDao<User> implements EntityDao<User> {
                 resultSet.getString(FIRST_NAME_FIELD_NAME),
                 resultSet.getString(SECOND_NAME_FIELD_NAME)
         );
+    }
+
+    private void fillFields(PreparedStatement statement, User user) throws SQLException {
+        statement.setLong(1, ZERO);
+        statement.setString(2, user.getFirstName());
+        statement.setString(3, user.getSecondName());
+        statement.setString(4, user.getRole().toString());
+        statement.setString(5, composeHashCode(user));
     }
 
     private String composeHashCode(User user) {

@@ -7,13 +7,12 @@ import com.epam.jwd.hrmanager.secvice.ServiceFactory;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 public class ServiceFactoryImpl implements ServiceFactory {
 
     private static final String SERVICE_NOT_FOUND = "Could not create service for %s class";
-    private final Map<Class<?>, EntityService<?>> serviceByEntity = new ConcurrentHashMap<>();
+    private final Map<Class<?>, EntityService<?>> serviceByEntity = new HashMap<>();
     private final DaoFactory daoFactory = DaoFactory.getInstance();
 
     private ServiceFactoryImpl() {
