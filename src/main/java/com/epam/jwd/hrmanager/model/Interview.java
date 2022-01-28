@@ -1,6 +1,7 @@
 package com.epam.jwd.hrmanager.model;
 
-import java.util.Date;
+
+import java.sql.Date;
 
 public class Interview implements Entity{
 

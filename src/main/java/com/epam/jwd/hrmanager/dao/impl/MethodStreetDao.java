@@ -7,6 +7,7 @@ import com.epam.jwd.hrmanager.model.Street;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -21,6 +22,7 @@ public class MethodStreetDao extends CommonDao<Street> implements EntityDao<Stre
     private static final String STREET_TABLE_NAME = "street";
     private static final String ID_FIELD_NAME = "id";
     private static final String STREET_NAME_FIELD = "s_name";
+    private static final Integer ZERO = 0;
     private static final List<String> FIELDS = Arrays.asList(ID_FIELD_NAME, STREET_NAME_FIELD);
 
     private MethodStreetDao(ConnectionPool connectionPool) {
@@ -51,8 +53,28 @@ public class MethodStreetDao extends CommonDao<Street> implements EntityDao<Stre
     }
 
     @Override
+    protected String getUniqueFieldName() {
+        return STREET_NAME_FIELD;
+    }
+
+    @Override
     protected List<String> getFields() {
         return FIELDS;
+    }
+
+    /**
+     * При создании сущности, id подбирается автоматически, поэтому нет разницы
+     * какое число туда подставлять. Здесть подставляется нуль
+     */
+    @Override
+    protected void fillEntity(PreparedStatement statement, Street street) throws SQLException {
+        statement.setLong(1, ZERO);
+        statement.setString(2, street.getName());
+    }
+
+    @Override
+    protected void fillUniqueField(PreparedStatement statement, Street entity) throws SQLException {
+        statement.setString(1, entity.getName());
     }
 
     @Override

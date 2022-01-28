@@ -122,6 +122,7 @@ public class ConnectionService implements ConnectionPool {
     public Connection takeConnection() throws InterruptedException {
         lock.lock();
         try {
+            LOGGER.trace("take connection");
             while (availableConnections.isEmpty()) {
                 LOGGER.warn("No free connections!");
                 haveConnections.await();

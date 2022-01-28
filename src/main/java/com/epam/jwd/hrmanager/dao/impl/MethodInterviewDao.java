@@ -3,11 +3,14 @@ package com.epam.jwd.hrmanager.dao.impl;
 import com.epam.jwd.hrmanager.dao.CommonDao;
 import com.epam.jwd.hrmanager.dao.InterviewDao;
 import com.epam.jwd.hrmanager.db.ConnectionPool;
+import com.epam.jwd.hrmanager.model.Address;
 import com.epam.jwd.hrmanager.model.Interview;
 import com.epam.jwd.hrmanager.model.InterviewStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -20,16 +23,18 @@ public class MethodInterviewDao extends CommonDao<Interview> implements Intervie
     private static MethodInterviewDao instance;
     private static final ReentrantLock lock = new ReentrantLock();
     private static final Logger LOGGER = LogManager.getLogger(MethodInterviewDao.class);
-    private static final String INTERVIEW_TABLE_NAME = "interview i join interview_status s on i.status_id = s.id";
-    private static final String ID_FIELD_NAME = "i.id";
-    private static final String DATE_FIELD_NAME = "i.i_date";
-    private static final String ADDRESS_ID_FIELD_NAME = "i.address_id";
-    private static final String USER_ID_FIELD_NAME = "i.user_id";
-    private static final String VACANCY_ID_FIELD_NAME = "i.vacancy_id";
-    private static final String STATUS_FIELD_NAME = "s.s_name";
+    private static final String INTERVIEW_TABLE_NAME = "interview";
+    private static final String ID_FIELD_NAME = "id";
+    private static final String DATE_FIELD_NAME = "i_date";
+    private static final String ADDRESS_ID_FIELD_NAME = "address_id";
+    private static final String USER_ID_FIELD_NAME = "user_id";
+    private static final String VACANCY_ID_FIELD_NAME = "vacancy_id";
+    private static final String STATUS_FIELD_NAME = "i_status";
+    private static final String HASH = "i_hash";
+    private static final Integer ZERO = 0;
     private static final List<String> FIELDS = Arrays.asList(
             ID_FIELD_NAME, DATE_FIELD_NAME, ADDRESS_ID_FIELD_NAME,
-            USER_ID_FIELD_NAME, VACANCY_ID_FIELD_NAME, STATUS_FIELD_NAME
+            USER_ID_FIELD_NAME, VACANCY_ID_FIELD_NAME, STATUS_FIELD_NAME, HASH
     );
 
     private MethodInterviewDao(ConnectionPool connectionPool){
@@ -60,8 +65,33 @@ public class MethodInterviewDao extends CommonDao<Interview> implements Intervie
     }
 
     @Override
+    protected String getUniqueFieldName() {
+        return HASH;
+    }
+
+    @Override
     protected List<String> getFields() {
         return FIELDS;
+    }
+
+    /**
+     * При создании сущности, id подбирается автоматически, поэтому нет разницы
+     * какое число туда подставлять. Здесть подставляется нуль
+     */
+    @Override
+    protected void fillEntity(PreparedStatement statement, Interview interview) throws SQLException {
+        statement.setLong(1, ZERO);
+        statement.setDate(2, interview.getDate());
+        statement.setLong(3, interview.getAddress().getId());
+        statement.setLong(4, interview.getUser().getId());
+        statement.setLong(5, interview.getVacancy().getId());
+        statement.setString(6, interview.getStatus().toString());
+        statement.setString(7, composeHashCode(interview));
+    }
+
+    @Override
+    protected void fillUniqueField(PreparedStatement statement, Interview interview) throws SQLException {
+        statement.setString(1, composeHashCode(interview));
     }
 
     @Override
@@ -89,5 +119,13 @@ public class MethodInterviewDao extends CommonDao<Interview> implements Intervie
     @Override
     public Optional<Long> receiveVacancyId(Interview interview) {
         return receiveForeignKey(interview, VACANCY_ID_FIELD_NAME);
+    }
+
+    private String composeHashCode(Interview interview){
+        return String.valueOf(interview.getDate()) +
+                interview.getAddress().getId() +
+                interview.getUser().getId() +
+                interview.getVacancy().getId() +
+                interview.getStatus();
     }
 }

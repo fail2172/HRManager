@@ -8,6 +8,7 @@ import com.epam.jwd.hrmanager.model.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -19,24 +20,26 @@ public class MethodUserDao extends CommonDao<User> implements EntityDao<User> {
     private static MethodUserDao instance;
     private static final ReentrantLock lock = new ReentrantLock();
     private static final Logger LOGGER = LogManager.getLogger(MethodUserDao.class);
-    private static final String USER_TABLE_NAME = "hr_user u join user_role r on role_id = r.id";
-    private static final String ID_FIELD_NAME = "u.id";
-    private static final String FIRST_NAME_FIELD_NAME = "u.first_name";
-    private static final String SECOND_NAME_FIELD_NAME = "u.second_name";
-    private static final String U_ROLE_FIELD_NAME = "r.r_name";
+    private static final String USER_TABLE_NAME = "hr_user";
+    private static final String ID_FIELD_NAME = "id";
+    private static final String FIRST_NAME_FIELD_NAME = "first_name";
+    private static final String SECOND_NAME_FIELD_NAME = "second_name";
+    private static final String U_ROLE_FIELD_NAME = "r_name";
+    private static final String HASH = "u_hash";
+    private static final Integer ZERO = 0;
     private static final List<String> FIELDS = Arrays.asList(
-            ID_FIELD_NAME, FIRST_NAME_FIELD_NAME, SECOND_NAME_FIELD_NAME, U_ROLE_FIELD_NAME
+            ID_FIELD_NAME, FIRST_NAME_FIELD_NAME, SECOND_NAME_FIELD_NAME, U_ROLE_FIELD_NAME, HASH
     );
 
     private MethodUserDao(ConnectionPool connectionPool) {
         super(LOGGER, connectionPool);
     }
 
-    static MethodUserDao getInstance(ConnectionPool connectionPool){
-        if(instance == null){
+    static MethodUserDao getInstance(ConnectionPool connectionPool) {
+        if (instance == null) {
             lock.lock();
             {
-                if(instance == null){
+                if (instance == null) {
                     instance = new MethodUserDao(connectionPool);
                 }
             }
@@ -44,6 +47,7 @@ public class MethodUserDao extends CommonDao<User> implements EntityDao<User> {
         }
         return instance;
     }
+
 
     @Override
     protected String getTableName() {
@@ -56,8 +60,31 @@ public class MethodUserDao extends CommonDao<User> implements EntityDao<User> {
     }
 
     @Override
+    protected String getUniqueFieldName() {
+        return HASH;
+    }
+
+    @Override
     protected List<String> getFields() {
         return FIELDS;
+    }
+
+    /**
+     * При создании сущности, id подбирается автоматически, поэтому нет разницы
+     * какое число туда подставлять. Здесть подставляется нуль
+     */
+    @Override
+    protected void fillEntity(PreparedStatement statement, User user) throws SQLException {
+        statement.setLong(1, ZERO);
+        statement.setString(2, user.getFirstName());
+        statement.setString(3, user.getSecondName());
+        statement.setString(4, user.getRole().toString());
+        statement.setString(5, composeHashCode(user));
+    }
+
+    @Override
+    protected void fillUniqueField(PreparedStatement statement, User user) throws SQLException {
+        statement.setString(1, composeHashCode(user));
     }
 
     @Override
@@ -68,5 +95,9 @@ public class MethodUserDao extends CommonDao<User> implements EntityDao<User> {
                 resultSet.getString(FIRST_NAME_FIELD_NAME),
                 resultSet.getString(SECOND_NAME_FIELD_NAME)
         );
+    }
+
+    private String composeHashCode(User user) {
+        return user.getFirstName() + user.getSecondName() + user.getRole();
     }
 }

@@ -7,12 +7,15 @@ import com.epam.jwd.hrmanager.model.Address;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.locks.ReentrantLock;
+
+import static java.lang.String.join;
 
 public class MethodAddressDao extends CommonDao<Address> implements AddressDao {
 
@@ -25,21 +28,22 @@ public class MethodAddressDao extends CommonDao<Address> implements AddressDao {
     private static final String FLAT_NUMBER_FIELD_NAME = "flat_number";
     private static final String CITY_ID_FIELD_NAME = "city_id";
     private static final String STREET_ID_FIELD_NAME = "street_id";
+    private static final String HASH = "a_hash";
+    private static final Integer ZERO = 0;
     private static final List<String> FIELDS = Arrays.asList(
-            ID_FIELD_NAME, HOUSE_NUMBER_FIELD_NAME,
-            FLAT_NUMBER_FIELD_NAME,CITY_ID_FIELD_NAME,
-            STREET_ID_FIELD_NAME
+            ID_FIELD_NAME, CITY_ID_FIELD_NAME, STREET_ID_FIELD_NAME,
+            HOUSE_NUMBER_FIELD_NAME, FLAT_NUMBER_FIELD_NAME, HASH
     );
 
     private MethodAddressDao(ConnectionPool connectionPool) {
         super(LOGGER, connectionPool);
     }
 
-    static MethodAddressDao getInstance(ConnectionPool connectionPool){
-        if(instance == null){
+    static MethodAddressDao getInstance(ConnectionPool connectionPool) {
+        if (instance == null) {
             lock.lock();
             {
-                if(instance == null){
+                if (instance == null) {
                     instance = new MethodAddressDao(connectionPool);
                 }
             }
@@ -59,17 +63,41 @@ public class MethodAddressDao extends CommonDao<Address> implements AddressDao {
     }
 
     @Override
+    protected String getUniqueFieldName() {
+        return HASH;
+    }
+
+    @Override
     protected List<String> getFields() {
         return FIELDS;
+    }
+
+    /**
+     * При создании сущности, id подбирается автоматически, поэтому нет разницы
+     * какое число туда подставлять. Здесть подставляется нуль
+     */
+    @Override
+    protected void fillEntity(PreparedStatement statement, Address address) throws SQLException {
+        statement.setLong(1, ZERO);
+        statement.setLong(2, address.getCity().getId());
+        statement.setLong(3, address.getStreet().getId());
+        statement.setInt(4, address.getHoseNumber());
+        statement.setInt(5, address.getFlatNumber().orElse(0));
+        statement.setString(6, composeHashCode(address));
+    }
+
+    @Override
+    protected void fillUniqueField(PreparedStatement statement, Address address) throws SQLException {
+        statement.setString(1, composeHashCode(address));
     }
 
     @Override
     protected Address extractResultSet(ResultSet resultSet) throws SQLException {
         return new Address(
                 resultSet.getLong(ID_FIELD_NAME),
+                null, null,
                 resultSet.getInt(HOUSE_NUMBER_FIELD_NAME),
-                resultSet.getInt(FLAT_NUMBER_FIELD_NAME),
-                null, null
+                resultSet.getInt(FLAT_NUMBER_FIELD_NAME)
         );
     }
 
@@ -81,5 +109,12 @@ public class MethodAddressDao extends CommonDao<Address> implements AddressDao {
     @Override
     public Optional<Long> receiveStreetId(Address address) {
         return receiveForeignKey(address, STREET_ID_FIELD_NAME);
+    }
+
+    private String composeHashCode(Address address) {
+        return String.valueOf(address.getCity().getId()) +
+                address.getStreet().getId() +
+                address.getHoseNumber() +
+                address.getFlatNumber();
     }
 }

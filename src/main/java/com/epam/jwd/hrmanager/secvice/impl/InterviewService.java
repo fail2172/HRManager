@@ -2,8 +2,11 @@ package com.epam.jwd.hrmanager.secvice.impl;
 
 import com.epam.jwd.hrmanager.dao.InterviewDao;
 import com.epam.jwd.hrmanager.db.TransactionManager;
+import com.epam.jwd.hrmanager.exeption.EntityUpdateException;
 import com.epam.jwd.hrmanager.model.*;
 import com.epam.jwd.hrmanager.secvice.EntityService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 import java.util.Objects;
@@ -12,17 +15,18 @@ import java.util.stream.Collectors;
 
 public class InterviewService implements EntityService<Interview> {
 
-    private static InterviewService instance;
+    private static final TransactionManager transactionManager = TransactionManager.getInstance();
+    private static final Logger LOGGER = LogManager.getLogger(AddressService.class);
     private static final ReentrantLock lock = new ReentrantLock();
+    private static InterviewService instance;
 
     private final InterviewDao interviewDao;
     private final EntityService<Address> addressService;
     private final EntityService<User> userService;
     private final EntityService<Vacancy> vacancyService;
-    private static final TransactionManager transactionManager = TransactionManager.getInstance();
 
     private InterviewService(InterviewDao interviewDao, EntityService<Address> addressService,
-                             EntityService<User> userService, EntityService<Vacancy> vacancyService){
+                             EntityService<User> userService, EntityService<Vacancy> vacancyService) {
         this.interviewDao = interviewDao;
         this.addressService = addressService;
         this.userService = userService;
@@ -30,11 +34,11 @@ public class InterviewService implements EntityService<Interview> {
     }
 
     static InterviewService getInstance(InterviewDao interviewDao, EntityService<Address> addressService,
-                                        EntityService<User> userService, EntityService<Vacancy> vacancyService){
-        if(instance == null){
+                                        EntityService<User> userService, EntityService<Vacancy> vacancyService) {
+        if (instance == null) {
             lock.lock();
             {
-                if(instance == null){
+                if (instance == null) {
                     instance = new InterviewService(interviewDao, addressService, userService, vacancyService);
                 }
             }
@@ -62,5 +66,29 @@ public class InterviewService implements EntityService<Interview> {
         return interviewDao.read().stream()
                 .map(interview -> get(interview.getId()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Interview add(Interview interview) {
+        try {
+            transactionManager.initTransaction();
+            final Interview addedInterview = interviewDao.create(interview
+                    .withAddress(addressService.add(interview.getAddress()))
+                    .withUser(userService.add(interview.getUser()))
+                    .withVacancy(vacancyService.add(interview.getVacancy())));
+            return get(addedInterview.getId());
+        } catch (EntityUpdateException e) {
+            LOGGER.error("Error adding address to database", e);
+        } catch (InterruptedException e) {
+            LOGGER.warn("take connection interrupted");
+        } finally {
+            transactionManager.commitTransaction();
+        }
+        return null;
+    }
+
+    @Override
+    public Interview update(Interview interview) {
+        return null;
     }
 }

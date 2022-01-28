@@ -5,6 +5,7 @@ import com.epam.jwd.hrmanager.model.*;
 import com.epam.jwd.hrmanager.secvice.EntityService;
 import com.epam.jwd.hrmanager.secvice.ServiceFactory;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;

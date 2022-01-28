@@ -10,7 +10,7 @@ public class Address implements Entity {
     private final int hoseNumber;
     private final Integer flatNumber;
 
-    public Address(Long id, int hoseNumber, Integer flatNumber, City city, Street street) {
+    public Address(Long id, City city, Street street, int hoseNumber, Integer flatNumber) {
         this.id = id;
         this.city = city;
         this.street = street;
@@ -18,8 +18,8 @@ public class Address implements Entity {
         this.flatNumber = flatNumber;
     }
 
-    public Address(int hoseNumber, Integer flatNumber, City city, Street street) {
-        this(null, hoseNumber, flatNumber, city, street);
+    public Address(City city, Street street, int hoseNumber, Integer flatNumber) {
+        this(null, city, street, hoseNumber, flatNumber);
     }
 
     public int getHoseNumber() {
@@ -45,11 +45,11 @@ public class Address implements Entity {
     }
 
     public Address withCity(City city) {
-        return new Address(id,  hoseNumber, flatNumber, city, street);
+        return new Address(id, city, street, hoseNumber, flatNumber);
     }
 
     public Address withStreet(Street street) {
-        return new Address(id,  hoseNumber, flatNumber, city, street);
+        return new Address(id, city, street, hoseNumber, flatNumber);
     }
 
     @Override

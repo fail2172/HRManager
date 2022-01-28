@@ -7,6 +7,7 @@ import com.epam.jwd.hrmanager.model.Account;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -25,6 +26,7 @@ public class MethodAccountDao extends CommonDao<Account> implements AccountDao {
     private static final String LOGIN_FIELD_NAME = "login";
     private static final String EMAIL_FIELD_NAME = "email";
     private static final String PASSWORD_FIELD_NAME = "a_password";
+    private static final Integer ZERO = 0;
     private static final List<String> FIELDS = Arrays.asList(
             ID_FIELD_NAME, USER_ID_FIELD_NAME,
             LOGIN_FIELD_NAME, EMAIL_FIELD_NAME,
@@ -64,8 +66,31 @@ public class MethodAccountDao extends CommonDao<Account> implements AccountDao {
     }
 
     @Override
+    protected String getUniqueFieldName() {
+        return LOGIN_FIELD_NAME;
+    }
+
+    @Override
     protected List<String> getFields() {
         return FIELDS;
+    }
+
+    /**
+     * При создании сущности, id подбирается автоматически, поэтому нет разницы
+     * какое число туда подставлять. Здесь подставляется нуль
+     */
+    @Override
+    protected void fillEntity(PreparedStatement statement, Account account) throws SQLException {
+        statement.setLong(1, ZERO);
+        statement.setLong(2, account.getUser().getId());
+        statement.setString(3, account.getLogin());
+        statement.setString(4, account.getEmail());
+        statement.setString(5, account.getPassword());
+    }
+
+    @Override
+    protected void fillUniqueField(PreparedStatement statement, Account account) throws SQLException {
+        statement.setString(1, account.getLogin());
     }
 
     @Override

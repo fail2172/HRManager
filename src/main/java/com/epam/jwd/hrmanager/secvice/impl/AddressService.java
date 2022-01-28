@@ -2,10 +2,14 @@ package com.epam.jwd.hrmanager.secvice.impl;
 
 import com.epam.jwd.hrmanager.dao.AddressDao;
 import com.epam.jwd.hrmanager.dao.EntityDao;
+import com.epam.jwd.hrmanager.db.TransactionManager;
+import com.epam.jwd.hrmanager.exeption.EntityUpdateException;
 import com.epam.jwd.hrmanager.model.Address;
 import com.epam.jwd.hrmanager.model.City;
 import com.epam.jwd.hrmanager.model.Street;
 import com.epam.jwd.hrmanager.secvice.EntityService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 import java.util.Objects;
@@ -14,8 +18,10 @@ import java.util.stream.Collectors;
 
 public class AddressService implements EntityService<Address> {
 
-    private static AddressService instance;
+    private static final TransactionManager transactionManager = TransactionManager.getInstance();
+    private static final Logger LOGGER = LogManager.getLogger(AddressService.class);
     private static final ReentrantLock lock = new ReentrantLock();
+    private static AddressService instance;
 
     private final AddressDao addressDao;
     private final EntityDao<City> cityDao;
@@ -55,5 +61,25 @@ public class AddressService implements EntityService<Address> {
         return addressDao.read().stream()
                 .map(address -> this.get(address.getId()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Address add(Address address) {
+        try {
+            final Address addedAddress = addressDao.create(address
+                    .withCity(cityDao.create(address.getCity()))
+                    .withStreet(streetDao.create(address.getStreet())));
+            return get(addedAddress.getId());
+        } catch (EntityUpdateException e) {
+            LOGGER.error("Error adding address to database", e);
+        } catch (InterruptedException e) {
+            LOGGER.warn("take connection interrupted");
+        }
+        return null;
+    }
+
+    @Override
+    public Address update(Address address) {
+        return null;
     }
 }

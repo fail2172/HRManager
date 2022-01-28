@@ -7,6 +7,7 @@ import com.epam.jwd.hrmanager.model.Vacancy;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -26,9 +27,12 @@ public class MethodVacancyDao extends CommonDao<Vacancy> implements VacancyDao {
     private static final String DESCRIPTION_FIELD_NAME = "description";
     private static final String CITY_ID_FIELD_NAME = "city_id";
     private static final String EMPLOYER_ID_FIELD_NAME = "employer_id";
+    private static final String HASH = "v_hash";
+    private static final String EMPTY_LINE = "";
+    private static final Integer ZERO = 0;
     private static final List<String> FIELDS = Arrays.asList(
             ID_FIELD_NAME, TITLE_NAME_FIELD, SALARY_FIELD_NAME,
-            DESCRIPTION_FIELD_NAME, CITY_ID_FIELD_NAME, EMPLOYER_ID_FIELD_NAME
+            DESCRIPTION_FIELD_NAME, CITY_ID_FIELD_NAME, EMPLOYER_ID_FIELD_NAME, HASH
     );
 
 
@@ -60,8 +64,33 @@ public class MethodVacancyDao extends CommonDao<Vacancy> implements VacancyDao {
     }
 
     @Override
+    protected String getUniqueFieldName() {
+        return HASH;
+    }
+
+    @Override
     protected List<String> getFields() {
         return FIELDS;
+    }
+
+    /**
+     * При создании сущности, id подбирается автоматически, поэтому нет разницы
+     * какое число туда подставлять. Здесть подставляется нуль
+     */
+    @Override
+    protected void fillEntity(PreparedStatement statement, Vacancy vacancy) throws SQLException {
+        statement.setLong(1, ZERO);
+        statement.setString(2, vacancy.getTitle());
+        statement.setBigDecimal(3, vacancy.getSalary());
+        statement.setString(4, vacancy.getDescription().orElse(EMPTY_LINE));
+        statement.setLong(5, vacancy.getCity().getId());
+        statement.setLong(6, vacancy.getEmployer().getId());
+        statement.setString(7, composeHashCode(vacancy));
+    }
+
+    @Override
+    protected void fillUniqueField(PreparedStatement statement, Vacancy vacancy) throws SQLException {
+        statement.setString(1, composeHashCode(vacancy));
     }
 
     @Override
@@ -84,5 +113,9 @@ public class MethodVacancyDao extends CommonDao<Vacancy> implements VacancyDao {
     @Override
     public Optional<Long> receiveCityId(Vacancy vacancy) {
         return receiveForeignKey(vacancy, CITY_ID_FIELD_NAME);
+    }
+
+    private String composeHashCode(Vacancy vacancy){
+        return vacancy.getTitle() + vacancy.getSalary() + vacancy.getCity().getId() + vacancy.getEmployer().getId();
     }
 }

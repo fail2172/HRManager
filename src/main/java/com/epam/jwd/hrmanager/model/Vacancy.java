@@ -43,6 +43,14 @@ public class Vacancy implements Entity{
         return Optional.of(description);
     }
 
+    public Employer getEmployer() {
+        return employer;
+    }
+
+    public City getCity() {
+        return city;
+    }
+
     public Vacancy withEmployer(Employer employer){
         return new Vacancy(id, title, salary, employer, city, description);
     }

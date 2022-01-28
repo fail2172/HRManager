@@ -10,4 +10,8 @@ public interface EntityService<T extends Entity> {
 
     List<T> findAll();
 
+    T add(T t);
+
+    T update(T t);
+
 }

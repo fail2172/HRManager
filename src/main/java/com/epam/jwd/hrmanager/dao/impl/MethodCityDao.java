@@ -8,6 +8,7 @@ import com.epam.jwd.hrmanager.model.City;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -22,6 +23,7 @@ public class MethodCityDao extends CommonDao<City> implements EntityDao<City> {
     private static final String CITY_TABLE_NAME = "city";
     private static final String ID_FIELD_NAME = "id";
     private static final String CITY_NAME_FIELD = "c_name";
+    private static final Integer ZERO = 0;
     private static final List<String> FIELDS = Arrays.asList(ID_FIELD_NAME, CITY_NAME_FIELD);
 
     private MethodCityDao(ConnectionPool connectionPool) {
@@ -52,8 +54,28 @@ public class MethodCityDao extends CommonDao<City> implements EntityDao<City> {
     }
 
     @Override
+    protected String getUniqueFieldName() {
+        return CITY_NAME_FIELD;
+    }
+
+    @Override
     protected List<String> getFields() {
         return FIELDS;
+    }
+
+    /**
+     * При создании сущности, id подбирается автоматически, поэтому нет разницы
+     * какое число туда подставлять. Здесть подставляется нуль
+     */
+    @Override
+    protected void fillEntity(PreparedStatement statement, City city) throws SQLException {
+        statement.setLong(1, ZERO);
+        statement.setString(2, city.getName());
+    }
+
+    @Override
+    protected void fillUniqueField(PreparedStatement statement, City city) throws SQLException {
+        statement.setString(1, city.getName());
     }
 
     @Override
