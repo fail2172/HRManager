@@ -24,12 +24,13 @@ import static java.lang.String.join;
 
 public abstract class CommonDao<T extends Entity> implements EntityDao<T> {
 
-    private static final String SELECT_ALL_FROM = "select %s from";
+    private static final String SELECT_ALL_FROM = "select %s from %s";
     private static final String SELECT_FOREIGN_KEY = "select %s as foreignKey from";
     private static final String INSERT_INTO = "insert into %s (%s) values(%s)";
     private static final String FOREIGN_KEY_NAME = "foreignKey";
     private static final String WHERE_FIELD = "where %s = ?";
     private static final String UPDATE_SET = "update %s set %s";
+    private static final String DELETE_FROM = "delete from %s";
     private static final String COMMA = ", ";
     private static final String SPACE = " ";
 
@@ -39,17 +40,19 @@ public abstract class CommonDao<T extends Entity> implements EntityDao<T> {
     private final String selectAllExpression;
     private final String insertSql;
     private final String updateExpression;
+    private final String deleteExpression;
 
     protected final ConnectionPool connectionPool;
 
     protected CommonDao(Logger logger, ConnectionPool connectionPool) {
         this.logger = logger;
         this.connectionPool = connectionPool;
-        this.selectAllExpression = format(SELECT_ALL_FROM, join(COMMA, getFields())) + SPACE + getTableName();
+        this.selectAllExpression = format(SELECT_ALL_FROM, join(COMMA, getFields()), getTableName());
         this.selectByIdExpression = this.selectAllExpression + SPACE + format(WHERE_FIELD, getIdFieldName());
         this.insertSql = format(INSERT_INTO, getTableName(), join(COMMA, getFields()), join(COMMA, insertParams()));
         this.selectByUField = this.selectAllExpression + SPACE + format(WHERE_FIELD, getUniqueFieldName());
         this.updateExpression = format(UPDATE_SET, getTableName(), join(COMMA, updateParams())) + SPACE + format(WHERE_FIELD, getIdFieldName());
+        this.deleteExpression = format(DELETE_FROM, getTableName()) + SPACE + format(WHERE_FIELD, getIdFieldName());
     }
 
     private List<String> insertParams() {
@@ -133,7 +136,14 @@ public abstract class CommonDao<T extends Entity> implements EntityDao<T> {
 
     @Override
     public boolean delete(Long id) {
-        return false;
+        try {
+            final int updatedLines = executePreparedUpdate(deleteExpression, ps -> ps.setLong(1, id));
+            return updatedLines > 0;
+        } catch (InterruptedException e) {
+            logger.warn("take connection interrupted");
+            Thread.currentThread().interrupt();
+            return false;
+        }
     }
 
     private Long extractForeignKey(ResultSet resultSet) throws EntityExtractionFailedException {
@@ -207,11 +217,11 @@ public abstract class CommonDao<T extends Entity> implements EntityDao<T> {
         return Optional.empty();
     }
 
-    private void executePreparedUpdate(String sql, StatementPreparator statementPreparation) throws InterruptedException {
+    private int executePreparedUpdate(String sql, StatementPreparator statementPreparation) throws InterruptedException {
         try (Connection conn = connectionPool.takeConnection();
              final PreparedStatement statement = conn.prepareStatement(sql)) {
             statementPreparation.accept(statement);
-            statement.executeUpdate();
+            return statement.executeUpdate();
         } catch (SQLException e) {
             logger.error("sql exception occurred", e);
         } catch (InterruptedException e) {
@@ -219,6 +229,7 @@ public abstract class CommonDao<T extends Entity> implements EntityDao<T> {
             Thread.currentThread().interrupt();
             throw e;
         }
+        return 0;
     }
 
     private T extractResultCheckingException(ResultSet resultSet) throws EntityExtractionFailedException {

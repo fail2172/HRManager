@@ -47,24 +47,32 @@ public class VacancyService implements EntityService<Vacancy> {
 
     @Override
     public Vacancy get(Long id) {
+        transactionManager.initTransaction();
         Vacancy vacancy = vacancyDao.read(id).orElse(null);
         final Long employerId = vacancyDao.receiveEmployerId(vacancy).orElse(null);
         final Long cityId = vacancyDao.receiveCityId(vacancy).orElse(null);
         Employer employer = employerDao.read(employerId).orElse(null);
         City city = cityDao.read(cityId).orElse(null);
+        transactionManager.commitTransaction();
         return Objects.requireNonNull(vacancy).withEmployer(employer).withCity(city);
     }
 
     @Override
     public List<Vacancy> findAll() {
-        return vacancyDao.read().stream()
-                .map(vacancy -> get(vacancy.getId()))
-                .collect(Collectors.toList());
+        try {
+            transactionManager.initTransaction();
+            return vacancyDao.read().stream()
+                    .map(vacancy -> get(vacancy.getId()))
+                    .collect(Collectors.toList());
+        } finally {
+            transactionManager.commitTransaction();
+        }
     }
 
     @Override
     public Vacancy add(Vacancy vacancy) {
         try {
+            transactionManager.initTransaction();
             final Vacancy addedVacancy = vacancyDao.create(vacancy
                     .withEmployer(employerDao.create(vacancy.getEmployer()))
                     .withCity(cityDao.create(vacancy.getCity())));
@@ -73,6 +81,8 @@ public class VacancyService implements EntityService<Vacancy> {
             LOGGER.error("Error adding address to database", e);
         } catch (InterruptedException e) {
             LOGGER.warn("take connection interrupted");
+        } finally {
+            transactionManager.commitTransaction();
         }
         return null;
     }
@@ -80,6 +90,7 @@ public class VacancyService implements EntityService<Vacancy> {
     @Override
     public Vacancy update(Vacancy vacancy) {
         try {
+            transactionManager.initTransaction();
             Employer updateEmployer = employerDao.create(vacancy.getEmployer());
             City updateCity = cityDao.create(vacancy.getCity());
             Vacancy updatedVacancy = vacancyDao.update(vacancy
@@ -96,7 +107,19 @@ public class VacancyService implements EntityService<Vacancy> {
             LOGGER.error("Failed to update vacancy information", e);
         } catch (NotFoundEntityException e) {
             LOGGER.error("there is no such vacancy in the database", e);
+        } finally {
+            transactionManager.commitTransaction();
         }
         return null;
+    }
+
+    @Override
+    public boolean delete(Long id) {
+        try {
+            transactionManager.initTransaction();
+            return vacancyDao.delete(id);
+        } finally {
+            transactionManager.commitTransaction();
+        }
     }
 }

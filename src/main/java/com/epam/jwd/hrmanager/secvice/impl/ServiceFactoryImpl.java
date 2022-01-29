@@ -57,6 +57,12 @@ public class ServiceFactoryImpl implements ServiceFactory {
                     AccountDao accountDao = (AccountDao) daoFactory.daoFor(Account.class);
                     userDao = daoFactory.daoFor(User.class);
                     return AccountService.getInstance(accountDao, userDao);
+                case "City":
+                    cityDao = daoFactory.daoFor(City.class);
+                    return CityService.getInstance(cityDao);
+                case "Street":
+                    streetDao = daoFactory.daoFor(Street.class);
+                    return StreetService.getInstance(streetDao);
                 default:
                     throw new IllegalStateException(String.format(SERVICE_NOT_FOUND, className));
             }

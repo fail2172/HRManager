@@ -61,9 +61,14 @@ public class AddressService implements EntityService<Address> {
 
     @Override
     public List<Address> findAll() {
-        return addressDao.read().stream()
-                .map(address -> this.get(address.getId()))
-                .collect(Collectors.toList());
+        try {
+            transactionManager.initTransaction();
+            return addressDao.read().stream()
+                    .map(address -> this.get(address.getId()))
+                    .collect(Collectors.toList());
+        } finally {
+            transactionManager.commitTransaction();
+        }
     }
 
     @Override
@@ -109,5 +114,15 @@ public class AddressService implements EntityService<Address> {
             transactionManager.commitTransaction();
         }
         return null;
+    }
+
+    @Override
+    public boolean delete(Long id) {
+        try {
+            transactionManager.initTransaction();
+            return addressDao.delete(id);
+        } finally {
+            transactionManager.commitTransaction();
+        }
     }
 }

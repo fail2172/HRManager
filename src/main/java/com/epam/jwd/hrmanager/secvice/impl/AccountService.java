@@ -56,9 +56,14 @@ public class AccountService implements EntityService<Account> {
 
     @Override
     public List<Account> findAll() {
-        return accountDao.read().stream()
-                .map(account -> get(account.getId()))
-                .collect(Collectors.toList());
+        try {
+            transactionManager.initTransaction();
+            return accountDao.read().stream()
+                    .map(account -> get(account.getId()))
+                    .collect(Collectors.toList());
+        } finally {
+            transactionManager.commitTransaction();
+        }
     }
 
     @Override
@@ -71,7 +76,7 @@ public class AccountService implements EntityService<Account> {
         } catch (EntityUpdateException e) {
             LOGGER.error("Error adding address to database", e);
         } catch (InterruptedException e) {
-            LOGGER.warn("take connection interrupted");
+            LOGGER.warn("take connection interrupted", e);
         } finally {
             transactionManager.commitTransaction();
         }
@@ -100,5 +105,15 @@ public class AccountService implements EntityService<Account> {
             transactionManager.commitTransaction();
         }
         return null;
+    }
+
+    @Override
+    public boolean delete(Long id) {
+        try {
+            transactionManager.initTransaction();
+            return accountDao.delete(id);
+        } finally {
+            transactionManager.commitTransaction();
+        }
     }
 }

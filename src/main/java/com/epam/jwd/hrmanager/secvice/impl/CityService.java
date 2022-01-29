@@ -4,8 +4,7 @@ import com.epam.jwd.hrmanager.dao.EntityDao;
 import com.epam.jwd.hrmanager.db.TransactionManager;
 import com.epam.jwd.hrmanager.exeption.EntityUpdateException;
 import com.epam.jwd.hrmanager.exeption.NotFoundEntityException;
-import com.epam.jwd.hrmanager.model.Interview;
-import com.epam.jwd.hrmanager.model.User;
+import com.epam.jwd.hrmanager.model.City;
 import com.epam.jwd.hrmanager.secvice.EntityService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,27 +12,25 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class UserService implements EntityService<User> {
+public class CityService implements EntityService<City> {
 
     private static final TransactionManager transactionManager = TransactionManager.getInstance();
-    private static final Logger LOGGER = LogManager.getLogger(UserService.class);
+    private static final Logger LOGGER = LogManager.getLogger(AddressService.class);
     private static final ReentrantLock lock = new ReentrantLock();
+    private static CityService instance;
 
+    private final EntityDao<City> cityDao;
 
-    private static UserService instance;
-
-    private final EntityDao<User> userDao;
-
-    UserService(EntityDao<User> userDao) {
-        this.userDao = userDao;
+    private CityService(EntityDao<City> cityDao) {
+        this.cityDao = cityDao;
     }
 
-    static UserService getInstance(EntityDao<User> userDao) {
+    static CityService getInstance(EntityDao<City> cityDao) {
         if (instance == null) {
             lock.lock();
             {
                 if (instance == null) {
-                    instance = new UserService(userDao);
+                    instance = new CityService(cityDao);
                 }
             }
             lock.unlock();
@@ -41,35 +38,37 @@ public class UserService implements EntityService<User> {
         return instance;
     }
 
+
     @Override
-    public User get(Long id) {
+    public City get(Long id) {
         try {
             transactionManager.initTransaction();
-            return userDao.read(id).orElse(null);
+            return cityDao.read(id).orElse(null);
         } finally {
             transactionManager.commitTransaction();
         }
     }
 
     @Override
-    public List<User> findAll() {
+    public List<City> findAll() {
         try {
             transactionManager.initTransaction();
-            return userDao.read();
+            return cityDao.read();
         } finally {
             transactionManager.commitTransaction();
         }
     }
 
     @Override
-    public User add(User user) {
+    public City add(City city) {
         try {
             transactionManager.initTransaction();
-            return userDao.create(user);
+            return cityDao.create(city);
         } catch (EntityUpdateException e) {
-            LOGGER.error("Error adding address to database", e);
+            LOGGER.error("Error adding city to database", e);
         } catch (InterruptedException e) {
-            LOGGER.warn("take connection interrupted");
+            LOGGER.warn("take connection interrupted", e);
+            Thread.currentThread().interrupt();
         } finally {
             transactionManager.commitTransaction();
         }
@@ -77,21 +76,17 @@ public class UserService implements EntityService<User> {
     }
 
     @Override
-    public User update(User user) {
+    public City update(City city) {
         try {
             transactionManager.initTransaction();
-            User updatedUser = userDao.update(user
-                    .withRole(user.getRole())
-                    .withFirstName(user.getFirstName())
-                    .withSecondName(user.getSecondName()));
-            return get(updatedUser.getId());
+            return cityDao.update(city);
         } catch (InterruptedException e) {
             LOGGER.warn("take connection interrupted");
             Thread.currentThread().interrupt();
         } catch (EntityUpdateException e) {
-            LOGGER.error("Failed to update user information", e);
+            LOGGER.error("Failed to update city information", e);
         } catch (NotFoundEntityException e) {
-            LOGGER.error("there is no such user in the database", e);
+            LOGGER.error("there is no such city in the database", e);
         } finally {
             transactionManager.commitTransaction();
         }
@@ -102,7 +97,7 @@ public class UserService implements EntityService<User> {
     public boolean delete(Long id) {
         try {
             transactionManager.initTransaction();
-            return userDao.delete(id);
+            return cityDao.delete(id);
         } finally {
             transactionManager.commitTransaction();
         }

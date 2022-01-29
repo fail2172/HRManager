@@ -64,9 +64,14 @@ public class InterviewService implements EntityService<Interview> {
 
     @Override
     public List<Interview> findAll() {
-        return interviewDao.read().stream()
-                .map(interview -> get(interview.getId()))
-                .collect(Collectors.toList());
+        try {
+            transactionManager.initTransaction();
+            return interviewDao.read().stream()
+                    .map(interview -> get(interview.getId()))
+                    .collect(Collectors.toList());
+        } finally {
+            transactionManager.commitTransaction();
+        }
     }
 
     @Override
@@ -113,5 +118,15 @@ public class InterviewService implements EntityService<Interview> {
             transactionManager.commitTransaction();
         }
         return null;
+    }
+
+    @Override
+    public boolean delete(Long id) {
+        try {
+            transactionManager.initTransaction();
+            return interviewDao.delete(id);
+        } finally {
+            transactionManager.commitTransaction();
+        }
     }
 }
