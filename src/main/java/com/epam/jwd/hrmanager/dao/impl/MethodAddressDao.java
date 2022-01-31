@@ -104,13 +104,13 @@ public class MethodAddressDao extends CommonDao<Address> implements AddressDao {
     }
 
     @Override
-    public Optional<Long> receiveCityId(Address address) {
-        return receiveForeignKey(address, CITY_ID_FIELD_NAME);
+    public Long receiveCityId(Address address) {
+        return ((Number) receiveEntityParam(address, CITY_ID_FIELD_NAME)).longValue();
     }
 
     @Override
-    public Optional<Long> receiveStreetId(Address address) {
-        return receiveForeignKey(address, STREET_ID_FIELD_NAME);
+    public Long receiveStreetId(Address address) {
+        return ((Number) receiveEntityParam(address, STREET_ID_FIELD_NAME)).longValue();
     }
 
     private String composeHashCode(Address address) {

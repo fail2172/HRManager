@@ -48,7 +48,7 @@ public class AccountService implements EntityService<Account> {
     public Account get(Long id) {
         transactionManager.initTransaction();
         Account account = accountDao.read(id).orElse(null);
-        final Long userId = accountDao.receiveUserId(account).orElse(null);
+        final Long userId = accountDao.receiveUserId(account);
         User user = userDao.read(userId).orElse(null);
         transactionManager.commitTransaction();
         return Objects.requireNonNull(account).withUser(user);

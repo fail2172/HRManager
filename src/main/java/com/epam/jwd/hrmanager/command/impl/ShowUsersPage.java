@@ -35,13 +35,10 @@ public class ShowUsersPage implements Command {
 
     @Override
     public CommandResponse execute(CommandRequest request) {
-//        EntityService<User> userService = ServiceFactory.getInstance().serviceFor(User.class);
-//        List<User> usersList = userService.findAll();
-//        request.addAttributeToJsp("users", usersList);
+        EntityService<User> userService = ServiceFactory.getInstance().serviceFor(User.class);
+        List<User> usersList = userService.findAll();
+        request.addAttributeToJsp("users", usersList);
 
-        List<User> users = Arrays.asList(new User(Role.ASPIRANT, "Artsiom", "Salauyou"),
-                new User(Role.EMPLOYEE, "Bob", "Jonson"));
-        request.addAttributeToJsp("users", users);
         return SHOW_USERS;
     }
 

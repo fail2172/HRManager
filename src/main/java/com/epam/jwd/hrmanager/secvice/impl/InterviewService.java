@@ -50,27 +50,27 @@ public class InterviewService implements EntityService<Interview> {
 
     @Override
     public Interview get(Long id) {
-        transactionManager.initTransaction();
+        //transactionManager.initTransaction();
         Interview interview = interviewDao.read(id).orElse(null);
-        final Long addressId = interviewDao.receiveAddressId(interview).orElse(null);
-        final Long userId = interviewDao.receiveUserId(interview).orElse(null);
-        final Long vacancyId = interviewDao.receiveVacancyId(interview).orElse(null);
+        final Long addressId = interviewDao.receiveAddressId(interview);
+        final Long userId = interviewDao.receiveUserId(interview);
+        final Long vacancyId = interviewDao.receiveVacancyId(interview);
         Address address = addressService.get(addressId);
         User user = userService.get(userId);
         Vacancy vacancy = vacancyService.get(vacancyId);
-        transactionManager.commitTransaction();
+        //transactionManager.commitTransaction();
         return Objects.requireNonNull(interview).withAddress(address).withUser(user).withVacancy(vacancy);
     }
 
     @Override
     public List<Interview> findAll() {
         try {
-            transactionManager.initTransaction();
+            //transactionManager.initTransaction();
             return interviewDao.read().stream()
                     .map(interview -> get(interview.getId()))
                     .collect(Collectors.toList());
         } finally {
-            transactionManager.commitTransaction();
+            //transactionManager.commitTransaction();
         }
     }
 

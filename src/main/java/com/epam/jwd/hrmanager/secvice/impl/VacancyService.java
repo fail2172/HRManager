@@ -49,8 +49,8 @@ public class VacancyService implements EntityService<Vacancy> {
     public Vacancy get(Long id) {
         transactionManager.initTransaction();
         Vacancy vacancy = vacancyDao.read(id).orElse(null);
-        final Long employerId = vacancyDao.receiveEmployerId(vacancy).orElse(null);
-        final Long cityId = vacancyDao.receiveCityId(vacancy).orElse(null);
+        final Long employerId = vacancyDao.receiveEmployerId(vacancy);
+        final Long cityId = vacancyDao.receiveCityId(vacancy);
         Employer employer = employerDao.read(employerId).orElse(null);
         City city = cityDao.read(cityId).orElse(null);
         transactionManager.commitTransaction();

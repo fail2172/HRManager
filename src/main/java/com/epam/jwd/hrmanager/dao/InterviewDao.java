@@ -6,10 +6,10 @@ import java.util.Optional;
 
 public interface InterviewDao extends EntityDao<Interview> {
 
-    Optional<Long> receiveAddressId(Interview interview);
+    Long receiveAddressId(Interview interview);
 
-    Optional<Long> receiveUserId(Interview interview);
+    Long receiveUserId(Interview interview);
 
-    Optional<Long> receiveVacancyId(Interview interview);
+    Long receiveVacancyId(Interview interview);
 
 }

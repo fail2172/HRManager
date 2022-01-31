@@ -79,6 +79,7 @@ public class ConnectionService implements ConnectionPool {
         lock.lock();
         try {
             if (!initialized) {
+                Class.forName("com.mysql.jdbc.Driver");
                 registerDrivers();
                 initialisationConnections();
                 collector = new ConnectionCollector();
@@ -86,6 +87,8 @@ public class ConnectionService implements ConnectionPool {
                 return true;
             }
             return false;
+        } catch (ClassNotFoundException e) {
+            throw new CouldNotInitialiseConnectionService("Failed to register driver", e);
         } finally {
             lock.unlock();
         }

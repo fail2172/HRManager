@@ -4,7 +4,6 @@ import com.epam.jwd.hrmanager.dao.EntityDao;
 import com.epam.jwd.hrmanager.db.TransactionManager;
 import com.epam.jwd.hrmanager.exeption.EntityUpdateException;
 import com.epam.jwd.hrmanager.exeption.NotFoundEntityException;
-import com.epam.jwd.hrmanager.model.Interview;
 import com.epam.jwd.hrmanager.model.User;
 import com.epam.jwd.hrmanager.secvice.EntityService;
 import org.apache.logging.log4j.LogManager;

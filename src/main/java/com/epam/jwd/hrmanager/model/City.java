@@ -25,6 +25,10 @@ public class City implements Entity{
         return name;
     }
 
+    public City withName(String name){
+        return new City(id, name);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

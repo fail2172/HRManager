@@ -66,8 +66,4 @@ public final class TransactionConnectionService implements ConnectionPool {
             connectionPool.returnConnection(((ProxyConnection) connection).getConnection());
         }
     }
-
-    public static ConnectionService getInstance(ConnectionServiceContext context) {
-        return ConnectionPool.getInstance(context);
-    }
 }

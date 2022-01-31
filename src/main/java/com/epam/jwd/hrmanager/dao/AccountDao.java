@@ -6,6 +6,6 @@ import java.util.Optional;
 
 public interface AccountDao extends EntityDao<Account>{
 
-    Optional<Long> receiveUserId(Account account);
+    Long receiveUserId(Account account);
 
 }

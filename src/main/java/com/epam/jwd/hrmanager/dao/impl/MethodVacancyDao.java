@@ -107,13 +107,13 @@ public class MethodVacancyDao extends CommonDao<Vacancy> implements VacancyDao {
     }
 
     @Override
-    public Optional<Long> receiveEmployerId(Vacancy vacancy) {
-        return receiveForeignKey(vacancy, EMPLOYER_ID_FIELD_NAME);
+    public Long receiveEmployerId(Vacancy vacancy) {
+        return ((Number) receiveEntityParam(vacancy, EMPLOYER_ID_FIELD_NAME)).longValue();
     }
 
     @Override
-    public Optional<Long> receiveCityId(Vacancy vacancy) {
-        return receiveForeignKey(vacancy, CITY_ID_FIELD_NAME);
+    public Long receiveCityId(Vacancy vacancy) {
+        return ((Number) receiveEntityParam(vacancy, CITY_ID_FIELD_NAME)).longValue();
     }
 
     private void fillFields(PreparedStatement statement, Vacancy vacancy) throws SQLException {

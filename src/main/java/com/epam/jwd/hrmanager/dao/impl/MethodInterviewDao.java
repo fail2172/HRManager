@@ -108,18 +108,18 @@ public class MethodInterviewDao extends CommonDao<Interview> implements Intervie
     }
 
     @Override
-    public Optional<Long> receiveAddressId(Interview interview) {
-        return receiveForeignKey(interview, ADDRESS_ID_FIELD_NAME);
+    public Long receiveAddressId(Interview interview) {
+        return ((Number) receiveEntityParam(interview, ADDRESS_ID_FIELD_NAME)).longValue();
     }
 
     @Override
-    public Optional<Long> receiveUserId(Interview interview) {
-        return receiveForeignKey(interview, USER_ID_FIELD_NAME);
+    public Long receiveUserId(Interview interview) {
+        return ((Number) receiveEntityParam(interview, USER_ID_FIELD_NAME)).longValue();
     }
 
     @Override
-    public Optional<Long> receiveVacancyId(Interview interview) {
-        return receiveForeignKey(interview, VACANCY_ID_FIELD_NAME);
+    public Long receiveVacancyId(Interview interview) {
+        return ((Number) receiveEntityParam(interview, VACANCY_ID_FIELD_NAME)).longValue();
     }
 
     private void fillFields(PreparedStatement statement, Interview interview) throws SQLException {

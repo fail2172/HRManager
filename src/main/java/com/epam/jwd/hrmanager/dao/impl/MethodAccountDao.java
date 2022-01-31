@@ -51,8 +51,8 @@ public class MethodAccountDao extends CommonDao<Account> implements AccountDao {
     }
 
     @Override
-    public Optional<Long> receiveUserId(Account account) {
-        return receiveForeignKey(account, USER_ID_FIELD_NAME);
+    public Long receiveUserId(Account account) {
+        return ((Number) receiveEntityParam(account, USER_ID_FIELD_NAME)).longValue();
     }
 
     @Override

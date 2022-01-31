@@ -6,8 +6,8 @@ import java.util.Optional;
 
 public interface VacancyDao extends EntityDao<Vacancy>{
 
-    Optional<Long> receiveEmployerId(Vacancy vacancy);
+    Long receiveEmployerId(Vacancy vacancy);
 
-    Optional<Long> receiveCityId(Vacancy vacancy);
+    Long receiveCityId(Vacancy vacancy);
 
 }

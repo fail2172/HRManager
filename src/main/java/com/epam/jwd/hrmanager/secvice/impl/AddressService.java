@@ -51,8 +51,8 @@ public class AddressService implements EntityService<Address> {
     public Address get(Long id) {
         transactionManager.initTransaction();
         Address address = addressDao.read(id).orElse(null);
-        final Long cityId = addressDao.receiveCityId(address).orElse(null);
-        final Long streetId = addressDao.receiveStreetId(address).orElse(null);
+        final Long cityId = addressDao.receiveCityId(address);
+        final Long streetId = addressDao.receiveStreetId(address);
         final City city = cityDao.read(cityId).orElse(null);
         final Street street = streetDao.read(streetId).orElse(null);
         transactionManager.commitTransaction();

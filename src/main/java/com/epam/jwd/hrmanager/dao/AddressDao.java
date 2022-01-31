@@ -6,8 +6,8 @@ import java.util.Optional;
 
 public interface AddressDao extends EntityDao<Address> {
 
-    Optional<Long> receiveCityId(Address address);
+    Long receiveCityId(Address address);
 
-    Optional<Long> receiveStreetId(Address address);
+    Long receiveStreetId(Address address);
 
 }
