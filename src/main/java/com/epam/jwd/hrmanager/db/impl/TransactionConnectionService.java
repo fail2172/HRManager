@@ -37,16 +37,6 @@ public final class TransactionConnectionService implements ConnectionPool {
     }
 
     @Override
-    public boolean init() throws CouldNotInitialiseConnectionService {
-        return connectionPool.init();
-    }
-
-    @Override
-    public boolean shutDown() {
-        return connectionPool.shutDown();
-    }
-
-    @Override
     public boolean isInitialized() {
         return connectionPool.isInitialized();
     }

@@ -1,9 +1,6 @@
 package com.epam.jwd.hrmanager.controller;
 
 import com.epam.jwd.hrmanager.command.Command;
-import com.epam.jwd.hrmanager.db.ConnectionPool;
-import com.epam.jwd.hrmanager.db.ConnectionPoolFactory;
-import com.epam.jwd.hrmanager.db.ConnectionPoolType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -23,12 +20,6 @@ public class Controller extends HttpServlet {
     public static final String COMMAND_NAME_PARAM = "command";
 
     private final RequestFactory requestFactory = RequestFactory.getInstance();
-
-    @Override
-    public void init() {
-        ConnectionPool connectionPool = ConnectionPoolFactory.getInstance().getBy(ConnectionPoolType.TRANSACTION_CONNECTION_POOL);
-        connectionPool.init();
-    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
@@ -69,11 +60,5 @@ public class Controller extends HttpServlet {
             final RequestDispatcher dispatcher = req.getRequestDispatcher(desiredPath);
             dispatcher.forward(req, resp);
         }
-    }
-
-    @Override
-    public void destroy() {
-        ConnectionPool connectionPool = ConnectionPoolFactory.getInstance().getBy(ConnectionPoolType.TRANSACTION_CONNECTION_POOL);
-        connectionPool.shutDown();
     }
 }

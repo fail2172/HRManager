@@ -74,28 +74,22 @@ public class ConnectionService implements ConnectionPool {
         return getInstance(ConnectionServiceContext.of().build());
     }
 
-    @Override
-    public boolean init() {
+
+    void init() {
         lock.lock();
         try {
             if (!initialized) {
-                Class.forName("com.mysql.jdbc.Driver");
                 registerDrivers();
                 initialisationConnections();
                 collector = new ConnectionCollector();
                 initialized = true;
-                return true;
             }
-            return false;
-        } catch (ClassNotFoundException e) {
-            throw new CouldNotInitialiseConnectionService("Failed to register driver", e);
         } finally {
             lock.unlock();
         }
     }
 
-    @Override
-    public boolean shutDown() {
+    void shutDown() {
         lock.lock();
         try {
             if (initialized) {
@@ -103,9 +97,7 @@ public class ConnectionService implements ConnectionPool {
                 closeConnections();
                 collector.shutDown();
                 initialized = false;
-                return true;
             }
-            return false;
         } finally {
             lock.unlock();
         }
@@ -145,6 +137,7 @@ public class ConnectionService implements ConnectionPool {
     public void returnConnection(Connection connection) {
         lock.lock();
         try {
+            LOGGER.trace("return connection");
             if (givenAwayConnections.remove((ProxyConnection) connection)) {
                 connection.setAutoCommit(true);
                 availableConnections.add((ProxyConnection) connection);
