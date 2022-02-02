@@ -1,4 +1,4 @@
-package com.epam.jwd.hrmanager.command;
+package com.epam.jwd.hrmanager.controller;
 
 public interface CommandResponse {
 

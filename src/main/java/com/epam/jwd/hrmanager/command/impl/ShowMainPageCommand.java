@@ -1,8 +1,8 @@
 package com.epam.jwd.hrmanager.command.impl;
 
 import com.epam.jwd.hrmanager.command.Command;
-import com.epam.jwd.hrmanager.command.CommandRequest;
-import com.epam.jwd.hrmanager.command.CommandResponse;
+import com.epam.jwd.hrmanager.controller.CommandRequest;
+import com.epam.jwd.hrmanager.controller.CommandResponse;
 
 public class ShowMainPageCommand implements Command {
 
@@ -10,7 +10,7 @@ public class ShowMainPageCommand implements Command {
 
     }
 
-    public static ShowMainPageCommand getInstance(){
+    static ShowMainPageCommand getInstance(){
         return Holder.INSTANCE;
     }
 

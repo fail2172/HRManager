@@ -208,15 +208,6 @@ public abstract class CommonDao<T extends Entity> implements EntityDao<T> {
         }
     }
 
-    private Long extractForeignKey(ResultSet resultSet) throws EntityExtractionFailedException {
-        try {
-            return resultSet.getLong(FIELD_NAME);
-        } catch (SQLException e) {
-            logger.error("sql exception occurred extracting entity from ResultSet", e);
-            throw new EntityExtractionFailedException("failed to extract entity parameter id", e);
-        }
-    }
-
     private Object extractField(ResultSet resultSet) throws EntityExtractionFailedException {
         try {
             return resultSet.getObject(FIELD_NAME);
@@ -231,6 +222,19 @@ public abstract class CommonDao<T extends Entity> implements EntityDao<T> {
             final String selectField = format(SELECT_FIELD, fieldName, getTableName()) + SPACE + format(WHERE_FIELD, getIdFieldName());
             return search(selectField, st -> st.setLong(1, entity.getId()), this::extractField);
         } catch (InterruptedException e) {
+            logger.warn("take connection interrupted");
+            Thread.currentThread().interrupt();
+        }
+        return null;
+    }
+
+    protected Optional<T> receiveEntityByParam(String fieldName, Object param){
+        final String selectByField = format(SELECT_ALL_FROM, join(COMMA, getFields()), getTableName()) + SPACE + format(WHERE_FIELD, fieldName);
+        try {
+            return Optional.ofNullable(
+                    search(selectByField, st -> st.setObject(1, param), this::extractResultCheckingException)
+            );
+        }  catch (InterruptedException e) {
             logger.warn("take connection interrupted");
             Thread.currentThread().interrupt();
         }

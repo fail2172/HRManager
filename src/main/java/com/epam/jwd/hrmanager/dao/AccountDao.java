@@ -8,4 +8,6 @@ public interface AccountDao extends EntityDao<Account>{
 
     Long receiveUserId(Account account);
 
+    Optional<Account> receiveAccountByLogin(String email);
+
 }

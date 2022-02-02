@@ -7,36 +7,37 @@ import com.epam.jwd.hrmanager.exeption.EntityUpdateException;
 import com.epam.jwd.hrmanager.exeption.NotFoundEntityException;
 import com.epam.jwd.hrmanager.model.Account;
 import com.epam.jwd.hrmanager.model.User;
-import com.epam.jwd.hrmanager.secvice.EntityService;
+import com.epam.jwd.hrmanager.secvice.AccountService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
-public class AccountService implements EntityService<Account> {
+public class AccountServiceImpl implements AccountService {
 
     private static final TransactionManager transactionManager = TransactionManager.getInstance();
     private static final Logger LOGGER = LogManager.getLogger(AddressService.class);
     private static final ReentrantLock lock = new ReentrantLock();
-    private static AccountService instance;
+    private static AccountServiceImpl instance;
 
     private final AccountDao accountDao;
     private final EntityDao<User> userDao;
 
-    private AccountService(AccountDao accountDao, EntityDao<User> userDao) {
+    private AccountServiceImpl(AccountDao accountDao, EntityDao<User> userDao) {
         this.accountDao = accountDao;
         this.userDao = userDao;
     }
 
-    static AccountService getInstance(AccountDao accountDao, EntityDao<User> userDao){
+    static AccountServiceImpl getInstance(AccountDao accountDao, EntityDao<User> userDao){
         if(instance == null){
             lock.lock();
             {
                 if(instance == null){
-                    instance = new AccountService(accountDao, userDao);
+                    instance = new AccountServiceImpl(accountDao, userDao);
                 }
             }
             lock.unlock();
@@ -115,5 +116,11 @@ public class AccountService implements EntityService<Account> {
         } finally {
             transactionManager.commitTransaction();
         }
+    }
+
+    @Override
+    public Optional<Account> authenticate(String login, String password) {
+        Optional<Account> readAccount = accountDao.receiveAccountByLogin(login);
+        return readAccount.filter(account -> account.getPassword().equals(password));
     }
 }

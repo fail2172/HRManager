@@ -1,8 +1,6 @@
 package com.epam.jwd.hrmanager.controller;
 
 import com.epam.jwd.hrmanager.command.Command;
-import com.epam.jwd.hrmanager.command.CommandRegistry;
-import com.epam.jwd.hrmanager.command.CommandResponse;
 import com.epam.jwd.hrmanager.db.ConnectionPool;
 import com.epam.jwd.hrmanager.db.ConnectionPoolFactory;
 import com.epam.jwd.hrmanager.db.ConnectionPoolType;
@@ -19,21 +17,36 @@ import java.io.IOException;
 
 @WebServlet("/controller")
 public class Controller extends HttpServlet {
-    private static final long serialVersionUID = 8238816177981432076L;
 
+    private static final long serialVersionUID = 8238816177981432076L;
     private static final Logger LOGGER = LogManager.getLogger(Controller.class);
+    public static final String COMMAND_NAME_PARAM = "command";
+
+    private final RequestFactory requestFactory = RequestFactory.getInstance();
 
     @Override
-    public void init() throws ServletException {
+    public void init() {
         ConnectionPool connectionPool = ConnectionPoolFactory.getInstance().getBy(ConnectionPoolType.TRANSACTION_CONNECTION_POOL);
         connectionPool.init();
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
-        final String commandName = req.getParameter("command");
+        LOGGER.trace("caught req and resp in doGet method");
+        processRequest(req, resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
+        LOGGER.trace("caught req and resp in doPost method");
+        processRequest(req, resp);
+    }
+
+    private void processRequest(HttpServletRequest req, HttpServletResponse resp){
+        final String commandName = req.getParameter(COMMAND_NAME_PARAM);
         final Command command = Command.of(commandName);
-        final CommandResponse commandResponse = command.execute(req::setAttribute);
+        final CommandRequest commandRequest = requestFactory.createRequest(req);
+        final CommandResponse commandResponse = command.execute(commandRequest);
         proceedWithResponse(req, resp, commandResponse);
     }
 

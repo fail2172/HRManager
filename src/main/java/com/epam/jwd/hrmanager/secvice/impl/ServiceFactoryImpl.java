@@ -56,7 +56,7 @@ public class ServiceFactoryImpl implements ServiceFactory {
                 case "Account":
                     AccountDao accountDao = (AccountDao) daoFactory.daoFor(Account.class);
                     userDao = daoFactory.daoFor(User.class);
-                    return AccountService.getInstance(accountDao, userDao);
+                    return AccountServiceImpl.getInstance(accountDao, userDao);
                 case "City":
                     cityDao = daoFactory.daoFor(City.class);
                     return CityService.getInstance(cityDao);

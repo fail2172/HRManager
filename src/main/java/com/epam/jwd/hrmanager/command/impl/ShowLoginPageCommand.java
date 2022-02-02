@@ -4,31 +4,27 @@ import com.epam.jwd.hrmanager.command.Command;
 import com.epam.jwd.hrmanager.controller.CommandRequest;
 import com.epam.jwd.hrmanager.controller.CommandResponse;
 import com.epam.jwd.hrmanager.controller.RequestFactory;
-import com.epam.jwd.hrmanager.secvice.impl.UserService;
 
 import java.util.concurrent.locks.ReentrantLock;
 
-public class ShowUsersPage implements Command {
+public class ShowLoginPageCommand implements Command {
 
-    private static final String USERS_ATTRIBUTE_NAME = "users";
-    private static final String USER_JSP_PATH = "/WEB-INF/jsp/users.jsp";
+    private static final String LOGIN_JSP_PATH = "/WEB-INF/jsp/login.jsp";
     private static final ReentrantLock lock = new ReentrantLock();
+    private static ShowLoginPageCommand instance;
 
-    private static ShowUsersPage instance;
     private final RequestFactory requestFactory;
-    private final UserService userService;
 
-    private ShowUsersPage(RequestFactory requestFactory, UserService userService) {
+    private ShowLoginPageCommand(RequestFactory requestFactory) {
         this.requestFactory = requestFactory;
-        this.userService = userService;
     }
 
-    static ShowUsersPage getInstance(RequestFactory requestFactory, UserService userService){
+    static ShowLoginPageCommand getInstance(RequestFactory requestFactory){
         if(instance == null){
             lock.lock();
             {
                 if(instance == null){
-                    instance = new ShowUsersPage(requestFactory, userService);
+                    instance = new ShowLoginPageCommand(requestFactory);
                 }
             }
             lock.unlock();
@@ -38,7 +34,6 @@ public class ShowUsersPage implements Command {
 
     @Override
     public CommandResponse execute(CommandRequest request) {
-        request.addAttributeToJsp(USERS_ATTRIBUTE_NAME, userService.findAll());
-        return requestFactory.createForwardResponse(USER_JSP_PATH);
+        return requestFactory.createForwardResponse(LOGIN_JSP_PATH);
     }
 }

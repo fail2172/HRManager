@@ -56,6 +56,11 @@ public class MethodAccountDao extends CommonDao<Account> implements AccountDao {
     }
 
     @Override
+    public Optional<Account> receiveAccountByLogin(String email) {
+        return receiveEntityByParam(LOGIN_FIELD_NAME, email);
+    }
+
+    @Override
     protected String getTableName() {
         return ACCOUNT_TABLE_NAME;
     }

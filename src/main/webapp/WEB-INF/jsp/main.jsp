@@ -5,9 +5,16 @@
     <title>Title</title>
 </head>
 <body>
-<h3>Main Page</h3>
-<h1>World hello</h1>
-<p>send from jsp</p>
-<a href="<c:url value="/controller?command=user_page"/>">user_page</a>
+<c:choose>
+    <c:when test="${not empty sessionScope.account}">
+        <h3>Hello, ${sessionScope.account.login}</h3>
+        <a href="<c:url value="/controller?command=user_page"/>">user_page</a>
+        <br>
+        <a href="<c:url value="/controller?command=logout"/>">logout</a>
+    </c:when>
+    <c:otherwise>
+        <a href="<c:url value="/controller?command=login_page"/>">login</a>
+    </c:otherwise>
+</c:choose>
 </body>
 </html>
