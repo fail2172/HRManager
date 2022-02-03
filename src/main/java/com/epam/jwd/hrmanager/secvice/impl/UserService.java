@@ -80,7 +80,6 @@ public class UserService implements EntityService<User> {
         try {
             transactionManager.initTransaction();
             User updatedUser = userDao.update(user
-                    .withRole(user.getRole())
                     .withFirstName(user.getFirstName())
                     .withSecondName(user.getSecondName()));
             return get(updatedUser.getId());

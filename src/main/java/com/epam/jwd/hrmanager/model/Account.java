@@ -7,17 +7,19 @@ public class Account implements Entity {
     private final String email;
     private final String password;
     private final User user;
+    private final Role role;
 
-    public Account(Long id, String login, String email, String password, User user) {
+    public Account(Long id, String login, String email, String password, User user, Role role) {
         this.id = id;
         this.login = login;
         this.email = email;
         this.password = password;
         this.user = user;
+        this.role = role;
     }
 
-    public Account(String login, String email, String password, User user) {
-        this(null, login, email, password, user);
+    public Account(String login, String email, String password, User user, Role role) {
+        this(null, login, email, password, user, role);
     }
 
     @Override
@@ -41,20 +43,28 @@ public class Account implements Entity {
         return user;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
     public Account withLogin(String login) {
-        return new Account(id, login, email, password, user);
+        return new Account(id, login, email, password, user, role);
     }
 
     public Account withEmail(String email) {
-        return new Account(id, login, email, password, user);
+        return new Account(id, login, email, password, user, role);
     }
 
     public Account withPassword(String password) {
-        return new Account(id, login, email, password, user);
+        return new Account(id, login, email, password, user, role);
     }
 
     public Account withUser(User user) {
-        return new Account(id, login, email, password, user);
+        return new Account(id, login, email, password, user, role);
+    }
+
+    public Account withRole(Role role) {
+        return new Account(id, login, email, password, user, role);
     }
 
     @Override
@@ -68,7 +78,8 @@ public class Account implements Entity {
         if (!login.equals(account.login)) return false;
         if (!email.equals(account.email)) return false;
         if (!password.equals(account.password)) return false;
-        return user.equals(account.user);
+        if (!user.equals(account.user)) return false;
+        return role == account.role;
     }
 
     @Override
@@ -78,6 +89,7 @@ public class Account implements Entity {
         result = 31 * result + email.hashCode();
         result = 31 * result + password.hashCode();
         result = 31 * result + user.hashCode();
+        result = 31 * result + role.hashCode();
         return result;
     }
 
@@ -89,6 +101,7 @@ public class Account implements Entity {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", user=" + user +
+                ", role=" + role +
                 '}';
     }
 }

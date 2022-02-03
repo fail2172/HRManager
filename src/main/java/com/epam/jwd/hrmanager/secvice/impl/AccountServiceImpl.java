@@ -93,7 +93,8 @@ public class AccountServiceImpl implements AccountService {
                     .withLogin(account.getLogin())
                     .withEmail(account.getEmail())
                     .withPassword(account.getPassword())
-                    .withUser(updateUser));
+                    .withUser(updateUser)
+                    .withRole(account.getRole()));
             return get(updatedAccount.getId());
         } catch (InterruptedException e) {
             LOGGER.warn("take connection interrupted");

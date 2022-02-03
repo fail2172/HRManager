@@ -10,7 +10,6 @@
     <c:forEach var="user" items="${requestScope.users}">
         <li>${user.firstName}</li>
         <li>${user.secondName}</li>
-        <li>${user.role}</li>
     </c:forEach>
 </ul>
 </body>

@@ -24,7 +24,7 @@ public class LoginCommand implements Command {
     private final RequestFactory requestFactory;
     private final AccountService accountService;
 
-    public LoginCommand(RequestFactory requestFactory, AccountService accountService) {
+    private LoginCommand(RequestFactory requestFactory, AccountService accountService) {
         this.requestFactory = requestFactory;
         this.accountService = accountService;
     }

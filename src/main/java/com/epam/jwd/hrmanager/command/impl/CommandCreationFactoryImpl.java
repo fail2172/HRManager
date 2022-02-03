@@ -34,6 +34,8 @@ public class CommandCreationFactoryImpl implements CommandCreationFactory {
                         (AccountService) serviceFactory.serviceFor(Account.class));
             case "logout":
                 return LogoutCommand.getInstance(requestFactory);
+            case "show_error":
+                return ShowErrorPageCommand.getInstance(requestFactory);
             default:
                 return ShowMainPageCommand.getInstance();
         }

@@ -4,6 +4,7 @@ import com.epam.jwd.hrmanager.dao.AccountDao;
 import com.epam.jwd.hrmanager.dao.CommonDao;
 import com.epam.jwd.hrmanager.db.ConnectionPool;
 import com.epam.jwd.hrmanager.model.Account;
+import com.epam.jwd.hrmanager.model.Role;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,11 +27,12 @@ public class MethodAccountDao extends CommonDao<Account> implements AccountDao {
     private static final String LOGIN_FIELD_NAME = "login";
     private static final String EMAIL_FIELD_NAME = "email";
     private static final String PASSWORD_FIELD_NAME = "a_password";
+    private static final String ROLE_FIELD_NAME = "a_role";
     private static final Integer ZERO = 0;
     private static final List<String> FIELDS = Arrays.asList(
             ID_FIELD_NAME, USER_ID_FIELD_NAME,
             LOGIN_FIELD_NAME, EMAIL_FIELD_NAME,
-            PASSWORD_FIELD_NAME
+            PASSWORD_FIELD_NAME, ROLE_FIELD_NAME
     );
 
     private MethodAccountDao(ConnectionPool connectionPool){
@@ -93,7 +95,7 @@ public class MethodAccountDao extends CommonDao<Account> implements AccountDao {
     protected void updateEntity(PreparedStatement statement, Account account) throws SQLException {
         fillFields(statement, account);
         statement.setLong(1, account.getId());
-        statement.setLong(6, account.getId());
+        statement.setLong(7, account.getId());
     }
 
     @Override
@@ -108,7 +110,8 @@ public class MethodAccountDao extends CommonDao<Account> implements AccountDao {
                 resultSet.getString(LOGIN_FIELD_NAME),
                 resultSet.getString(EMAIL_FIELD_NAME),
                 resultSet.getString(PASSWORD_FIELD_NAME),
-                null
+                null,
+                Role.of(resultSet.getString(ROLE_FIELD_NAME))
         );
     }
 
@@ -118,5 +121,6 @@ public class MethodAccountDao extends CommonDao<Account> implements AccountDao {
         statement.setString(3, account.getLogin());
         statement.setString(4, account.getEmail());
         statement.setString(5, account.getPassword());
+        statement.setString(6, account.getPassword());
     }
 }

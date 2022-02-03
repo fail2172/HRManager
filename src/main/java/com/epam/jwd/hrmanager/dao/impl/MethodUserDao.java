@@ -28,7 +28,7 @@ public class MethodUserDao extends CommonDao<User> implements EntityDao<User> {
     private static final String HASH = "u_hash";
     private static final Integer ZERO = 0;
     private static final List<String> FIELDS = Arrays.asList(
-            ID_FIELD_NAME, FIRST_NAME_FIELD_NAME, SECOND_NAME_FIELD_NAME, U_ROLE_FIELD_NAME, HASH
+            ID_FIELD_NAME, FIRST_NAME_FIELD_NAME, SECOND_NAME_FIELD_NAME, HASH
     );
 
     private MethodUserDao(ConnectionPool connectionPool) {
@@ -82,7 +82,7 @@ public class MethodUserDao extends CommonDao<User> implements EntityDao<User> {
     protected void updateEntity(PreparedStatement statement, User user) throws SQLException {
         fillFields(statement, user);
         statement.setLong(1, user.getId());
-        statement.setLong(6, user.getId());
+        statement.setLong(5, user.getId());
     }
 
     @Override
@@ -94,7 +94,6 @@ public class MethodUserDao extends CommonDao<User> implements EntityDao<User> {
     protected User extractResultSet(ResultSet resultSet) throws SQLException {
         return new User(
                 resultSet.getLong(ID_FIELD_NAME),
-                Role.of(resultSet.getString(U_ROLE_FIELD_NAME)),
                 resultSet.getString(FIRST_NAME_FIELD_NAME),
                 resultSet.getString(SECOND_NAME_FIELD_NAME)
         );
@@ -104,11 +103,10 @@ public class MethodUserDao extends CommonDao<User> implements EntityDao<User> {
         statement.setLong(1, ZERO);
         statement.setString(2, user.getFirstName());
         statement.setString(3, user.getSecondName());
-        statement.setString(4, user.getRole().toString());
-        statement.setString(5, composeHashCode(user));
+        statement.setString(4, composeHashCode(user));
     }
 
     private String composeHashCode(User user) {
-        return user.getFirstName() + user.getSecondName() + user.getRole();
+        return user.getFirstName() + user.getSecondName();
     }
 }
