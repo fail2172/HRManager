@@ -17,6 +17,7 @@ public class LoginCommand implements Command {
     private static final String ERROR_LOGIN_PASSWORD_ATTRIBUTE = "errorLoginPassMessage";
     private static final String ACCOUNT_SESSION_ATTRIBUTE = "account";
     private static final String LOGIN_REQUEST_PARAM_NAME = "login";
+    private static final String EMAIL_REQUEST_PARAM_NAME = "email";
     private static final String PASSWORD_REQUEST_PARAM_NAME = "password";
     private static final ReentrantLock lock = new ReentrantLock();
     private static LoginCommand instance;
@@ -48,8 +49,9 @@ public class LoginCommand implements Command {
             return null;
         }
         final String login = request.getParameter(LOGIN_REQUEST_PARAM_NAME);
+        final String email = request.getParameter(LOGIN_REQUEST_PARAM_NAME);
         final String password = request.getParameter(PASSWORD_REQUEST_PARAM_NAME);
-        Optional<Account> account = accountService.authenticate(login, password);
+        Optional<Account> account = accountService.authenticate(login, email, password);
         if(!account.isPresent()){
             request.addAttributeToJsp(ERROR_LOGIN_PASSWORD_ATTRIBUTE, INVALID_LOGIN_PASSWORD_MESSAGE);
             return requestFactory.createForwardResponse(LOGIN_JSP_PATH);

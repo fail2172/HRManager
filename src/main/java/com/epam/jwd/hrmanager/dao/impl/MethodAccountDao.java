@@ -35,15 +35,15 @@ public class MethodAccountDao extends CommonDao<Account> implements AccountDao {
             PASSWORD_FIELD_NAME, ROLE_FIELD_NAME
     );
 
-    private MethodAccountDao(ConnectionPool connectionPool){
+    private MethodAccountDao(ConnectionPool connectionPool) {
         super(LOGGER, connectionPool);
     }
 
-    static MethodAccountDao getInstance(ConnectionPool connectionPool){
-        if(instance == null){
+    static MethodAccountDao getInstance(ConnectionPool connectionPool) {
+        if (instance == null) {
             lock.lock();
             {
-                if(instance == null){
+                if (instance == null) {
                     instance = new MethodAccountDao(connectionPool);
                 }
             }
@@ -58,8 +58,17 @@ public class MethodAccountDao extends CommonDao<Account> implements AccountDao {
     }
 
     @Override
-    public Optional<Account> receiveAccountByLogin(String email) {
-        return receiveEntityByParam(LOGIN_FIELD_NAME, email);
+    public Optional<Account> receiveAccountByLogin(String login) {
+        return login != null
+                ? receiveEntityByParam(LOGIN_FIELD_NAME, login)
+                : Optional.empty();
+    }
+
+    @Override
+    public Optional<Account> receiveAccountByEmail(String email) {
+        return email != null
+                ? receiveEntityByParam(EMAIL_FIELD_NAME, email)
+                : Optional.empty();
     }
 
     @Override

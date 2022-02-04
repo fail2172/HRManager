@@ -132,11 +132,11 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Optional<Account> authenticate(String login, String password) {
-        if (login == null || password == null) {
+    public Optional<Account> authenticate(String login, String email, String password) {
+        if (password == null || (login == null && email == null)) {
             return Optional.empty();
         }
-        final Optional<Account> readAccount = accountDao.receiveAccountByLogin(login);
+        final Optional<Account> readAccount = tryReceiveAccount(login, email);
         final byte[] enteredPassword = password.getBytes(StandardCharsets.UTF_8);
         if (readAccount.isPresent()) {
             final byte[] hashedPassword = readAccount.get()
@@ -149,6 +149,11 @@ public class AccountServiceImpl implements AccountService {
             protectFromTimingAttack(password.getBytes(StandardCharsets.UTF_8));
             return Optional.empty();
         }
+    }
+
+    private Optional<Account> tryReceiveAccount(String login, String email) {
+        Optional<Account> account = accountDao.receiveAccountByLogin(login);
+        return account.isPresent() ? account : accountDao.receiveAccountByEmail(email);
     }
 
     private void protectFromTimingAttack(byte[] enterPassword) {
