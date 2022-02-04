@@ -31,12 +31,13 @@ public class RoleFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) {
-        for (CommandRegistry command : CommandRegistry.values()) {
-            for (Role role : command.getAllowedRoles()) {
-                final Set<Command> commands = commandsByRoles.computeIfAbsent(role, s -> new HashSet<>());
-                commands.add(command.getCommand());
-            }
-        }
+        Arrays.stream(CommandRegistry.values())
+                .forEach(command ->
+                        command.getAllowedRoles()
+                                .forEach(role -> {
+                            final Set<Command> commands = commandsByRoles.computeIfAbsent(role, s -> new HashSet<>());
+                            commands.add(command.getCommand());
+                        }));
     }
 
     @Override

@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="com.epam.jwd.hrmanager.model.Role" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -8,8 +9,10 @@
 <c:choose>
     <c:when test="${not empty sessionScope.account}">
         <h3>Hello, ${sessionScope.account.login}</h3>
-        <a href="<c:url value="/controller?command=user_page"/>">user_page</a>
-        <br>
+        <c:if test="${sessionScope.account.role eq Role.ADMINISTRATOR}">
+            <a href="<c:url value="/controller?command=user_page"/>">user_page</a>
+            <br>
+        </c:if>
         <a href="<c:url value="/controller?command=logout"/>">logout</a>
     </c:when>
     <c:otherwise>

@@ -1,5 +1,6 @@
 package com.epam.jwd.hrmanager.secvice.impl;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.epam.jwd.hrmanager.dao.*;
 import com.epam.jwd.hrmanager.model.*;
 import com.epam.jwd.hrmanager.secvice.EntityService;
@@ -56,7 +57,7 @@ public class ServiceFactoryImpl implements ServiceFactory {
                 case "Account":
                     AccountDao accountDao = (AccountDao) daoFactory.daoFor(Account.class);
                     userDao = daoFactory.daoFor(User.class);
-                    return AccountServiceImpl.getInstance(accountDao, userDao);
+                    return AccountServiceImpl.getInstance(accountDao, userDao, BCrypt.withDefaults(), BCrypt.verifyer());
                 case "City":
                     cityDao = daoFactory.daoFor(City.class);
                     return CityService.getInstance(cityDao);
