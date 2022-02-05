@@ -1,6 +1,6 @@
-package com.epam.jwd.hrmanager.db;
+package com.epam.jwd.hrmanager.transaction;
 
-import com.epam.jwd.hrmanager.db.impl.ThreadLocalTransactionManager;
+import com.epam.jwd.hrmanager.transaction.impl.ThreadLocalTransactionManager;
 
 import java.util.Optional;
 
@@ -9,6 +9,8 @@ public interface TransactionManager {
     void initTransaction();
 
     void commitTransaction();
+
+    void rollback();
 
     boolean isTransaction();
 

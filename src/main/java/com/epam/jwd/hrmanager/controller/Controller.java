@@ -1,6 +1,9 @@
 package com.epam.jwd.hrmanager.controller;
 
 import com.epam.jwd.hrmanager.command.Command;
+import com.epam.jwd.hrmanager.model.User;
+import com.epam.jwd.hrmanager.secvice.EntityService;
+import com.epam.jwd.hrmanager.secvice.ServiceFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -33,8 +36,9 @@ public class Controller extends HttpServlet {
         processRequest(req, resp);
     }
 
-    private void processRequest(HttpServletRequest req, HttpServletResponse resp){
+    private void processRequest(HttpServletRequest req, HttpServletResponse resp) {
         final String commandName = req.getParameter(COMMAND_NAME_PARAM);
+        LOGGER.info("Command execution: {}", commandName);
         final Command command = Command.of(commandName);
         final CommandRequest commandRequest = requestFactory.createRequest(req);
         final CommandResponse commandResponse = command.execute(commandRequest);
@@ -60,5 +64,10 @@ public class Controller extends HttpServlet {
             final RequestDispatcher dispatcher = req.getRequestDispatcher(desiredPath);
             dispatcher.forward(req, resp);
         }
+    }
+
+    private void main() {
+        EntityService<User> userService = ServiceFactory.getInstance().serviceFor(User.class);
+        System.out.println(userService.findAll());
     }
 }

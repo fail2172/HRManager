@@ -7,7 +7,7 @@ import com.epam.jwd.hrmanager.model.Account;
 import com.epam.jwd.hrmanager.model.User;
 import com.epam.jwd.hrmanager.secvice.AccountService;
 import com.epam.jwd.hrmanager.secvice.ServiceFactory;
-import com.epam.jwd.hrmanager.secvice.impl.UserService;
+import com.epam.jwd.hrmanager.secvice.UserService;
 
 public class CommandCreationFactoryImpl implements CommandCreationFactory {
 

@@ -1,6 +1,6 @@
-package com.epam.jwd.hrmanager.db.impl;
+package com.epam.jwd.hrmanager.transaction.impl;
 
-import com.epam.jwd.hrmanager.db.TransactionId;
+import com.epam.jwd.hrmanager.transaction.TransactionId;
 
 import java.sql.Connection;
 

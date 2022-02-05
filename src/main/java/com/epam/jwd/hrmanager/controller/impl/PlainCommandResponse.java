@@ -18,7 +18,7 @@ public class PlainCommandResponse implements CommandResponse {
 
     @Override
     public boolean isRedirect() {
-        return false;
+        return redirect;
     }
 
     @Override

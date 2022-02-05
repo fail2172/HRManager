@@ -10,7 +10,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class LogoutCommand implements Command {
 
-    private static final String MAIN_JSP_PATH = "/WEB-INF/jsp/main.jsp";
+    private static final String MAIN_JSP_PATH = "/";
     private static final String ACCOUNT_SESSION_ATTRIBUTE = "account";
     private static final ReentrantLock lock = new ReentrantLock();
     private static LogoutCommand instance;

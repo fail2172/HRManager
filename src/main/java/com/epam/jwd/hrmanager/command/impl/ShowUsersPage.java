@@ -4,7 +4,9 @@ import com.epam.jwd.hrmanager.command.Command;
 import com.epam.jwd.hrmanager.controller.CommandRequest;
 import com.epam.jwd.hrmanager.controller.CommandResponse;
 import com.epam.jwd.hrmanager.controller.RequestFactory;
-import com.epam.jwd.hrmanager.secvice.impl.UserService;
+import com.epam.jwd.hrmanager.model.User;
+import com.epam.jwd.hrmanager.secvice.EntityService;
+import com.epam.jwd.hrmanager.secvice.UserService;
 
 import java.util.concurrent.locks.ReentrantLock;
 

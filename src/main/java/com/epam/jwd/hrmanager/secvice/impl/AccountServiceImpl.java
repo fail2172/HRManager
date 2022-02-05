@@ -3,12 +3,12 @@ package com.epam.jwd.hrmanager.secvice.impl;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.epam.jwd.hrmanager.dao.AccountDao;
 import com.epam.jwd.hrmanager.dao.EntityDao;
-import com.epam.jwd.hrmanager.db.TransactionManager;
 import com.epam.jwd.hrmanager.exeption.EntityUpdateException;
 import com.epam.jwd.hrmanager.exeption.NotFoundEntityException;
 import com.epam.jwd.hrmanager.model.Account;
 import com.epam.jwd.hrmanager.model.User;
 import com.epam.jwd.hrmanager.secvice.AccountService;
+import com.epam.jwd.hrmanager.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,8 +22,7 @@ import java.util.stream.Collectors;
 public class AccountServiceImpl implements AccountService {
 
     private static final byte[] DUMMY_PASSWORD = "password".getBytes(StandardCharsets.UTF_8);
-    private static final TransactionManager transactionManager = TransactionManager.getInstance();
-    private static final Logger LOGGER = LogManager.getLogger(AddressService.class);
+    private static final Logger LOGGER = LogManager.getLogger(AddressServiceImpl.class);
     private static final ReentrantLock lock = new ReentrantLock();
     private static AccountServiceImpl instance;
 
@@ -55,31 +54,26 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Transactional
     public Account get(Long id) {
-        transactionManager.initTransaction();
         Account account = accountDao.read(id).orElse(null);
         final Long userId = accountDao.receiveUserId(account);
         User user = userDao.read(userId).orElse(null);
-        transactionManager.commitTransaction();
         return Objects.requireNonNull(account).withUser(user);
     }
 
     @Override
+    @Transactional
     public List<Account> findAll() {
-        try {
-            transactionManager.initTransaction();
-            return accountDao.read().stream()
-                    .map(account -> get(account.getId()))
-                    .collect(Collectors.toList());
-        } finally {
-            transactionManager.commitTransaction();
-        }
+        return accountDao.read().stream()
+                .map(account -> get(account.getId()))
+                .collect(Collectors.toList());
     }
 
     @Override
+    @Transactional
     public Account add(Account account) {
         try {
-            transactionManager.initTransaction();
             final char[] rowPassword = account.getPassword().toCharArray();
             final String hashedPassword = hasher.hashToString(BCrypt.MIN_COST, rowPassword);
             final Account addedAccount = accountDao.create(account
@@ -90,16 +84,14 @@ public class AccountServiceImpl implements AccountService {
             LOGGER.error("Error adding address to database", e);
         } catch (InterruptedException e) {
             LOGGER.warn("take connection interrupted", e);
-        } finally {
-            transactionManager.commitTransaction();
         }
         return null;
     }
 
     @Override
+    @Transactional
     public Account update(Account account) {
         try {
-            transactionManager.initTransaction();
             User updateUser = userDao.create(account.getUser());
             Account updatedAccount = accountDao.update(account
                     .withLogin(account.getLogin())
@@ -115,23 +107,18 @@ public class AccountServiceImpl implements AccountService {
             LOGGER.error("Failed to update account information", e);
         } catch (NotFoundEntityException e) {
             LOGGER.error("there is no such account in the database", e);
-        } finally {
-            transactionManager.commitTransaction();
         }
         return null;
     }
 
     @Override
+    @Transactional
     public boolean delete(Long id) {
-        try {
-            transactionManager.initTransaction();
-            return accountDao.delete(id);
-        } finally {
-            transactionManager.commitTransaction();
-        }
+        return accountDao.delete(id);
     }
 
     @Override
+    @Transactional
     public Optional<Account> authenticate(String login, String email, String password) {
         if (password == null || (login == null && email == null)) {
             return Optional.empty();

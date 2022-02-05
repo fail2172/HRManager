@@ -12,12 +12,11 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class LoginCommand implements Command {
     private static final String LOGIN_JSP_PATH = "/WEB-INF/jsp/login.jsp";
-    private static final String MAIN_JSP_PATH = "/WEB-INF/jsp/main.jsp";
+    private static final String MAIN_JSP_PATH = "/";
     private static final String INVALID_LOGIN_PASSWORD_MESSAGE = "Invalid login or password";
     private static final String ERROR_LOGIN_PASSWORD_ATTRIBUTE = "errorLoginPassMessage";
     private static final String ACCOUNT_SESSION_ATTRIBUTE = "account";
     private static final String LOGIN_REQUEST_PARAM_NAME = "login";
-    private static final String EMAIL_REQUEST_PARAM_NAME = "email";
     private static final String PASSWORD_REQUEST_PARAM_NAME = "password";
     private static final ReentrantLock lock = new ReentrantLock();
     private static LoginCommand instance;

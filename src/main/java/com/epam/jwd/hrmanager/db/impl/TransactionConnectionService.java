@@ -1,9 +1,8 @@
 package com.epam.jwd.hrmanager.db.impl;
 
 import com.epam.jwd.hrmanager.db.ConnectionPool;
-import com.epam.jwd.hrmanager.db.TransactionId;
-import com.epam.jwd.hrmanager.db.TransactionManager;
-import com.epam.jwd.hrmanager.exeption.CouldNotInitialiseConnectionService;
+import com.epam.jwd.hrmanager.transaction.TransactionId;
+import com.epam.jwd.hrmanager.transaction.TransactionManager;
 
 import java.sql.Connection;
 import java.util.Optional;

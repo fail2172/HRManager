@@ -1,6 +1,6 @@
-package com.epam.jwd.hrmanager.db;
+package com.epam.jwd.hrmanager.transaction;
 
-import com.epam.jwd.hrmanager.db.impl.TransactionManagerFactoryImpl;
+import com.epam.jwd.hrmanager.transaction.impl.TransactionManagerFactoryImpl;
 
 public interface TransactionManagerFactory {
 

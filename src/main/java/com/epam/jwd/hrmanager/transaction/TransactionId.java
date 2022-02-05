@@ -1,4 +1,4 @@
-package com.epam.jwd.hrmanager.db;
+package com.epam.jwd.hrmanager.transaction;
 
 import java.sql.Connection;
 

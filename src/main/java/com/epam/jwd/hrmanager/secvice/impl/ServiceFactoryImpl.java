@@ -5,6 +5,7 @@ import com.epam.jwd.hrmanager.dao.*;
 import com.epam.jwd.hrmanager.model.*;
 import com.epam.jwd.hrmanager.secvice.EntityService;
 import com.epam.jwd.hrmanager.secvice.ServiceFactory;
+import com.epam.jwd.hrmanager.transaction.ProxyWithTransactions;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +21,7 @@ public class ServiceFactoryImpl implements ServiceFactory {
 
     }
 
-    public static ServiceFactoryImpl getInstance(){
+    public static ServiceFactoryImpl getInstance() {
         return Holder.INSTANCE;
     }
 
@@ -37,40 +38,48 @@ public class ServiceFactoryImpl implements ServiceFactory {
             switch (className) {
                 case "User":
                     EntityDao<User> userDao = daoFactory.daoFor(User.class);
-                    return UserService.getInstance(userDao);
+                    return withTransactions(UserServiceImpl.getInstance(userDao));
                 case "Address":
                     AddressDao addressDao = (AddressDao) daoFactory.daoFor(Address.class);
                     EntityDao<City> cityDao = daoFactory.daoFor(City.class);
                     EntityDao<Street> streetDao = daoFactory.daoFor(Street.class);
-                    return AddressService.getInstance(addressDao, cityDao, streetDao);
+                    return withTransactions(AddressServiceImpl.getInstance(addressDao, cityDao, streetDao));
                 case "Vacancy":
                     VacancyDao vacancyDao = (VacancyDao) daoFactory.daoFor(Vacancy.class);
                     EntityDao<Employer> employerDao = daoFactory.daoFor(Employer.class);
                     cityDao = daoFactory.daoFor(City.class);
-                    return VacancyService.getInstance(vacancyDao, employerDao, cityDao);
+                    return withTransactions(VacancyServiceImpl.getInstance(vacancyDao, employerDao, cityDao));
                 case "Interview":
                     InterviewDao interviewDao = (InterviewDao) daoFactory.daoFor(Interview.class);
                     EntityService<Address> addressService = serviceFor(Address.class);
                     EntityService<User> userService = serviceFor(User.class);
                     EntityService<Vacancy> vacancyService = serviceFor(Vacancy.class);
-                    return InterviewService.getInstance(interviewDao, addressService, userService, vacancyService);
+                    return withTransactions(
+                            InterviewServiceImpl.getInstance(interviewDao, addressService, userService, vacancyService)
+                    );
                 case "Account":
                     AccountDao accountDao = (AccountDao) daoFactory.daoFor(Account.class);
                     userDao = daoFactory.daoFor(User.class);
-                    return AccountServiceImpl.getInstance(accountDao, userDao, BCrypt.withDefaults(), BCrypt.verifyer());
+                    return withTransactions(
+                            AccountServiceImpl.getInstance(accountDao, userDao, BCrypt.withDefaults(), BCrypt.verifyer())
+                    );
                 case "City":
                     cityDao = daoFactory.daoFor(City.class);
-                    return CityService.getInstance(cityDao);
+                    return withTransactions(CityServiceImpl.getInstance(cityDao));
                 case "Street":
                     streetDao = daoFactory.daoFor(Street.class);
-                    return StreetService.getInstance(streetDao);
+                    return withTransactions(StreetServiceImpl.getInstance(streetDao));
                 case "Employer":
                     employerDao = daoFactory.daoFor(Employer.class);
-                    return EmployerService.getInstance(employerDao);
+                    return withTransactions(EmployerServiceImpl.getInstance(employerDao));
                 default:
                     throw new IllegalStateException(String.format(SERVICE_NOT_FOUND, className));
             }
         };
+    }
+
+    private <T extends Entity> EntityService<T> withTransactions(EntityService<T> service) {
+        return ProxyWithTransactions.of(service);
     }
 
     private static class Holder {

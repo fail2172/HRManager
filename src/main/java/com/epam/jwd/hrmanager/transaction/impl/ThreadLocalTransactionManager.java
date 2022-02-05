@@ -1,6 +1,8 @@
-package com.epam.jwd.hrmanager.db.impl;
+package com.epam.jwd.hrmanager.transaction.impl;
 
 import com.epam.jwd.hrmanager.db.*;
+import com.epam.jwd.hrmanager.transaction.TransactionId;
+import com.epam.jwd.hrmanager.transaction.TransactionManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -56,7 +58,7 @@ public class ThreadLocalTransactionManager implements TransactionManager {
         try {
             if (TRANSACTION_ACTIVE.get()) {
                 TRANSACTION_ACTIVE.set(false);
-                Connection connection = THREAD_CONNECTION.get().getConnection();
+                final Connection connection = THREAD_CONNECTION.get().getConnection();
                 connection.commit();
                 connection.setAutoCommit(true);
                 THREAD_CONNECTION.remove();
@@ -64,6 +66,18 @@ public class ThreadLocalTransactionManager implements TransactionManager {
             } //todo : otherwise throw exception
         } catch (SQLException e) {
             LOGGER.warn("SQL exception occurred committing transaction", e);
+        }
+    }
+
+    @Override
+    public void rollback() {
+        try {
+            if (TRANSACTION_ACTIVE.get()) {
+                final Connection connection = THREAD_CONNECTION.get().getConnection();
+                connection.rollback();
+            }
+        } catch (SQLException e) {
+            LOGGER.warn("SQL exception when rolling back transaction", e);
         }
     }
 
