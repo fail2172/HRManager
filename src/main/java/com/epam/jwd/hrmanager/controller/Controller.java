@@ -1,8 +1,10 @@
 package com.epam.jwd.hrmanager.controller;
 
 import com.epam.jwd.hrmanager.command.Command;
+import com.epam.jwd.hrmanager.model.Interview;
 import com.epam.jwd.hrmanager.model.User;
 import com.epam.jwd.hrmanager.secvice.EntityService;
+import com.epam.jwd.hrmanager.secvice.InterviewService;
 import com.epam.jwd.hrmanager.secvice.ServiceFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,6 +30,7 @@ public class Controller extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         LOGGER.trace("caught req and resp in doGet method");
         processRequest(req, resp);
+        main();
     }
 
     @Override
@@ -67,7 +70,7 @@ public class Controller extends HttpServlet {
     }
 
     private void main() {
-        EntityService<User> userService = ServiceFactory.getInstance().serviceFor(User.class);
+        InterviewService userService = (InterviewService) ServiceFactory.getInstance().serviceFor(Interview.class);
         System.out.println(userService.findAll());
     }
 }

@@ -119,7 +119,6 @@ public class MethodAccountDao extends CommonDao<Account> implements AccountDao {
                 resultSet.getString(LOGIN_FIELD_NAME),
                 resultSet.getString(EMAIL_FIELD_NAME),
                 resultSet.getString(PASSWORD_FIELD_NAME),
-                null,
                 Role.of(resultSet.getString(ROLE_FIELD_NAME))
         );
     }

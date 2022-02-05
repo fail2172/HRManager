@@ -100,9 +100,6 @@ public class MethodInterviewDao extends CommonDao<Interview> implements Intervie
         return new Interview(
                 resultSet.getLong(ID_FIELD_NAME),
                 InterviewStatus.of(resultSet.getString(STATUS_FIELD_NAME)),
-                null,
-                null,
-                null,
                 resultSet.getDate(DATE_FIELD_NAME)
         );
     }

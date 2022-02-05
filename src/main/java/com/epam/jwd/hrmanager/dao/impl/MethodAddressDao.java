@@ -97,7 +97,6 @@ public class MethodAddressDao extends CommonDao<Address> implements AddressDao {
     protected Address extractResultSet(ResultSet resultSet) throws SQLException {
         return new Address(
                 resultSet.getLong(ID_FIELD_NAME),
-                null, null,
                 resultSet.getInt(HOUSE_NUMBER_FIELD_NAME),
                 resultSet.getInt(FLAT_NUMBER_FIELD_NAME)
         );

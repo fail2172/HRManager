@@ -24,6 +24,10 @@ public class Interview implements Entity{
         this(null, status, address, user, vacancy, date);
     }
 
+    public Interview(Long id, InterviewStatus status, Date date) {
+        this(id, status, null, null, null, date);
+    }
+
     @Override
     public Long getId() {
         return id;

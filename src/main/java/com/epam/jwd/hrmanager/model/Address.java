@@ -22,6 +22,10 @@ public class Address implements Entity {
         this(null, city, street, hoseNumber, flatNumber);
     }
 
+    public Address(Long id, int hoseNumber, Integer flatNumber) {
+        this(id, null, null, hoseNumber, flatNumber);
+    }
+
     public int getHouseNumber() {
         return houseNumber;
     }

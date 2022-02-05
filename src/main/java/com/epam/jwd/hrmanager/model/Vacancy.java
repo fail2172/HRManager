@@ -26,6 +26,10 @@ public class Vacancy implements Entity{
         this(null, title, salary, employer, city, description);
     }
 
+    public Vacancy(Long id, String title, BigDecimal salary, String description) {
+        this(id, title, salary, null, null, description);
+    }
+
     @Override
     public Long getId() {
         return id;

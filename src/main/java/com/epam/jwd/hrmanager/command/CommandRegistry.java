@@ -6,22 +6,22 @@ import java.util.Arrays;
 import java.util.List;
 
 public enum CommandRegistry {
-    MAIN_PAGE(CommandCreationFactory.getInstance().createCommand("main_page"), "main_page"),
-    USER_PAGE(CommandCreationFactory.getInstance().createCommand("user_page"), "user_page", Role.ADMINISTRATOR, Role.EMPLOYEE),
-    LOGIN_PAGE(CommandCreationFactory.getInstance().createCommand("login_page"), "login_page"),
-    LOGIN(CommandCreationFactory.getInstance().createCommand("login"), "login"),
-    LOGOUT(CommandCreationFactory.getInstance().createCommand("logout"), "logout"),
-    ERROR_PAGE(CommandCreationFactory.getInstance().createCommand("show_error"), "show_error"),
-    DEFAULT(CommandCreationFactory.getInstance().createCommand("main_page"), "main_page");
+    MAIN_PAGE("main_page"),
+    USER_PAGE("user_page", Role.ADMINISTRATOR, Role.EMPLOYEE),
+    LOGIN_PAGE("login_page"),
+    LOGIN("login"),
+    LOGOUT("logout"),
+    ERROR_PAGE("show_error"),
+    DEFAULT("main_page");
 
+    private final List<Role> allowedRoles;
     private final Command command;
     private final String path;
-    private final List<Role> allowedRoles;
 
-    CommandRegistry(Command command, String path, Role... roles) {
-        this.command = command;
+    CommandRegistry(String path, Role... roles) {
+        this.allowedRoles = roles != null && roles.length > 0 ? Arrays.asList(roles) : Role.valuesAsList();
+        this.command = CommandCreationFactory.getInstance().createCommand(path);
         this.path = path;
-        allowedRoles = roles != null && roles.length > 0 ? Arrays.asList(roles) : Role.valuesAsList();
     }
 
     public Command getCommand() {

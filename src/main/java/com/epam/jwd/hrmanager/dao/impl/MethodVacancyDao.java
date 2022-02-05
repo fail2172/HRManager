@@ -100,8 +100,6 @@ public class MethodVacancyDao extends CommonDao<Vacancy> implements VacancyDao {
                 resultSet.getLong(ID_FIELD_NAME),
                 resultSet.getString(TITLE_NAME_FIELD),
                 resultSet.getBigDecimal(SALARY_FIELD_NAME),
-                null,
-                null,
                 resultSet.getString(DESCRIPTION_FIELD_NAME)
         );
     }
