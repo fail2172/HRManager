@@ -2,8 +2,6 @@ package com.epam.jwd.hrmanager.controller;
 
 import com.epam.jwd.hrmanager.command.Command;
 import com.epam.jwd.hrmanager.model.Interview;
-import com.epam.jwd.hrmanager.model.User;
-import com.epam.jwd.hrmanager.secvice.EntityService;
 import com.epam.jwd.hrmanager.secvice.InterviewService;
 import com.epam.jwd.hrmanager.secvice.ServiceFactory;
 import org.apache.logging.log4j.LogManager;
@@ -30,7 +28,6 @@ public class Controller extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         LOGGER.trace("caught req and resp in doGet method");
         processRequest(req, resp);
-        main();
     }
 
     @Override
@@ -67,10 +64,5 @@ public class Controller extends HttpServlet {
             final RequestDispatcher dispatcher = req.getRequestDispatcher(desiredPath);
             dispatcher.forward(req, resp);
         }
-    }
-
-    private void main() {
-        InterviewService userService = (InterviewService) ServiceFactory.getInstance().serviceFor(Interview.class);
-        System.out.println(userService.findAll());
     }
 }
