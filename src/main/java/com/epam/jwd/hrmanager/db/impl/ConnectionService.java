@@ -1,5 +1,6 @@
 package com.epam.jwd.hrmanager.db.impl;
 
+import com.epam.jwd.hrmanager.controller.PropertyContext;
 import com.epam.jwd.hrmanager.db.ConnectionPool;
 import com.epam.jwd.hrmanager.exeption.CouldNotInitialiseConnectionService;
 import org.apache.logging.log4j.LogManager;
@@ -18,15 +19,17 @@ public class ConnectionService implements ConnectionPool {
 
     private volatile static ConnectionService instance;
 
+    private static final String DB_URL = "db.url";
+    private static final String DB_USER = "db.user";
+    private static final String DB_PASSWORD = "db.password";
+
+    private final static PropertyContext propertyContext = PropertyContext.getInstance();
     private static final Logger LOGGER = LogManager.getLogger(ConnectionService.class);
     private static final ReentrantLock lock = new ReentrantLock();
     private static final Condition haveConnections = lock.newCondition();
 
-    private final Queue<ProxyConnection> availableConnections = new ArrayDeque<>();
-    private final List<ProxyConnection> givenAwayConnections = new ArrayList<>();
-    private final String DB_URL = "jdbc:mysql://localhost:3306/jwd";
-    private final String DB_USER = "root";
-    private final String DB_PASSWORD = "1234";
+    private final Queue<ProxyConnection> availableConnections;
+    private final List<ProxyConnection> givenAwayConnections;
     private final int MINIMAL_CONNECTIONS_NUM;
     private final long COLLECTOR_TIME_INTERVAL;
     private final double EXPANSION_LEVEL;
@@ -36,7 +39,11 @@ public class ConnectionService implements ConnectionPool {
         List<ProxyConnection> connections = new ArrayList<>();
         try {
             for (int i = 0; i < amount; i++) {
-                Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+                Connection connection = DriverManager.getConnection(
+                        propertyContext.get(DB_URL),
+                        propertyContext.get(DB_USER),
+                        propertyContext.get(DB_PASSWORD)
+                );
                 connections.add(new ProxyConnection(connection, this));
             }
             insertConnections(connections);
@@ -55,6 +62,8 @@ public class ConnectionService implements ConnectionPool {
         EXPANSION_LEVEL = serviceContext.getExpansionLevel().orElse(0.75);
         EXPANSION_RATIO = serviceContext.getExpansionRatio().orElse(0.2);
         COMPRESSION_RATIO = serviceContext.getCompressionRatio().orElse(0.2);
+        this.availableConnections = new ArrayDeque<>();
+        this.givenAwayConnections = new ArrayList<>();
     }
 
     public static ConnectionService getInstance(ConnectionServiceContext serviceContext) {
@@ -159,7 +168,11 @@ public class ConnectionService implements ConnectionPool {
     private void initialisationConnections() {
         try {
             for (int i = 0; i < MINIMAL_CONNECTIONS_NUM; i++) {
-                Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+                Connection connection = DriverManager.getConnection(
+                        propertyContext.get(DB_URL),
+                        propertyContext.get(DB_USER),
+                        propertyContext.get(DB_PASSWORD)
+                );
                 availableConnections.add(new ProxyConnection(connection, this));
             }
         } catch (SQLException e) {
@@ -216,7 +229,7 @@ public class ConnectionService implements ConnectionPool {
     private void registerDrivers() {
         LOGGER.trace("driver registration");
         try {
-            DriverManager.registerDriver(DriverManager.getDriver(DB_URL));
+            DriverManager.registerDriver(DriverManager.getDriver(propertyContext.get(DB_URL)));
         } catch (SQLException e) {
             throw new CouldNotInitialiseConnectionService("Failed to register driver", e);
         }

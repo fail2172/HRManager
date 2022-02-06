@@ -1,9 +1,7 @@
 package com.epam.jwd.hrmanager.controller;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.epam.jwd.hrmanager.command.Command;
-import com.epam.jwd.hrmanager.model.Interview;
-import com.epam.jwd.hrmanager.secvice.InterviewService;
-import com.epam.jwd.hrmanager.secvice.ServiceFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,7 +16,7 @@ import java.io.IOException;
 @WebServlet("/controller")
 public class Controller extends HttpServlet {
 
-    private static final long serialVersionUID = 8238816177981432076L;
+    private static final long serialVersionUID = -1303640745642398238L;
     private static final Logger LOGGER = LogManager.getLogger(Controller.class);
     public static final String COMMAND_NAME_PARAM = "command";
 
@@ -28,6 +26,7 @@ public class Controller extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         LOGGER.trace("caught req and resp in doGet method");
         processRequest(req, resp);
+        main();
     }
 
     @Override
@@ -64,5 +63,10 @@ public class Controller extends HttpServlet {
             final RequestDispatcher dispatcher = req.getRequestDispatcher(desiredPath);
             dispatcher.forward(req, resp);
         }
+    }
+
+    private void main(){
+        final BCrypt.Hasher hasher = BCrypt.withDefaults();
+        System.out.println(hasher.hashToString(BCrypt.MIN_COST, "sova".toCharArray()));
     }
 }

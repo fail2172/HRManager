@@ -3,35 +3,41 @@ package com.epam.jwd.hrmanager.command.impl;
 import com.epam.jwd.hrmanager.command.Command;
 import com.epam.jwd.hrmanager.controller.CommandRequest;
 import com.epam.jwd.hrmanager.controller.CommandResponse;
+import com.epam.jwd.hrmanager.controller.RequestFactory;
+import com.epam.jwd.hrmanager.controller.PropertyContext;
+
+import java.util.concurrent.locks.ReentrantLock;
 
 public class ShowMainPageCommand implements Command {
 
-    private ShowMainPageCommand(){
+    private static final String MAIN_PAGE = "page.main";
 
+    private static final ReentrantLock lock = new ReentrantLock();
+    private static ShowMainPageCommand instance;
+
+    private final RequestFactory requestFactory;
+    private final PropertyContext propertyContext;
+
+    private ShowMainPageCommand(RequestFactory requestFactory, PropertyContext propertyContext) {
+        this.requestFactory = requestFactory;
+        this.propertyContext = propertyContext;
     }
 
-    static ShowMainPageCommand getInstance(){
-        return Holder.INSTANCE;
+    static ShowMainPageCommand getInstance(RequestFactory requestFactory, PropertyContext propertyContext){
+        if(instance == null){
+            lock.lock();
+            {
+                if(instance == null){
+                    instance = new ShowMainPageCommand(requestFactory, propertyContext);
+                }
+            }
+            lock.unlock();
+        }
+        return instance;
     }
-
-    private static final CommandResponse SHOW_MAIN_PAGE = new CommandResponse() {
-        @Override
-        public boolean isRedirect() {
-            return false;
-        }
-
-        @Override
-        public String getPath() {
-            return "/WEB-INF/jsp/main.jsp";
-        }
-    };
 
     @Override
     public CommandResponse execute(CommandRequest request) {
-        return SHOW_MAIN_PAGE;
-    }
-
-    private static class Holder {
-        private static final ShowMainPageCommand INSTANCE = new ShowMainPageCommand();
+        return requestFactory.createForwardResponse(propertyContext.get(MAIN_PAGE));
     }
 }

@@ -4,27 +4,31 @@ import com.epam.jwd.hrmanager.command.Command;
 import com.epam.jwd.hrmanager.controller.CommandRequest;
 import com.epam.jwd.hrmanager.controller.CommandResponse;
 import com.epam.jwd.hrmanager.controller.RequestFactory;
+import com.epam.jwd.hrmanager.controller.PropertyContext;
 
 import java.util.concurrent.locks.ReentrantLock;
 
 public class ShowLoginPageCommand implements Command {
 
-    private static final String LOGIN_JSP_PATH = "/WEB-INF/jsp/login.jsp";
+    public static final String LOGIN_PAGE = "page.login";
+
     private static final ReentrantLock lock = new ReentrantLock();
     private static ShowLoginPageCommand instance;
 
     private final RequestFactory requestFactory;
+    private final PropertyContext propertyContext;
 
-    private ShowLoginPageCommand(RequestFactory requestFactory) {
+    private ShowLoginPageCommand(RequestFactory requestFactory, PropertyContext propertyContext) {
         this.requestFactory = requestFactory;
+        this.propertyContext = propertyContext;
     }
 
-    static ShowLoginPageCommand getInstance(RequestFactory requestFactory){
+    static ShowLoginPageCommand getInstance(RequestFactory requestFactory, PropertyContext propertyContext){
         if(instance == null){
             lock.lock();
             {
                 if(instance == null){
-                    instance = new ShowLoginPageCommand(requestFactory);
+                    instance = new ShowLoginPageCommand(requestFactory, propertyContext);
                 }
             }
             lock.unlock();
@@ -34,6 +38,6 @@ public class ShowLoginPageCommand implements Command {
 
     @Override
     public CommandResponse execute(CommandRequest request) {
-        return requestFactory.createForwardResponse(LOGIN_JSP_PATH);
+        return requestFactory.createForwardResponse(propertyContext.get(LOGIN_PAGE));
     }
 }
