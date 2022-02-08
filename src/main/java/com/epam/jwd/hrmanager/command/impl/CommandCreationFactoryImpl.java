@@ -26,23 +26,31 @@ public class CommandCreationFactoryImpl implements CommandCreationFactory {
     @Override
     public Command createCommand(String name) {
         switch (name) {
-            case "logout":
-                return LogoutCommand.getInstance(requestFactory, PropertyContext.getInstance());
+            case "singOut":
+                return SingOutCommand.getInstance(requestFactory, PropertyContext.getInstance());
             case "show_error":
                 return ShowErrorPageCommand.getInstance(requestFactory, PropertyContext.getInstance());
-            case "login_page":
-                return ShowLoginPageCommand.getInstance(requestFactory, PropertyContext.getInstance());
+            case "singIn_page":
+                return ShowSingInPageCommand.getInstance(requestFactory, PropertyContext.getInstance());
+            case "singUp_page":
+                return ShowSingUpPageCommand.getInstance(requestFactory, PropertyContext.getInstance());
             case "user_page":
                 return ShowUsersPage.getInstance(
                         requestFactory,
                         (UserService) serviceFactory.serviceFor(User.class),
                         PropertyContext.getInstance());
-            case "login":
-                return LoginCommand.getInstance(
+            case "singIn":
+                return SingInCommand.getInstance(
                         requestFactory,
                         (AccountService) serviceFactory.serviceFor(Account.class),
                         PropertyContext.getInstance()
                 );
+            case "singUp":
+                return SingUpCommand.getInstance(
+                        requestFactory,
+                        (AccountService) serviceFactory.serviceFor(Account.class),
+                        (UserService) serviceFactory.serviceFor(User.class),
+                        PropertyContext.getInstance());
             default:
                 return ShowMainPageCommand.getInstance(requestFactory, PropertyContext.getInstance());
         }

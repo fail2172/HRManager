@@ -26,7 +26,6 @@ public class Controller extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         LOGGER.trace("caught req and resp in doGet method");
         processRequest(req, resp);
-        main();
     }
 
     @Override
@@ -63,10 +62,5 @@ public class Controller extends HttpServlet {
             final RequestDispatcher dispatcher = req.getRequestDispatcher(desiredPath);
             dispatcher.forward(req, resp);
         }
-    }
-
-    private void main(){
-        final BCrypt.Hasher hasher = BCrypt.withDefaults();
-        System.out.println(hasher.hashToString(BCrypt.MIN_COST, "sova".toCharArray()));
     }
 }

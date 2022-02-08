@@ -4,12 +4,18 @@ import java.util.Arrays;
 import java.util.List;
 
 public enum Role {
-    ASPIRANT,
-    EMPLOYEE,
-    ADMINISTRATOR,
-    UNAUTHORIZED;
+    ADMINISTRATOR(2),
+    EMPLOYEE(1),
+    ASPIRANT(0),
+    UNAUTHORIZED(0);
+
+    private final int securityLevel;
 
     private static final List<Role> ALL_AVAILABLE_ROLES = Arrays.asList(values());
+
+    Role(int securityLevel) {
+        this.securityLevel = securityLevel;
+    }
 
     public static List<Role> valuesAsList(){
         return ALL_AVAILABLE_ROLES;
@@ -23,5 +29,9 @@ public enum Role {
             }
         }
         return ASPIRANT;
+    }
+
+    public int getSecurityLevel() {
+        return securityLevel;
     }
 }

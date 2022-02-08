@@ -8,9 +8,11 @@ import java.util.List;
 public enum CommandRegistry {
     MAIN_PAGE("main_page"),
     USER_PAGE("user_page", Role.ADMINISTRATOR, Role.EMPLOYEE),
-    LOGIN_PAGE("login_page"),
-    LOGIN("login"),
-    LOGOUT("logout"),
+    SING_IN_PAGE("singIn_page"),
+    SING_UP_PAGE("singUp_page"),
+    SING_IN("singIn"),
+    SING_UP("singUp"),
+    SING_OUT("singOut"),
     ERROR_PAGE("show_error"),
     DEFAULT("main_page");
 

@@ -129,6 +129,6 @@ public class MethodAccountDao extends CommonDao<Account> implements AccountDao {
         statement.setString(3, account.getLogin());
         statement.setString(4, account.getEmail());
         statement.setString(5, account.getPassword());
-        statement.setString(6, account.getPassword());
+        statement.setString(6, account.getRole().name());
     }
 }

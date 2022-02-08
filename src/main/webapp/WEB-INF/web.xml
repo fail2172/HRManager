@@ -5,6 +5,14 @@
                       http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
     <filter>
+        <filter-name>LangFilter</filter-name>
+        <filter-class>com.epam.jwd.hrmanager.filter.LanguageFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>LangFilter</filter-name>
+        <url-pattern>/controller</url-pattern>
+    </filter-mapping>
+    <filter>
         <filter-name>ErrorFilter</filter-name>
         <filter-class>com.epam.jwd.hrmanager.filter.ErrorFilter</filter-class>
     </filter>
@@ -20,4 +28,11 @@
         <filter-name>RoleFilter</filter-name>
         <url-pattern>/controller</url-pattern>
     </filter-mapping>
+    
+    <jsp-config>
+        <taglib>
+            <taglib-uri>WEB-INF/tld/customTagLib</taglib-uri>
+            <taglib-location>WEB-INF/tld/customTagLib.tld</taglib-location>
+        </taglib>
+    </jsp-config>
 </web-app>

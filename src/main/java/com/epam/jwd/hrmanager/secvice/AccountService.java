@@ -6,6 +6,9 @@ import java.util.Optional;
 
 public interface AccountService extends EntityService<Account> {
 
-    Optional<Account> authenticate(String login, String email, String password);
+    Optional<Account> authenticate(String email, String password);
 
+    Optional<Account> findByEmail(String email);
+
+    Optional<Account> findByLogin(String login);
 }

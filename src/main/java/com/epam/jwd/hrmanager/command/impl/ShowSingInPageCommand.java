@@ -8,28 +8,27 @@ import com.epam.jwd.hrmanager.controller.PropertyContext;
 
 import java.util.concurrent.locks.ReentrantLock;
 
-public class LogoutCommand implements Command {
+public class ShowSingInPageCommand implements Command {
 
-    private static final String INDEX_PAGE = "page.index";
+    public static final String SING_IN_PAGE = "page.singIn";
 
-    private static final String ACCOUNT_SESSION_ATTRIBUTE = "account";
     private static final ReentrantLock lock = new ReentrantLock();
-    private static LogoutCommand instance;
+    private static ShowSingInPageCommand instance;
 
     private final RequestFactory requestFactory;
     private final PropertyContext propertyContext;
 
-    private LogoutCommand(RequestFactory requestFactory, PropertyContext propertyContext) {
+    private ShowSingInPageCommand(RequestFactory requestFactory, PropertyContext propertyContext) {
         this.requestFactory = requestFactory;
         this.propertyContext = propertyContext;
     }
 
-    static LogoutCommand getInstance(RequestFactory requestFactory, PropertyContext propertyContext){
+    static ShowSingInPageCommand getInstance(RequestFactory requestFactory, PropertyContext propertyContext){
         if(instance == null){
             lock.lock();
             {
                 if(instance == null){
-                    instance = new LogoutCommand(requestFactory, propertyContext);
+                    instance = new ShowSingInPageCommand(requestFactory, propertyContext);
                 }
             }
             lock.unlock();
@@ -39,10 +38,6 @@ public class LogoutCommand implements Command {
 
     @Override
     public CommandResponse execute(CommandRequest request) {
-        if(request.sessionExist() && request.retrieveFromSession(ACCOUNT_SESSION_ATTRIBUTE).isPresent()) {
-            request.clearSession();
-            return requestFactory.createRedirectResponse(propertyContext.get(INDEX_PAGE));
-        }
-        return null;
+        return requestFactory.createForwardResponse(propertyContext.get(SING_IN_PAGE));
     }
 }

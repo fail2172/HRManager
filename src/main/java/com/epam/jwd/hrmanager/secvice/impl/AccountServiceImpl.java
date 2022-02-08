@@ -76,9 +76,7 @@ public class AccountServiceImpl implements AccountService {
         try {
             final char[] rowPassword = account.getPassword().toCharArray();
             final String hashedPassword = hasher.hashToString(BCrypt.MIN_COST, rowPassword);
-            final Account addedAccount = accountDao.create(account
-                    .withUser(userDao.create(account.getUser()))
-                    .withPassword(hashedPassword));
+            final Account addedAccount = accountDao.create(account.withPassword(hashedPassword));
             return get(addedAccount.getId());
         } catch (EntityUpdateException e) {
             LOGGER.error("Error adding address to database", e);
@@ -119,11 +117,11 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
-    public Optional<Account> authenticate(String login, String email, String password) {
-        if (password == null || (login == null && email == null)) {
+    public Optional<Account> authenticate(String email, String password) {
+        if (password == null || email == null) {
             return Optional.empty();
         }
-        final Optional<Account> readAccount = tryReceiveAccount(login, email);
+        final Optional<Account> readAccount = findByEmail(email);
         final byte[] enteredPassword = password.getBytes(StandardCharsets.UTF_8);
         if (readAccount.isPresent()) {
             final byte[] hashedPassword = readAccount.get()
@@ -138,9 +136,14 @@ public class AccountServiceImpl implements AccountService {
         }
     }
 
-    private Optional<Account> tryReceiveAccount(String login, String email) {
-        Optional<Account> account = accountDao.receiveAccountByLogin(login);
-        return account.isPresent() ? account : accountDao.receiveAccountByEmail(email);
+    @Override
+    public Optional<Account> findByEmail(String email) {
+        return accountDao.receiveAccountByEmail(email);
+    }
+
+    @Override
+    public Optional<Account> findByLogin(String login) {
+        return accountDao.receiveAccountByLogin(login);
     }
 
     private void protectFromTimingAttack(byte[] enterPassword) {
