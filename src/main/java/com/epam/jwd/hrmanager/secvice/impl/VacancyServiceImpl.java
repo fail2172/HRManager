@@ -2,8 +2,8 @@ package com.epam.jwd.hrmanager.secvice.impl;
 
 import com.epam.jwd.hrmanager.dao.EntityDao;
 import com.epam.jwd.hrmanager.dao.VacancyDao;
-import com.epam.jwd.hrmanager.exeption.EntityUpdateException;
-import com.epam.jwd.hrmanager.exeption.NotFoundEntityException;
+import com.epam.jwd.hrmanager.exception.EntityUpdateException;
+import com.epam.jwd.hrmanager.exception.NotFoundEntityException;
 import com.epam.jwd.hrmanager.model.*;
 import com.epam.jwd.hrmanager.secvice.VacancyService;
 import com.epam.jwd.hrmanager.transaction.Transactional;
@@ -68,8 +68,8 @@ public class VacancyServiceImpl implements VacancyService {
     public Vacancy add(Vacancy vacancy) {
         try {
             final Vacancy addedVacancy = vacancyDao.create(vacancy
-                    .withEmployer(employerDao.create(vacancy.getEmployer()))
-                    .withCity(cityDao.create(vacancy.getCity())));
+                    .withEmployer(vacancy.getEmployer())
+                    .withCity(vacancy.getCity()));
             return get(addedVacancy.getId());
         } catch (EntityUpdateException e) {
             LOGGER.error("Error adding address to database", e);
@@ -83,13 +83,16 @@ public class VacancyServiceImpl implements VacancyService {
     @Transactional
     public Vacancy update(Vacancy vacancy) {
         try {
-            Employer updateEmployer = employerDao.create(vacancy.getEmployer());
-            City updateCity = cityDao.create(vacancy.getCity());
             Vacancy updatedVacancy = vacancyDao.update(vacancy
                             .withTitle(vacancy.getTitle())
                             .withSalary(vacancy.getSalary())
-                            .withEmployer(updateEmployer))
-                    .withCity(updateCity)
+                            .withEmployer(vacancy.getEmployer())
+                            .withEmployment(vacancy.getEmployment())
+                            .withCity(vacancy.getCity())
+                            .withDescription(vacancy.getDescription().orElse(null))
+                            .withExperience(vacancy.getExperience()))
+                    .withCity(vacancy.getCity())
+                    .withEmployment(vacancy.getEmployment())
                     .withDescription(vacancy.getDescription().orElse(null));
             return get(updatedVacancy.getId());
         } catch (InterruptedException e) {

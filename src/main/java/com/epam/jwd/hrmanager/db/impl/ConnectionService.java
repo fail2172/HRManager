@@ -2,7 +2,7 @@ package com.epam.jwd.hrmanager.db.impl;
 
 import com.epam.jwd.hrmanager.controller.PropertyContext;
 import com.epam.jwd.hrmanager.db.ConnectionPool;
-import com.epam.jwd.hrmanager.exeption.CouldNotInitialiseConnectionService;
+import com.epam.jwd.hrmanager.exception.CouldNotInitialiseConnectionService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

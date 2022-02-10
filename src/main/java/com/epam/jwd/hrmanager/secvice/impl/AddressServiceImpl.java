@@ -2,8 +2,8 @@ package com.epam.jwd.hrmanager.secvice.impl;
 
 import com.epam.jwd.hrmanager.dao.AddressDao;
 import com.epam.jwd.hrmanager.dao.EntityDao;
-import com.epam.jwd.hrmanager.exeption.EntityUpdateException;
-import com.epam.jwd.hrmanager.exeption.NotFoundEntityException;
+import com.epam.jwd.hrmanager.exception.EntityUpdateException;
+import com.epam.jwd.hrmanager.exception.NotFoundEntityException;
 import com.epam.jwd.hrmanager.model.Address;
 import com.epam.jwd.hrmanager.model.City;
 import com.epam.jwd.hrmanager.model.Street;
@@ -70,8 +70,8 @@ public class AddressServiceImpl implements AddressService {
     public Address add(Address address) {
         try {
             final Address addedAddress = addressDao.create(address
-                    .withCity(cityDao.create(address.getCity()))
-                    .withStreet(streetDao.create(address.getStreet())));
+                    .withCity(address.getCity())
+                    .withStreet(address.getStreet()));
             return get(addedAddress.getId());
         } catch (EntityUpdateException e) {
             LOGGER.error("Error adding address to database", e);
@@ -85,12 +85,10 @@ public class AddressServiceImpl implements AddressService {
     @Transactional
     public Address update(Address address) {
         try {
-            City updateCity = cityDao.create(address.getCity());
-            Street updateStreet = streetDao.create(address.getStreet());
             Address updateAddress = addressDao
                     .update(address
-                            .withCity(updateCity)
-                            .withStreet(updateStreet)
+                            .withCity(address.getCity())
+                            .withStreet(address.getStreet())
                             .withHouseNumber(address.getHouseNumber())
                             .withFlatNumber(address.getFlatNumber().orElse(null))
                     );

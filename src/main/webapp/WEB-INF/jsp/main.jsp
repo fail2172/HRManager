@@ -5,35 +5,9 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-    <meta name="generator" content="Hugo 0.84.0">
     <title>Headers · Bootstrap v5.0</title>
 
-    <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/headers/">
-
-    <!-- Bootstrap core CSS -->
     <link href="../../css/bootstrap.min.css" rel="stylesheet">
-
-    <style>
-        .bd-placeholder-img {
-            font-size: 1.125rem;
-            text-anchor: middle;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            user-select: none;
-        }
-
-        @media (min-width: 768px) {
-            .bd-placeholder-img-lg {
-                font-size: 3.5rem;
-            }
-        }
-    </style>
-
-
-    <!-- Custom styles for this template -->
     <link href="../../css/headers.css" rel="stylesheet">
 
 </head>
@@ -104,102 +78,141 @@
     </div>
 </header>
 
-<div class="d-flex flex-column align-items-stretch flex-shrink-0 bg-white" style="width: 380px;">
-    <a href="/" class="d-flex align-items-center flex-shrink-0 p-3 link-dark text-decoration-none border-bottom">
-        <svg class="bi me-2" width="30" height="24"><use xlink:href="#bootstrap"/></svg>
-        <span class="fs-5 fw-semibold">List group</span>
-    </a>
-    <div class="list-group list-group-flush border-bottom scrollarea">
-        <a href="#" class="list-group-item list-group-item-action active py-3 lh-tight" aria-current="true">
-            <div class="d-flex w-100 align-items-center justify-content-between">
-                <strong class="mb-1">List group item heading</strong>
-                <small>Wed</small>
-            </div>
-            <div class="col-10 mb-1 small">Some placeholder content in a paragraph below the heading and date.</div>
-        </a>
-        <a href="#" class="list-group-item list-group-item-action py-3 lh-tight">
-            <div class="d-flex w-100 align-items-center justify-content-between">
-                <strong class="mb-1">List group item heading</strong>
-                <small class="text-muted">Tues</small>
-            </div>
-            <div class="col-10 mb-1 small">Some placeholder content in a paragraph below the heading and date.</div>
-        </a>
-        <a href="#" class="list-group-item list-group-item-action py-3 lh-tight">
-            <div class="d-flex w-100 align-items-center justify-content-between">
-                <strong class="mb-1">List group item heading</strong>
-                <small class="text-muted">Mon</small>
-            </div>
-            <div class="col-10 mb-1 small">Some placeholder content in a paragraph below the heading and date.</div>
-        </a>
+<div class="b-example-divider"></div>
 
-        <a href="#" class="list-group-item list-group-item-action py-3 lh-tight" aria-current="true">
-            <div class="d-flex w-100 align-items-center justify-content-between">
-                <strong class="mb-1">List group item heading</strong>
-                <small class="text-muted">Wed</small>
+<main>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-3">
+                <div class="d-flex flex-column align-items-stretch flex-shrink-0 bg-white" style="width: 380px;">
+                    <div
+                            class="d-flex align-items-center flex-shrink-0 p-3 link-dark text-decoration-none border-bottom">
+                        <svg class="bi me-2" width="30" height="24">
+                            <use xlink:href="#bootstrap"></use>
+                        </svg>
+                        <span class="fs-5 fw-semibold">Постоянная работа</span>
+                    </div>
+                    <form method="post">
+                        <div class="list-group list-group-flush border-bottom scrollarea">
+                            <div class="list-group-item py-3 lh-tight" aria-current="true">
+                                <div class="d-flex w-100 align-items-center justify-content-between">
+                                    <strong class="mb-1">Города</strong>
+                                    <small>Wed</small>
+                                </div>
+                                <div class="col-10 mb-1 small">
+                                    <select class="form-select" id="cityVacancies" name="cityVacancies">
+                                        <option selected></option>
+                                        <c:forEach var="city" items="${requestScope.cities}">
+                                            <option>${city.name}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="list-group-item py-3 lh-tight" aria-current="true">
+                                <div class="d-flex w-100 align-items-center justify-content-between">
+                                    <strong class="mb-1">Тип занятости</strong>
+                                    <small>Wed</small>
+                                </div>
+                                <div class="col-10 mb-1 small">
+                                    <select class="form-select" id="employmentType" name="employmentType">
+                                        <option selected></option>
+                                        <option>Полная занятость</option>
+                                        <option>Частичная занятость</option>
+                                        <option>Стажировка</option>
+                                        <option>Проектная работа</option>
+                                        <option>Волонтёрство</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="list-group-item py-3 lh-tight" aria-current="true">
+                                <div class="d-flex w-100 align-items-center justify-content-between">
+                                    <strong class="mb-1">Опыт работы</strong>
+                                    <small>Wed</small>
+                                </div>
+                                <div class="col-10 mb-1 small">
+                                    <select class="form-select" id="experience" name="experience">
+                                        <option selected></option>
+                                        <option value="1 3">От 1 до 3 лет</option>
+                                        <option value="4 6">От 4 до 6 лет</option>
+                                        <option value="6 100">от 6</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="list-group-item py-3 lh-tight" aria-current="true">
+                                <div class="d-flex w-100 align-items-center justify-content-between">
+                                    <strong class="mb-1">Уровень дохода</strong>
+                                    <small>Wed</small>
+                                </div>
+                                <div class="col-10 mb-1 small">
+                                    <div class="input-group input-group-sm mb-3">
+                                        <span class="input-group-text">От</span>
+                                        <input type="text" class="form-control" id="incomeLevel" name="incomeLevel">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-12">
+                                    <button class="w-100 btn btn-lg col-6 btn-dark" type="submit">Поиск</button>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <br>
+                    </form>
+                </div>
             </div>
-            <div class="col-10 mb-1 small">Some placeholder content in a paragraph below the heading and date.</div>
-        </a>
-        <a href="#" class="list-group-item list-group-item-action py-3 lh-tight">
-            <div class="d-flex w-100 align-items-center justify-content-between">
-                <strong class="mb-1">List group item heading</strong>
-                <small class="text-muted">Tues</small>
+            <div class="col-9">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-2"></div>
+                        <div class="col-8">
+                            <div class="list-group-flush border-bottom">
+                                <c:forEach var="vacanvy" items="${requestScope.vacancies}">
+                                    <form method="post">
+                                        <br>
+                                        <div class="card" style="width: 44rem;">
+                                            <div class="card-header">
+                                                <h1>${vacanvy.title}</h1>
+                                            </div>
+                                            <div class="list-group-item py-3 lh-tight">
+                                                <div class="d-flex w-100 align-items-center justify-content-between">
+                                                    <strong class="mb-1">${vacanvy.salary}</strong>
+                                                </div>
+                                                <div class="col-10 mb-1 small">
+                                                    <small class="text-muted">${vacanvy.employer.name}</small><br>
+                                                    <small class="text-muted">${vacanvy.city.name}</small><br>
+                                                    <label class="text">${vacanvy.description.get()}</label><br>
+                                                </div>
+                                                <div class="row">
+                                                    <br>
+                                                    <div class="col-4">
+                                                        <button class="w-100 btn btn-success" type="submit">
+                                                            Откликнуться
+                                                        </button>
+                                                    </div>
+                                                    <br>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </c:forEach>
+                            </div>
+                            <br>
+                        </div>
+                        <div class="col-2"></div>
+                    </div>
+                </div>
             </div>
-            <div class="col-10 mb-1 small">Some placeholder content in a paragraph below the heading and date.</div>
-        </a>
-        <a href="#" class="list-group-item list-group-item-action py-3 lh-tight">
-            <div class="d-flex w-100 align-items-center justify-content-between">
-                <strong class="mb-1">List group item heading</strong>
-                <small class="text-muted">Mon</small>
-            </div>
-            <div class="col-10 mb-1 small">Some placeholder content in a paragraph below the heading and date.</div>
-        </a>
-        <a href="#" class="list-group-item list-group-item-action py-3 lh-tight" aria-current="true">
-            <div class="d-flex w-100 align-items-center justify-content-between">
-                <strong class="mb-1">List group item heading</strong>
-                <small class="text-muted">Wed</small>
-            </div>
-            <div class="col-10 mb-1 small">Some placeholder content in a paragraph below the heading and date.</div>
-        </a>
-        <a href="#" class="list-group-item list-group-item-action py-3 lh-tight">
-            <div class="d-flex w-100 align-items-center justify-content-between">
-                <strong class="mb-1">List group item heading</strong>
-                <small class="text-muted">Tues</small>
-            </div>
-            <div class="col-10 mb-1 small">Some placeholder content in a paragraph below the heading and date.</div>
-        </a>
-        <a href="#" class="list-group-item list-group-item-action py-3 lh-tight">
-            <div class="d-flex w-100 align-items-center justify-content-between">
-                <strong class="mb-1">List group item heading</strong>
-                <small class="text-muted">Mon</small>
-            </div>
-            <div class="col-10 mb-1 small">Some placeholder content in a paragraph below the heading and date.</div>
-        </a>
-        <a href="#" class="list-group-item list-group-item-action py-3 lh-tight" aria-current="true">
-            <div class="d-flex w-100 align-items-center justify-content-between">
-                <strong class="mb-1">List group item heading</strong>
-                <small class="text-muted">Wed</small>
-            </div>
-            <div class="col-10 mb-1 small">Some placeholder content in a paragraph below the heading and date.</div>
-        </a>
-        <a href="#" class="list-group-item list-group-item-action py-3 lh-tight">
-            <div class="d-flex w-100 align-items-center justify-content-between">
-                <strong class="mb-1">List group item heading</strong>
-                <small class="text-muted">Tues</small>
-            </div>
-            <div class="col-10 mb-1 small">Some placeholder content in a paragraph below the heading and date.</div>
-        </a>
-        <a href="#" class="list-group-item list-group-item-action py-3 lh-tight">
-            <div class="d-flex w-100 align-items-center justify-content-between">
-                <strong class="mb-1">List group item heading</strong>
-                <small class="text-muted">Mon</small>
-            </div>
-            <div class="col-10 mb-1 small">Some placeholder content in a paragraph below the heading and date.</div>
-        </a>
+        </div>
     </div>
-</div>
+</main>
+
+<div class="b-example-divider"></div>
 
 <script src="../../js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
-

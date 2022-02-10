@@ -1,4 +1,4 @@
-package com.epam.jwd.hrmanager.exeption;
+package com.epam.jwd.hrmanager.exception;
 
 public class EntityExtractionFailedException extends Exception {
 

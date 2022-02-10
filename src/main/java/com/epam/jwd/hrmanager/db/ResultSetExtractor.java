@@ -1,7 +1,6 @@
 package com.epam.jwd.hrmanager.db;
 
-import com.epam.jwd.hrmanager.exeption.EntityExtractionFailedException;
-import com.epam.jwd.hrmanager.exeption.IdExtractionFailedException;
+import com.epam.jwd.hrmanager.exception.EntityExtractionFailedException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

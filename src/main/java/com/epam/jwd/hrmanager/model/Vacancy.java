@@ -11,23 +11,29 @@ public class Vacancy implements Entity{
     private final BigDecimal salary;
     private final Employer employer;
     private final City city;
+    private final Employment employment;
+    private final Integer experience;
     private final String description;
 
-    public Vacancy(Long id, String title, BigDecimal salary, Employer employer, City city, String description) {
+    public Vacancy(Long id, String title, BigDecimal salary, Employer employer,
+                   City city, Employment employment, Integer experience, String description) {
         this.id = id;
         this.title = title;
         this.salary = salary;
         this.employer = employer;
         this.city = city;
+        this.employment = employment;
+        this.experience = experience;
         this.description = description;
     }
 
-    public Vacancy(String title, BigDecimal salary, Employer employer, City city, String description) {
-        this(null, title, salary, employer, city, description);
+    public Vacancy(String title, BigDecimal salary, Employer employer,
+                   City city, Employment employment, Integer experience, String description) {
+        this(null, title, salary, employer, city, employment, experience, description);
     }
 
-    public Vacancy(Long id, String title, BigDecimal salary, String description) {
-        this(id, title, salary, null, null, description);
+    public Vacancy(Long id, String title, BigDecimal salary, Employment employment, Integer experience, String description) {
+        this(id, title, salary, null, null, employment, experience, description);
     }
 
     @Override
@@ -55,24 +61,40 @@ public class Vacancy implements Entity{
         return city;
     }
 
+    public Employment getEmployment() {
+        return employment;
+    }
+
+    public Integer getExperience() {
+        return experience;
+    }
+
     public Vacancy withTitle(String title){
-        return new Vacancy(id, title, salary, employer, city, description);
+        return new Vacancy(id, title, salary, employer, city, employment, experience, description);
     }
 
     public Vacancy withSalary(BigDecimal salary){
-        return new Vacancy(id, title, salary, employer, city, description);
+        return new Vacancy(id, title, salary, employer, city, employment, experience, description);
     }
 
     public Vacancy withEmployer(Employer employer){
-        return new Vacancy(id, title, salary, employer, city, description);
+        return new Vacancy(id, title, salary, employer, city, employment, experience, description);
     }
 
     public Vacancy withCity(City city){
-        return new Vacancy(id, title, salary, employer, city, description);
+        return new Vacancy(id, title, salary, employer, city, employment, experience, description);
+    }
+
+    public Vacancy withEmployment(Employment employment){
+        return new Vacancy(id, title, salary, employer, city, employment, experience, description);
+    }
+
+    public Vacancy withExperience(Integer experience){
+        return new Vacancy(id, title, salary, employer, city, employment, experience, description);
     }
 
     public Vacancy withDescription(String description){
-        return new Vacancy(id, title, salary, employer, city, description);
+        return new Vacancy(id, title, salary, employer, city, employment, experience, description);
     }
 
     @Override
@@ -87,6 +109,8 @@ public class Vacancy implements Entity{
         if (!salary.equals(vacancy.salary)) return false;
         if (!employer.equals(vacancy.employer)) return false;
         if (!city.equals(vacancy.city)) return false;
+        if (employment != vacancy.employment) return false;
+        if (!experience.equals(vacancy.experience)) return false;
         return description.equals(vacancy.description);
     }
 
@@ -97,6 +121,8 @@ public class Vacancy implements Entity{
         result = 31 * result + salary.hashCode();
         result = 31 * result + employer.hashCode();
         result = 31 * result + city.hashCode();
+        result = 31 * result + employment.hashCode();
+        result = 31 * result + experience.hashCode();
         result = 31 * result + description.hashCode();
         return result;
     }
@@ -109,6 +135,8 @@ public class Vacancy implements Entity{
                 ", salary=" + salary +
                 ", employer=" + employer +
                 ", city=" + city +
+                ", employment=" + employment +
+                ", experience=" + experience +
                 ", description='" + description + '\'' +
                 '}';
     }

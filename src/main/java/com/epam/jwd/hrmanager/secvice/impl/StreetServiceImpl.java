@@ -1,8 +1,8 @@
 package com.epam.jwd.hrmanager.secvice.impl;
 
 import com.epam.jwd.hrmanager.dao.EntityDao;
-import com.epam.jwd.hrmanager.exeption.EntityUpdateException;
-import com.epam.jwd.hrmanager.exeption.NotFoundEntityException;
+import com.epam.jwd.hrmanager.exception.EntityUpdateException;
+import com.epam.jwd.hrmanager.exception.NotFoundEntityException;
 import com.epam.jwd.hrmanager.model.Street;
 import com.epam.jwd.hrmanager.secvice.StreetService;
 import com.epam.jwd.hrmanager.transaction.Transactional;

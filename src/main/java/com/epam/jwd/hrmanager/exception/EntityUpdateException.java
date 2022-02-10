@@ -1,6 +1,4 @@
-package com.epam.jwd.hrmanager.exeption;
-
-import java.util.function.Supplier;
+package com.epam.jwd.hrmanager.exception;
 
 public class EntityUpdateException extends Exception {
 

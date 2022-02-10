@@ -3,9 +3,9 @@ package com.epam.jwd.hrmanager.dao;
 import com.epam.jwd.hrmanager.db.ConnectionPool;
 import com.epam.jwd.hrmanager.db.ResultSetExtractor;
 import com.epam.jwd.hrmanager.db.StatementPreparator;
-import com.epam.jwd.hrmanager.exeption.EntityUpdateException;
-import com.epam.jwd.hrmanager.exeption.EntityExtractionFailedException;
-import com.epam.jwd.hrmanager.exeption.NotFoundEntityException;
+import com.epam.jwd.hrmanager.exception.EntityUpdateException;
+import com.epam.jwd.hrmanager.exception.EntityExtractionFailedException;
+import com.epam.jwd.hrmanager.exception.NotFoundEntityException;
 import com.epam.jwd.hrmanager.model.Entity;
 import org.apache.logging.log4j.Logger;
 

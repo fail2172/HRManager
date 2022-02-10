@@ -3,6 +3,7 @@ package com.epam.jwd.hrmanager.dao.impl;
 import com.epam.jwd.hrmanager.dao.CommonDao;
 import com.epam.jwd.hrmanager.dao.VacancyDao;
 import com.epam.jwd.hrmanager.db.ConnectionPool;
+import com.epam.jwd.hrmanager.model.Employment;
 import com.epam.jwd.hrmanager.model.Vacancy;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,7 +13,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class MethodVacancyDao extends CommonDao<Vacancy> implements VacancyDao {
@@ -27,12 +27,15 @@ public class MethodVacancyDao extends CommonDao<Vacancy> implements VacancyDao {
     private static final String DESCRIPTION_FIELD_NAME = "description";
     private static final String CITY_ID_FIELD_NAME = "city_id";
     private static final String EMPLOYER_ID_FIELD_NAME = "employer_id";
+    private static final String EMPLOYMENT_ID_FIELD_NAME = "employment";
+    private static final String EXPERIENCE_ID_FIELD_NAME = "experience";
     private static final String HASH = "v_hash";
     private static final String EMPTY_LINE = "";
     private static final Integer ZERO = 0;
     private static final List<String> FIELDS = Arrays.asList(
             ID_FIELD_NAME, TITLE_NAME_FIELD, SALARY_FIELD_NAME,
-            DESCRIPTION_FIELD_NAME, CITY_ID_FIELD_NAME, EMPLOYER_ID_FIELD_NAME, HASH
+            DESCRIPTION_FIELD_NAME, CITY_ID_FIELD_NAME, EMPLOYER_ID_FIELD_NAME,
+            EMPLOYMENT_ID_FIELD_NAME, EXPERIENCE_ID_FIELD_NAME, HASH
     );
 
 
@@ -86,7 +89,7 @@ public class MethodVacancyDao extends CommonDao<Vacancy> implements VacancyDao {
     protected void updateEntity(PreparedStatement statement, Vacancy vacancy) throws SQLException {
         fillFields(statement, vacancy);
         statement.setLong(1, vacancy.getId());
-        statement.setLong(8, vacancy.getId());
+        statement.setLong(10, vacancy.getId());
     }
 
     @Override
@@ -100,6 +103,8 @@ public class MethodVacancyDao extends CommonDao<Vacancy> implements VacancyDao {
                 resultSet.getLong(ID_FIELD_NAME),
                 resultSet.getString(TITLE_NAME_FIELD),
                 resultSet.getBigDecimal(SALARY_FIELD_NAME),
+                Employment.of(resultSet.getString(EMPLOYMENT_ID_FIELD_NAME)),
+                resultSet.getInt(EXPERIENCE_ID_FIELD_NAME),
                 resultSet.getString(DESCRIPTION_FIELD_NAME)
         );
     }
@@ -121,10 +126,17 @@ public class MethodVacancyDao extends CommonDao<Vacancy> implements VacancyDao {
         statement.setString(4, vacancy.getDescription().orElse(EMPTY_LINE));
         statement.setLong(5, vacancy.getCity().getId());
         statement.setLong(6, vacancy.getEmployer().getId());
-        statement.setString(7, composeHashCode(vacancy));
+        statement.setString(7, vacancy.getEmployment().name());
+        statement.setInt(8, vacancy.getExperience());
+        statement.setString(9, composeHashCode(vacancy));
     }
 
     private String composeHashCode(Vacancy vacancy) {
-        return vacancy.getTitle() + vacancy.getSalary() + vacancy.getCity().getId() + vacancy.getEmployer().getId();
+        return vacancy.getTitle()
+                + vacancy.getSalary()
+                + vacancy.getCity().getId()
+                + vacancy.getEmployer().getId()
+                + vacancy.getEmployment()
+                + vacancy.getExperience();
     }
 }

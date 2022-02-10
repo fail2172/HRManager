@@ -1,4 +1,4 @@
-package com.epam.jwd.hrmanager.exeption;
+package com.epam.jwd.hrmanager.exception;
 
 public class OpenPropertiesError extends Error{
     private static final long serialVersionUID = -6124390427848305790L;

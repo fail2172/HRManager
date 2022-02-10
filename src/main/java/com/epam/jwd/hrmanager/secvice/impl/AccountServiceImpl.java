@@ -3,8 +3,8 @@ package com.epam.jwd.hrmanager.secvice.impl;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.epam.jwd.hrmanager.dao.AccountDao;
 import com.epam.jwd.hrmanager.dao.EntityDao;
-import com.epam.jwd.hrmanager.exeption.EntityUpdateException;
-import com.epam.jwd.hrmanager.exeption.NotFoundEntityException;
+import com.epam.jwd.hrmanager.exception.EntityUpdateException;
+import com.epam.jwd.hrmanager.exception.NotFoundEntityException;
 import com.epam.jwd.hrmanager.model.Account;
 import com.epam.jwd.hrmanager.model.User;
 import com.epam.jwd.hrmanager.secvice.AccountService;
@@ -90,12 +90,11 @@ public class AccountServiceImpl implements AccountService {
     @Transactional
     public Account update(Account account) {
         try {
-            User updateUser = userDao.create(account.getUser());
             Account updatedAccount = accountDao.update(account
                     .withLogin(account.getLogin())
                     .withEmail(account.getEmail())
                     .withPassword(account.getPassword())
-                    .withUser(updateUser)
+                    .withUser(account.getUser())
                     .withRole(account.getRole()));
             return get(updatedAccount.getId());
         } catch (InterruptedException e) {

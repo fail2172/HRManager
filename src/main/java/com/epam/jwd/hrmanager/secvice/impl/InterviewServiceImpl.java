@@ -1,8 +1,8 @@
 package com.epam.jwd.hrmanager.secvice.impl;
 
 import com.epam.jwd.hrmanager.dao.InterviewDao;
-import com.epam.jwd.hrmanager.exeption.EntityUpdateException;
-import com.epam.jwd.hrmanager.exeption.NotFoundEntityException;
+import com.epam.jwd.hrmanager.exception.EntityUpdateException;
+import com.epam.jwd.hrmanager.exception.NotFoundEntityException;
 import com.epam.jwd.hrmanager.model.*;
 import com.epam.jwd.hrmanager.secvice.EntityService;
 import com.epam.jwd.hrmanager.secvice.InterviewService;
@@ -74,9 +74,9 @@ public class InterviewServiceImpl implements InterviewService {
     public Interview add(Interview interview) {
         try {
             final Interview addedInterview = interviewDao.create(interview
-                    .withAddress(addressService.add(interview.getAddress()))
-                    .withUser(userService.add(interview.getUser()))
-                    .withVacancy(vacancyService.add(interview.getVacancy())));
+                    .withAddress(interview.getAddress())
+                    .withUser(interview.getUser())
+                    .withVacancy(interview.getVacancy()));
             return get(addedInterview.getId());
         } catch (EntityUpdateException e) {
             LOGGER.error("Error adding address to database", e);
@@ -90,14 +90,11 @@ public class InterviewServiceImpl implements InterviewService {
     @Transactional
     public Interview update(Interview interview) {
         try {
-            Address updateAddress = addressService.update(interview.getAddress());
-            User updateUser = userService.update(interview.getUser());
-            Vacancy updateVacancy = vacancyService.update(interview.getVacancy());
             Interview updatedInterview = interviewDao.update(interview
                     .withInterviewStatus(interview.getStatus())
-                    .withAddress(updateAddress)
-                    .withUser(updateUser)
-                    .withVacancy(updateVacancy)
+                    .withAddress(interview.getAddress())
+                    .withUser(interview.getUser())
+                    .withVacancy(interview.getVacancy())
                     .withData(interview.getDate()));
             return get(updatedInterview.getId());
         } catch (InterruptedException e) {

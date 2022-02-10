@@ -5,10 +5,10 @@ import com.epam.jwd.hrmanager.command.CommandCreationFactory;
 import com.epam.jwd.hrmanager.controller.RequestFactory;
 import com.epam.jwd.hrmanager.controller.PropertyContext;
 import com.epam.jwd.hrmanager.model.Account;
+import com.epam.jwd.hrmanager.model.City;
 import com.epam.jwd.hrmanager.model.User;
-import com.epam.jwd.hrmanager.secvice.AccountService;
-import com.epam.jwd.hrmanager.secvice.ServiceFactory;
-import com.epam.jwd.hrmanager.secvice.UserService;
+import com.epam.jwd.hrmanager.model.Vacancy;
+import com.epam.jwd.hrmanager.secvice.*;
 
 public class CommandCreationFactoryImpl implements CommandCreationFactory {
 
@@ -52,7 +52,10 @@ public class CommandCreationFactoryImpl implements CommandCreationFactory {
                         (UserService) serviceFactory.serviceFor(User.class),
                         PropertyContext.getInstance());
             default:
-                return ShowMainPageCommand.getInstance(requestFactory, PropertyContext.getInstance());
+                return ShowMainPageCommand.getInstance(requestFactory,
+                        (VacancyService) serviceFactory.serviceFor(Vacancy.class),
+                        (CityService) serviceFactory.serviceFor(City.class),
+                        PropertyContext.getInstance());
         }
     }
 
