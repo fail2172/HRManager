@@ -9,7 +9,7 @@ public enum Employment {
 
     public static Employment of(String name) {
         for (Employment employment : values()){
-            if(employment.name().equals(name)){
+            if(employment.name().equalsIgnoreCase(name)){
                 return employment;
             }
         }

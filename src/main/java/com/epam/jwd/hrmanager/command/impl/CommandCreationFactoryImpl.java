@@ -51,8 +51,14 @@ public class CommandCreationFactoryImpl implements CommandCreationFactory {
                         (AccountService) serviceFactory.serviceFor(Account.class),
                         (UserService) serviceFactory.serviceFor(User.class),
                         PropertyContext.getInstance());
+            case "filterVacancies":
+                return FilterVacanciesCommand.getInstance(
+                        requestFactory,
+                        (VacancyService) serviceFactory.serviceFor(Vacancy.class),
+                        PropertyContext.getInstance());
             default:
-                return ShowMainPageCommand.getInstance(requestFactory,
+                return ShowMainPageCommand.getInstance(
+                        requestFactory,
                         (VacancyService) serviceFactory.serviceFor(Vacancy.class),
                         (CityService) serviceFactory.serviceFor(City.class),
                         PropertyContext.getInstance());

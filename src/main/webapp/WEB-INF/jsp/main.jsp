@@ -85,14 +85,13 @@
         <div class="row">
             <div class="col-3">
                 <div class="d-flex flex-column align-items-stretch flex-shrink-0 bg-white" style="width: 380px;">
-                    <div
-                            class="d-flex align-items-center flex-shrink-0 p-3 link-dark text-decoration-none border-bottom">
+                    <div class="d-flex align-items-center flex-shrink-0 p-3 link-dark text-decoration-none border-bottom">
                         <svg class="bi me-2" width="30" height="24">
                             <use xlink:href="#bootstrap"></use>
                         </svg>
                         <span class="fs-5 fw-semibold">Постоянная работа</span>
                     </div>
-                    <form method="post">
+                    <form action="<c:url value="/controller?command=filterVacancies"/>" method="post">
                         <div class="list-group list-group-flush border-bottom scrollarea">
                             <div class="list-group-item py-3 lh-tight" aria-current="true">
                                 <div class="d-flex w-100 align-items-center justify-content-between">
@@ -116,11 +115,11 @@
                                 <div class="col-10 mb-1 small">
                                     <select class="form-select" id="employmentType" name="employmentType">
                                         <option selected></option>
-                                        <option>Полная занятость</option>
-                                        <option>Частичная занятость</option>
-                                        <option>Стажировка</option>
-                                        <option>Проектная работа</option>
-                                        <option>Волонтёрство</option>
+                                        <option value="FULL_EMPLOYMENT">Полная занятость</option>
+                                        <option value="PART_TIME_EMPLOYMENT">Частичная занятость</option>
+                                        <option value="INTERNSHIP">Стажировка</option>
+                                        <option value="PROJECT_WORK">Проектная работа</option>
+                                        <option value="VOLUNTEERING">Волонтёрство</option>
                                     </select>
                                 </div>
                             </div>
@@ -170,35 +169,70 @@
                         <div class="col-2"></div>
                         <div class="col-8">
                             <div class="list-group-flush border-bottom">
-                                <c:forEach var="vacanvy" items="${requestScope.vacancies}">
-                                    <form method="post">
-                                        <br>
-                                        <div class="card" style="width: 44rem;">
-                                            <div class="card-header">
-                                                <h1>${vacanvy.title}</h1>
-                                            </div>
-                                            <div class="list-group-item py-3 lh-tight">
-                                                <div class="d-flex w-100 align-items-center justify-content-between">
-                                                    <strong class="mb-1">${vacanvy.salary}</strong>
-                                                </div>
-                                                <div class="col-10 mb-1 small">
-                                                    <small class="text-muted">${vacanvy.employer.name}</small><br>
-                                                    <small class="text-muted">${vacanvy.city.name}</small><br>
-                                                    <label class="text">${vacanvy.description.get()}</label><br>
-                                                </div>
-                                                <div class="row">
-                                                    <br>
-                                                    <div class="col-4">
-                                                        <button class="w-100 btn btn-success" type="submit">
-                                                            Откликнуться
-                                                        </button>
+                                <c:choose>
+                                    <c:when test="${not empty sessionScope.vacancies}">
+                                        <c:forEach var="vacancy" items="${sessionScope.vacancies}">
+                                            <form method="post">
+                                                <br>
+                                                <div class="card" style="width: 44rem;">
+                                                    <div class="card-header">
+                                                        <h1>${vacancy.title}</h1>
                                                     </div>
-                                                    <br>
+                                                    <div class="list-group-item py-3 lh-tight">
+                                                        <div class="d-flex w-100 align-items-center justify-content-between">
+                                                            <strong class="mb-1">${vacancy.salary}</strong>
+                                                        </div>
+                                                        <div class="col-10 mb-1 small">
+                                                            <small class="text-muted">${vacancy.employer.name}</small><br>
+                                                            <small class="text-muted">${vacancy.city.name}</small><br>
+                                                            <label class="text">${vacancy.description.get()}</label><br>
+                                                        </div>
+                                                        <div class="row">
+                                                            <br>
+                                                            <div class="col-4">
+                                                                <button class="w-100 btn btn-success" type="submit">
+                                                                    Откликнуться
+                                                                </button>
+                                                            </div>
+                                                            <br>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </c:forEach>
+                                            </form>
+                                        </c:forEach>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:forEach var="vacancy" items="${requestScope.vacancies}">
+                                            <form method="post">
+                                                <br>
+                                                <div class="card" style="width: 44rem;">
+                                                    <div class="card-header">
+                                                        <h1>${vacancy.title}</h1>
+                                                    </div>
+                                                    <div class="list-group-item py-3 lh-tight">
+                                                        <div class="d-flex w-100 align-items-center justify-content-between">
+                                                            <strong class="mb-1">${vacancy.salary}</strong>
+                                                        </div>
+                                                        <div class="col-10 mb-1 small">
+                                                            <small class="text-muted">${vacancy.employer.name}</small><br>
+                                                            <small class="text-muted">${vacancy.city.name}</small><br>
+                                                            <label class="text">${vacancy.description.get()}</label><br>
+                                                        </div>
+                                                        <div class="row">
+                                                            <br>
+                                                            <div class="col-4">
+                                                                <button class="w-100 btn btn-success" type="submit">
+                                                                    Откликнуться
+                                                                </button>
+                                                            </div>
+                                                            <br>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </c:forEach>
+                                    </c:otherwise>
+                                </c:choose>
                             </div>
                             <br>
                         </div>

@@ -13,6 +13,7 @@ public enum CommandRegistry {
     SING_IN("singIn"),
     SING_UP("singUp"),
     SING_OUT("singOut"),
+    FILTER_VACANCIES("filterVacancies"),
     ERROR_PAGE("show_error"),
     DEFAULT("main_page");
 
