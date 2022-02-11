@@ -14,6 +14,8 @@ public interface CommandRequest {
 
     Optional<Object> retrieveFromSession(String name);
 
+    String getPath();
+
     void removeFromSession(String name);
 
     void createSession();

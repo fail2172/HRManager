@@ -46,6 +46,11 @@ public class WrappingCommandRequest implements CommandRequest {
     }
 
     @Override
+    public String getPath() {
+        return request.getServletPath();
+    }
+
+    @Override
     public void removeFromSession(String name) {
         if(request.getSession(false) != null){
             request.getSession(false).removeAttribute(name);

@@ -7,9 +7,9 @@ import com.epam.jwd.hrmanager.controller.PropertyContext;
 import com.epam.jwd.hrmanager.controller.RequestFactory;
 import com.epam.jwd.hrmanager.model.Account;
 import com.epam.jwd.hrmanager.model.Vacancy;
-import com.epam.jwd.hrmanager.model.VacancyRequest;
+import com.epam.jwd.hrmanager.model.JobRequest;
 import com.epam.jwd.hrmanager.model.VacancyRequestStatus;
-import com.epam.jwd.hrmanager.secvice.VacancyRequestService;
+import com.epam.jwd.hrmanager.secvice.JobRequestService;
 import com.epam.jwd.hrmanager.secvice.VacancyService;
 
 import java.util.Optional;
@@ -17,32 +17,37 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class ApplyForVacancy implements Command {
 
-    private static final String SING_IN_PAGE = "page.singIn";
+    public static final String TASK_PARAM_NAME = "task";
     private static final String INDEX_PAGE = "page.index";
 
+    private static final String ACCOUNT_PARAM_NAME = "account";
+    private static final String APPLY_FOR_VACANCY_COMMAND = "/controller?command=applyForVacancy";
+    private static final String TASK_PARAM = "taskParam";
+    private static final String APPLY_PARAM_NAME = "apply";
+    private static final String SING_IN_COMMAND = "controller?command=singInPage";
     private static final ReentrantLock lock = new ReentrantLock();
     private static ApplyForVacancy instance;
 
     private final RequestFactory requestFactory;
-    private final VacancyRequestService vacancyRequestService;
+    private final JobRequestService jobRequestService;
     private final VacancyService vacancyService;
     private final PropertyContext propertyContext;
 
-    private ApplyForVacancy(RequestFactory requestFactory, VacancyRequestService vacancyRequestService,
+    private ApplyForVacancy(RequestFactory requestFactory, JobRequestService jobRequestService,
                             VacancyService vacancyService, PropertyContext propertyContext) {
         this.requestFactory = requestFactory;
-        this.vacancyRequestService = vacancyRequestService;
+        this.jobRequestService = jobRequestService;
         this.vacancyService = vacancyService;
         this.propertyContext = propertyContext;
     }
 
-    static ApplyForVacancy getInstance(RequestFactory requestFactory, VacancyRequestService vacancyRequestService,
+    static ApplyForVacancy getInstance(RequestFactory requestFactory, JobRequestService jobRequestService,
                                        VacancyService vacancyService, PropertyContext propertyContext) {
         if (instance == null) {
             lock.lock();
             {
                 if (instance == null) {
-                    instance = new ApplyForVacancy(requestFactory, vacancyRequestService,
+                    instance = new ApplyForVacancy(requestFactory, jobRequestService,
                             vacancyService, propertyContext);
                 }
             }
@@ -53,14 +58,30 @@ public class ApplyForVacancy implements Command {
 
     @Override
     public CommandResponse execute(CommandRequest request) {
-        final Optional<Object> checkAccount = request.retrieveFromSession("account");
+        final Optional<Object> checkAccount = request.retrieveFromSession(ACCOUNT_PARAM_NAME);
         if (!checkAccount.isPresent()) {
-            return requestFactory.createForwardResponse(propertyContext.get(SING_IN_PAGE));
+            return logIn(request);
         }
-        Long vacancyId = Long.parseLong(request.getParameter("apply"));
-        final Vacancy vacancy = vacancyService.get(vacancyId);
+        final Vacancy vacancy = vacancyService.get(receiveVacancyId(request));
         final Account account = (Account) checkAccount.get();
-        vacancyRequestService.add(new VacancyRequest(vacancy, account, VacancyRequestStatus.FIELD));
+        jobRequestService.add(new JobRequest(vacancy, account, VacancyRequestStatus.FIELD));
         return requestFactory.createRedirectResponse(propertyContext.get(INDEX_PAGE));
+    }
+
+    private CommandResponse logIn(CommandRequest request) {
+        request.addToSession(TASK_PARAM_NAME, APPLY_FOR_VACANCY_COMMAND);
+        request.addToSession(TASK_PARAM, Long.parseLong(request.getParameter(APPLY_PARAM_NAME)));
+        return requestFactory.createRedirectResponse(SING_IN_COMMAND);
+    }
+
+    private Long receiveVacancyId(CommandRequest request){
+        Optional<Object> taskParam = request.retrieveFromSession(TASK_PARAM);
+        if (!taskParam.isPresent()) {
+            return Long.parseLong(request.getParameter(APPLY_PARAM_NAME));
+        } else {
+            final Long vacancyId = (Long) taskParam.get();
+            request.removeFromSession(TASK_PARAM);
+            return vacancyId;
+        }
     }
 }

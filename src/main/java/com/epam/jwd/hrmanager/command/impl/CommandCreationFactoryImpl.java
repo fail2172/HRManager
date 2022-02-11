@@ -46,7 +46,20 @@ public class CommandCreationFactoryImpl implements CommandCreationFactory {
                 return FilterVacanciesCommand.getInstance(
                         requestFactory,
                         (VacancyService) serviceFactory.serviceFor(Vacancy.class),
-                        PropertyContext.getInstance());
+                        PropertyContext.getInstance()
+                );
+            case "jobRequestsPage":
+                return ShowJobRequestsPage.getInstance(
+                        requestFactory,
+                        (JobRequestService) serviceFactory.serviceFor(JobRequest.class),
+                        PropertyContext.getInstance()
+                );
+            case "rejectApplication":
+                return RejectJobRequestCommand.getInstance(
+                        requestFactory,
+                        (JobRequestService) serviceFactory.serviceFor(JobRequest.class),
+                        PropertyContext.getInstance()
+                );
             case "singUp":
                 return SingUpCommand.getInstance(
                         requestFactory,
@@ -56,7 +69,7 @@ public class CommandCreationFactoryImpl implements CommandCreationFactory {
             case "applyForVacancy":
                 return ApplyForVacancy.getInstance(
                         requestFactory,
-                        (VacancyRequestService) serviceFactory.serviceFor(VacancyRequest.class),
+                        (JobRequestService) serviceFactory.serviceFor(JobRequest.class),
                         (VacancyService) serviceFactory.serviceFor(Vacancy.class),
                         PropertyContext.getInstance()
                 );

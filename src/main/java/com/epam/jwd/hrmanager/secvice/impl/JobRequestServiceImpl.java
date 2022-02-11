@@ -1,11 +1,11 @@
 package com.epam.jwd.hrmanager.secvice.impl;
 
-import com.epam.jwd.hrmanager.dao.VacancyRequestDao;
+import com.epam.jwd.hrmanager.dao.JobRequestDao;
 import com.epam.jwd.hrmanager.exception.EntityUpdateException;
 import com.epam.jwd.hrmanager.exception.NotFoundEntityException;
 import com.epam.jwd.hrmanager.model.*;
 import com.epam.jwd.hrmanager.secvice.AccountService;
-import com.epam.jwd.hrmanager.secvice.VacancyRequestService;
+import com.epam.jwd.hrmanager.secvice.JobRequestService;
 import com.epam.jwd.hrmanager.secvice.VacancyService;
 import com.epam.jwd.hrmanager.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
@@ -16,31 +16,31 @@ import java.util.Objects;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
-public class VacancyRequestServiceImpl implements VacancyRequestService {
+public class JobRequestServiceImpl implements JobRequestService {
 
-    private static final Logger LOGGER = LogManager.getLogger(VacancyRequestServiceImpl.class);
+    private static final Logger LOGGER = LogManager.getLogger(JobRequestServiceImpl.class);
     private static final ReentrantLock lock = new ReentrantLock();
-    private static VacancyRequestServiceImpl instance;
+    private static JobRequestServiceImpl instance;
 
-    private final VacancyRequestDao vacancyRequestDao;
+    private final JobRequestDao jobRequestDao;
     private final VacancyService vacancyService;
     private final AccountService accountService;
 
-    public VacancyRequestServiceImpl(VacancyRequestDao vacancyRequestDao, VacancyService vacancyService,
-                                     AccountService accountService) {
-        this.vacancyRequestDao = vacancyRequestDao;
+    public JobRequestServiceImpl(JobRequestDao jobRequestDao, VacancyService vacancyService,
+                                 AccountService accountService) {
+        this.jobRequestDao = jobRequestDao;
         this.vacancyService = vacancyService;
         this.accountService = accountService;
     }
 
 
-    static VacancyRequestServiceImpl getInstance(VacancyRequestDao vacancyRequestDao, VacancyService vacancyService,
-                                                 AccountService accountService) {
+    static JobRequestServiceImpl getInstance(JobRequestDao jobRequestDao, VacancyService vacancyService,
+                                             AccountService accountService) {
         if (instance == null) {
             lock.lock();
             {
                 if (instance == null) {
-                    instance = new VacancyRequestServiceImpl(vacancyRequestDao, vacancyService, accountService);
+                    instance = new JobRequestServiceImpl(jobRequestDao, vacancyService, accountService);
                 }
             }
             lock.unlock();
@@ -50,29 +50,29 @@ public class VacancyRequestServiceImpl implements VacancyRequestService {
 
     @Override
     @Transactional
-    public VacancyRequest get(Long id) {
-        final VacancyRequest vacancyRequest = vacancyRequestDao.read(id).orElse(null);
-        final Long vacancyId = vacancyRequestDao.receiveVacancyId(vacancyRequest);
-        final Long accountId = vacancyRequestDao.receiveAccountId(vacancyRequest);
+    public JobRequest get(Long id) {
+        final JobRequest jobRequest = jobRequestDao.read(id).orElse(null);
+        final Long vacancyId = jobRequestDao.receiveVacancyId(jobRequest);
+        final Long accountId = jobRequestDao.receiveAccountId(jobRequest);
         final Vacancy vacancy = vacancyService.get(vacancyId);
         final Account account = accountService.get(accountId);
-        return Objects.requireNonNull(vacancyRequest).withVacancy(vacancy).withAccount(account);
+        return Objects.requireNonNull(jobRequest).withVacancy(vacancy).withAccount(account);
     }
 
     @Override
     @Transactional
-    public List<VacancyRequest> findAll() {
-        return vacancyRequestDao.read().stream()
+    public List<JobRequest> findAll() {
+        return jobRequestDao.read().stream()
                 .map(vacancyRequest -> get(vacancyRequest.getId()))
                 .collect(Collectors.toList());
     }
 
     @Override
     @Transactional
-    public VacancyRequest add(VacancyRequest vacancyRequest) {
+    public JobRequest add(JobRequest jobRequest) {
         try {
-            final VacancyRequest addedVacancyRequest = vacancyRequestDao.create(vacancyRequest);
-            return get(addedVacancyRequest.getId());
+            final JobRequest addedJobRequest = jobRequestDao.create(jobRequest);
+            return get(addedJobRequest.getId());
         } catch (EntityUpdateException e) {
             LOGGER.error("Error adding vacancy request to database", e);
         } catch (InterruptedException e) {
@@ -83,13 +83,13 @@ public class VacancyRequestServiceImpl implements VacancyRequestService {
 
     @Override
     @Transactional
-    public VacancyRequest update(VacancyRequest vacancyRequest) {
+    public JobRequest update(JobRequest jobRequest) {
         try {
-            final VacancyRequest updatedVacancyRequest = vacancyRequestDao.update(vacancyRequest
-                    .withVacancy(vacancyRequest.getVacancy())
-                    .withAccount(vacancyRequest.getAccount())
-                    .withStatus(vacancyRequest.getStatus()));
-            return get(updatedVacancyRequest.getId());
+            final JobRequest updatedJobRequest = jobRequestDao.update(jobRequest
+                    .withVacancy(jobRequest.getVacancy())
+                    .withAccount(jobRequest.getAccount())
+                    .withStatus(jobRequest.getStatus()));
+            return get(updatedJobRequest.getId());
         } catch (InterruptedException e) {
             LOGGER.warn("take connection interrupted");
             Thread.currentThread().interrupt();
@@ -104,6 +104,6 @@ public class VacancyRequestServiceImpl implements VacancyRequestService {
     @Override
     @Transactional
     public boolean delete(Long id) {
-        return vacancyRequestDao.delete(id);
+        return jobRequestDao.delete(id);
     }
 }

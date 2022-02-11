@@ -31,6 +31,8 @@ public class SingUpCommand implements Command {
     private static final String SECOND_NAME_REQUEST_PARAM_NAME = "secondName";
     private static final String PASSWORD_REQUEST_PARAM_NAME = "password";
     private static final String REPEAT_PASSWORD_REQUEST_PARAM_NAME = "repeatPassword";
+    private static final String POSSIBLE_TASK_PARAM_NAME = "task";
+    private static final String TASK_PARAM = "taskParam";
     private static final ReentrantLock lock = new ReentrantLock();
     private static final int MIN_PASSWORD_LENGTH = 8;
     private static SingUpCommand instance;
@@ -78,11 +80,7 @@ public class SingUpCommand implements Command {
             request.addAttributeToJsp(ERROR_REGISTRATION_ATTRIBUTE, exception.get());
             return requestFactory.createForwardResponse(propertyContext.get(SING_UP_PAGE));
         }
-        request.clearSession();
-        request.addToSession(ACCOUNT_SESSION_ATTRIBUTE, accountService.add(
-                createAccount(login, email, firstName, secondName, password)
-        ));
-        return requestFactory.createRedirectResponse(propertyContext.get(INDEX_PAGE));
+        return checkForTasks(request, accountService.add(createAccount(login, email, firstName, secondName, password)));
     }
 
     private Account createAccount(String login, String email, String firstName, String secondName, String password){
@@ -102,5 +100,17 @@ public class SingUpCommand implements Command {
         } else {
             return Optional.empty();
         }
+    }
+
+    private CommandResponse checkForTasks(CommandRequest request, Account account){
+        Optional<Object> possibleTask = request.retrieveFromSession(POSSIBLE_TASK_PARAM_NAME);
+        Optional<Object> taskParam = request.retrieveFromSession(TASK_PARAM);
+        request.createSession();
+        request.addToSession(ACCOUNT_SESSION_ATTRIBUTE, account);
+        if (possibleTask.isPresent() && taskParam.isPresent()) {
+            request.addToSession(TASK_PARAM, taskParam.get());
+            return requestFactory.createRedirectResponse((String) possibleTask.get());
+        }
+        return requestFactory.createRedirectResponse(propertyContext.get(INDEX_PAGE));
     }
 }

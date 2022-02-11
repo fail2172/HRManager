@@ -56,12 +56,12 @@ public class ServiceFactoryImpl implements ServiceFactory {
                     return withTransactions(
                             InterviewServiceImpl.getInstance(interviewDao, addressService, userService, vacancyService)
                     );
-                case "VacancyRequest":
-                    VacancyRequestDao vacancyRequestDao = (VacancyRequestDao) daoFactory.daoFor(VacancyRequest.class);
+                case "JobRequest":
+                    JobRequestDao jobRequestDao = (JobRequestDao) daoFactory.daoFor(JobRequest.class);
                     AccountService accountService = (AccountService) serviceFor(Account.class);
                     vacancyService = (VacancyService) serviceFor(Vacancy.class);
                     return withTransactions(
-                            VacancyRequestServiceImpl.getInstance(vacancyRequestDao, vacancyService, accountService)
+                            JobRequestServiceImpl.getInstance(jobRequestDao, vacancyService, accountService)
                     );
                 case "Account":
                     AccountDao accountDao = (AccountDao) daoFactory.daoFor(Account.class);

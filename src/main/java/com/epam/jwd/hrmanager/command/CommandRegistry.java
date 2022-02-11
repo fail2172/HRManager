@@ -8,6 +8,8 @@ import java.util.List;
 public enum CommandRegistry {
     MAIN_PAGE("mainPage"),
     USER_PAGE("userPage", Role.ADMINISTRATOR, Role.EMPLOYEE),
+    JOB_REQUESTS_PAGE("jobRequestsPage", Role.ADMINISTRATOR, Role.EMPLOYEE),
+    REJECT_APPLICATION("rejectApplication", Role.ADMINISTRATOR, Role.EMPLOYEE),
     SING_IN_PAGE("singInPage"),
     SING_UP_PAGE("singUpPage"),
     SING_IN("singIn"),
