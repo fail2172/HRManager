@@ -4,7 +4,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Headers · Bootstrap v5.0</title>
 
     <link href="../../css/bootstrap.min.css" rel="stylesheet">
@@ -42,16 +42,23 @@
                 </s:security>
             </ul>
 
-            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-                <input type="search" class="form-control form-control-dark" placeholder="Search..."
-                       aria-label="Search">
+            <select class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3 bg-dark text-white" id="list" onchange="setLocale()">
+                <option selected>Lang</option>
+                <option value="ru_RU">Ru</option>
+                <option value="en_US">En</option>
+            </select>
+
+            <form action="<c:url value="/controller?command=searchVacancies"/>" method="post"
+                  class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
+                <input type="search" class="form-control form-control-dark" id="search" name="search"
+                       placeholder="Search...">
             </form>
 
             <s:authorized auth="false">
                 <div class="text-end">
-                    <a href="<c:url value="/controller?command=singIn_page"/>" type="button"
+                    <a href="<c:url value="/controller?command=singInPage"/>" type="button"
                        class="btn btn-outline-light me-2">Login</a>
-                    <a href="<c:url value="/controller?command=singUp_page"/>" type="button"
+                    <a href="<c:url value="/controller?command=singUpPage"/>" type="button"
                        class="btn btn-warning">Sign-up</a>
                 </div>
             </s:authorized>
@@ -169,70 +176,37 @@
                         <div class="col-2"></div>
                         <div class="col-8">
                             <div class="list-group-flush border-bottom">
-                                <c:choose>
-                                    <c:when test="${not empty sessionScope.vacancies}">
-                                        <c:forEach var="vacancy" items="${sessionScope.vacancies}">
-                                            <form method="post">
+                                <c:forEach var="vacancy" items="${requestScope.vacancies}">
+                                    <br>
+                                    <div class="card" style="width: 44rem;">
+                                        <div class="card-header">
+                                            <h1>${vacancy.title}</h1>
+                                        </div>
+                                        <div class="list-group-item py-3 lh-tight">
+                                            <div class="d-flex w-100 align-items-center justify-content-between">
+                                                <strong class="mb-1">${vacancy.salary}</strong>
+                                            </div>
+                                            <div class="col-10 mb-1 small">
+                                                <small class="text-muted">${vacancy.employer.name}</small><br>
+                                                <small class="text-muted">${vacancy.city.name}</small><br>
+                                                <label class="text">${vacancy.description.get()}</label><br>
+                                            </div>
+                                            <div class="row">
                                                 <br>
-                                                <div class="card" style="width: 44rem;">
-                                                    <div class="card-header">
-                                                        <h1>${vacancy.title}</h1>
+                                                <form action="<c:url value="/controller?command=applyForVacancy"/>"
+                                                      method="post">
+                                                    <div class="col-4 form-floating">
+                                                        <button class="w-100 btn btn-success" type="submit"
+                                                                name="apply" value="${vacancy.id}">
+                                                            Откликнуться
+                                                        </button>
                                                     </div>
-                                                    <div class="list-group-item py-3 lh-tight">
-                                                        <div class="d-flex w-100 align-items-center justify-content-between">
-                                                            <strong class="mb-1">${vacancy.salary}</strong>
-                                                        </div>
-                                                        <div class="col-10 mb-1 small">
-                                                            <small class="text-muted">${vacancy.employer.name}</small><br>
-                                                            <small class="text-muted">${vacancy.city.name}</small><br>
-                                                            <label class="text">${vacancy.description.get()}</label><br>
-                                                        </div>
-                                                        <div class="row">
-                                                            <br>
-                                                            <div class="col-4">
-                                                                <button class="w-100 btn btn-success" type="submit">
-                                                                    Откликнуться
-                                                                </button>
-                                                            </div>
-                                                            <br>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </c:forEach>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <c:forEach var="vacancy" items="${requestScope.vacancies}">
-                                            <form method="post">
+                                                </form>
                                                 <br>
-                                                <div class="card" style="width: 44rem;">
-                                                    <div class="card-header">
-                                                        <h1>${vacancy.title}</h1>
-                                                    </div>
-                                                    <div class="list-group-item py-3 lh-tight">
-                                                        <div class="d-flex w-100 align-items-center justify-content-between">
-                                                            <strong class="mb-1">${vacancy.salary}</strong>
-                                                        </div>
-                                                        <div class="col-10 mb-1 small">
-                                                            <small class="text-muted">${vacancy.employer.name}</small><br>
-                                                            <small class="text-muted">${vacancy.city.name}</small><br>
-                                                            <label class="text">${vacancy.description.get()}</label><br>
-                                                        </div>
-                                                        <div class="row">
-                                                            <br>
-                                                            <div class="col-4">
-                                                                <button class="w-100 btn btn-success" type="submit">
-                                                                    Откликнуться
-                                                                </button>
-                                                            </div>
-                                                            <br>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </c:forEach>
-                                    </c:otherwise>
-                                </c:choose>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </c:forEach>
                             </div>
                             <br>
                         </div>
@@ -247,6 +221,7 @@
 <div class="b-example-divider"></div>
 
 <script src="../../js/bootstrap.bundle.min.js"></script>
+<script src="../../js/locale.js"></script>
 
 </body>
 </html>

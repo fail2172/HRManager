@@ -4,10 +4,7 @@ import com.epam.jwd.hrmanager.command.Command;
 import com.epam.jwd.hrmanager.command.CommandCreationFactory;
 import com.epam.jwd.hrmanager.controller.RequestFactory;
 import com.epam.jwd.hrmanager.controller.PropertyContext;
-import com.epam.jwd.hrmanager.model.Account;
-import com.epam.jwd.hrmanager.model.City;
-import com.epam.jwd.hrmanager.model.User;
-import com.epam.jwd.hrmanager.model.Vacancy;
+import com.epam.jwd.hrmanager.model.*;
 import com.epam.jwd.hrmanager.secvice.*;
 
 public class CommandCreationFactoryImpl implements CommandCreationFactory {
@@ -28,13 +25,13 @@ public class CommandCreationFactoryImpl implements CommandCreationFactory {
         switch (name) {
             case "singOut":
                 return SingOutCommand.getInstance(requestFactory, PropertyContext.getInstance());
-            case "show_error":
+            case "showError":
                 return ShowErrorPageCommand.getInstance(requestFactory, PropertyContext.getInstance());
-            case "singIn_page":
+            case "singInPage":
                 return ShowSingInPageCommand.getInstance(requestFactory, PropertyContext.getInstance());
-            case "singUp_page":
+            case "singUpPage":
                 return ShowSingUpPageCommand.getInstance(requestFactory, PropertyContext.getInstance());
-            case "user_page":
+            case "userPage":
                 return ShowUsersPage.getInstance(
                         requestFactory,
                         (UserService) serviceFactory.serviceFor(User.class),
@@ -45,23 +42,39 @@ public class CommandCreationFactoryImpl implements CommandCreationFactory {
                         (AccountService) serviceFactory.serviceFor(Account.class),
                         PropertyContext.getInstance()
                 );
+            case "filterVacancies":
+                return FilterVacanciesCommand.getInstance(
+                        requestFactory,
+                        (VacancyService) serviceFactory.serviceFor(Vacancy.class),
+                        PropertyContext.getInstance());
             case "singUp":
                 return SingUpCommand.getInstance(
                         requestFactory,
                         (AccountService) serviceFactory.serviceFor(Account.class),
                         (UserService) serviceFactory.serviceFor(User.class),
                         PropertyContext.getInstance());
-            case "filterVacancies":
-                return FilterVacanciesCommand.getInstance(
+            case "applyForVacancy":
+                return ApplyForVacancy.getInstance(
+                        requestFactory,
+                        (VacancyRequestService) serviceFactory.serviceFor(VacancyRequest.class),
+                        (VacancyService) serviceFactory.serviceFor(Vacancy.class),
+                        PropertyContext.getInstance()
+                );
+            case "searchVacancies":
+                return SearchVacanciesCommand.getInstance(
                         requestFactory,
                         (VacancyService) serviceFactory.serviceFor(Vacancy.class),
-                        PropertyContext.getInstance());
+                        (CityService) serviceFactory.serviceFor(City.class),
+                        (EmployerService) serviceFactory.serviceFor(Employer.class),
+                        PropertyContext.getInstance()
+                );
             default:
                 return ShowMainPageCommand.getInstance(
                         requestFactory,
                         (VacancyService) serviceFactory.serviceFor(Vacancy.class),
                         (CityService) serviceFactory.serviceFor(City.class),
-                        PropertyContext.getInstance());
+                        PropertyContext.getInstance()
+                );
         }
     }
 

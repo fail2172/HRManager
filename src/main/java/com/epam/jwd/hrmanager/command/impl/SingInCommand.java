@@ -13,7 +13,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class SingInCommand implements Command {
 
-    private static final String LOGIN_PAGE = "page.singIn";
+    private static final String SING_IN_PAGE = "page.singIn";
     private static final String INDEX_PAGE = "page.index";
 
     private static final String INVALID_LOGIN_PASSWORD_MESSAGE = "Invalid login or password";
@@ -59,7 +59,7 @@ public class SingInCommand implements Command {
         Optional<Account> account = accountService.authenticate(email, password);
         if (!account.isPresent()) {
             request.addAttributeToJsp(ERROR_LOGIN_PASSWORD_ATTRIBUTE, INVALID_LOGIN_PASSWORD_MESSAGE);
-            return requestFactory.createForwardResponse(propertyContext.get(LOGIN_PAGE));
+            return requestFactory.createForwardResponse(propertyContext.get(SING_IN_PAGE));
         }
         request.createSession();
         request.addToSession(ACCOUNT_SESSION_ATTRIBUTE, account.get());

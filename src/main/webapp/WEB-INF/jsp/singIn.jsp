@@ -14,7 +14,7 @@
 <fmt:message bundle="${loc}" key="error.LoginPassMessage" var="loginPassErrorMessage"/>
 
 <!doctype html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="utf-8">
     <title>${title}</title>
@@ -49,7 +49,7 @@
         <div class="form-floating" role="alert">
             <div class="alert alert-secondary" role="alert">
                 ${forTheFirstTimeWithUs}<br>
-                <a href="<c:url value="/controller?command=singUp_page"/>" class="alert-link">${register}</a>.
+                <a href="<c:url value="/controller?command=singUpPage"/>" class="alert-link">${register}</a>.
             </div>
         </div>
         <button class="w-100 btn btn-lg btn-success" type="submit">${singInButton}</button>

@@ -1,5 +1,6 @@
 package com.epam.jwd.hrmanager.secvice.impl;
 
+import com.epam.jwd.hrmanager.dao.EmployerDao;
 import com.epam.jwd.hrmanager.dao.EntityDao;
 import com.epam.jwd.hrmanager.exception.EntityUpdateException;
 import com.epam.jwd.hrmanager.exception.NotFoundEntityException;
@@ -10,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class EmployerServiceImpl implements EmployerService {
@@ -18,13 +20,13 @@ public class EmployerServiceImpl implements EmployerService {
     private static final ReentrantLock lock = new ReentrantLock();
     private static EmployerServiceImpl instance;
 
-    private final EntityDao<Employer> employerDao;
+    private final EmployerDao employerDao;
 
-    private EmployerServiceImpl(EntityDao<Employer> employerDao) {
+    private EmployerServiceImpl(EmployerDao employerDao) {
         this.employerDao = employerDao;
     }
 
-    static EmployerServiceImpl getInstance(EntityDao<Employer> employerDao) {
+    static EmployerServiceImpl getInstance(EmployerDao employerDao) {
         if (instance == null) {
             lock.lock();
             {
@@ -84,5 +86,10 @@ public class EmployerServiceImpl implements EmployerService {
     @Transactional
     public boolean delete(Long id) {
         return employerDao.delete(id);
+    }
+
+    @Override
+    public Optional<Employer> receiveByName(String name) {
+        return employerDao.receiveByName(name);
     }
 }

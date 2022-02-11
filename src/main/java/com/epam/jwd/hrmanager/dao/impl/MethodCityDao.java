@@ -1,5 +1,6 @@
 package com.epam.jwd.hrmanager.dao.impl;
 
+import com.epam.jwd.hrmanager.dao.CityDao;
 import com.epam.jwd.hrmanager.dao.CommonDao;
 import com.epam.jwd.hrmanager.dao.EntityDao;
 import com.epam.jwd.hrmanager.db.ConnectionPool;
@@ -13,9 +14,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class MethodCityDao extends CommonDao<City> implements EntityDao<City> {
+public class MethodCityDao extends CommonDao<City> implements CityDao {
 
     private static MethodCityDao instance;
     private static final ReentrantLock lock = new ReentrantLock();
@@ -91,5 +93,10 @@ public class MethodCityDao extends CommonDao<City> implements EntityDao<City> {
                 resultSet.getLong(ID_FIELD_NAME),
                 resultSet.getString(CITY_NAME_FIELD)
         );
+    }
+
+    @Override
+    public Optional<City> receiveByName(String name) {
+        return receiveEntityByParam(CITY_NAME_FIELD, name);
     }
 }

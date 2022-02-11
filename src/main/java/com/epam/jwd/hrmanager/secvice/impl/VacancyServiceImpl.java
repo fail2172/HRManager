@@ -67,9 +67,7 @@ public class VacancyServiceImpl implements VacancyService {
     @Transactional
     public Vacancy add(Vacancy vacancy) {
         try {
-            final Vacancy addedVacancy = vacancyDao.create(vacancy
-                    .withEmployer(vacancy.getEmployer())
-                    .withCity(vacancy.getCity()));
+            final Vacancy addedVacancy = vacancyDao.create(vacancy);
             return get(addedVacancy.getId());
         } catch (EntityUpdateException e) {
             LOGGER.error("Error adding address to database", e);

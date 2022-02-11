@@ -69,9 +69,7 @@ public class AddressServiceImpl implements AddressService {
     @Transactional
     public Address add(Address address) {
         try {
-            final Address addedAddress = addressDao.create(address
-                    .withCity(address.getCity())
-                    .withStreet(address.getStreet()));
+            final Address addedAddress = addressDao.create(address);
             return get(addedAddress.getId());
         } catch (EntityUpdateException e) {
             LOGGER.error("Error adding address to database", e);

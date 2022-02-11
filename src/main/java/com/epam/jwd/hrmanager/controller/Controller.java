@@ -79,14 +79,12 @@ public class Controller extends HttpServlet {
         EmployerService employerService = (EmployerService) ServiceFactory.getInstance().serviceFor(Employer.class);
         CityService cityService = (CityService) ServiceFactory.getInstance().serviceFor(City.class);
 
-        final Employer employer = employerService.add(new Employer("ООО Водная компания", ""));
+        final Employer employer = employerService.add(new Employer("Группа Компаний Армтек", ""));
         final City city = cityService.add(new City("Минск"));
 
-        Vacancy vacancy = new Vacancy("Оператор ПК", new BigDecimal(400), employer, city, Employment.PART_TIME_EMPLOYMENT,1,"Прием входящих звонков, оформление заявок в срм. Работа с документацией." +
-                "Грамотная речь. Умение пользоваться компьютером.");
-        service.add(vacancy);
-//        for (Vacancy vacancy : service.findAll()){
-//            System.out.println(vacancy);
-//        }
+        Vacancy vacancy = new Vacancy("Комплектовщик товара", new BigDecimal(2000), employer, city, Employment.PART_TIME_EMPLOYMENT,1,
+                "Комплектование заказов согласно заявкам. Отбор товара на местах хранения, укладка в контейнеры, передача для последующей обработки. Раскладка товара на местах...\n" +
+                        "Ищем к себе в команду таких же Энергичных, Позитивных и Нацеленных на результат ! Рассмотрим кандидатов без опыта работы, но желающих...");
+        System.out.println(service.add(vacancy));
     }
 }

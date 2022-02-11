@@ -56,8 +56,7 @@ public class FilterVacanciesCommand implements Command {
     @Override
     public CommandResponse execute(CommandRequest request) {
         List<Vacancy> vacancies = findVacancies(request);
-        request.createSession();
-        System.out.println(request.addToSession(VACANCIES_ATTRIBUTE_NAME, vacancies));
+        request.addToSession(VACANCIES_ATTRIBUTE_NAME, vacancies);
         return requestFactory.createRedirectResponse(propertyContext.get(INDEX_PAGE));
     }
 

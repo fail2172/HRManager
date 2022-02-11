@@ -6,16 +6,18 @@ import java.util.Arrays;
 import java.util.List;
 
 public enum CommandRegistry {
-    MAIN_PAGE("main_page"),
-    USER_PAGE("user_page", Role.ADMINISTRATOR, Role.EMPLOYEE),
-    SING_IN_PAGE("singIn_page"),
-    SING_UP_PAGE("singUp_page"),
+    MAIN_PAGE("mainPage"),
+    USER_PAGE("userPage", Role.ADMINISTRATOR, Role.EMPLOYEE),
+    SING_IN_PAGE("singInPage"),
+    SING_UP_PAGE("singUpPage"),
     SING_IN("singIn"),
     SING_UP("singUp"),
     SING_OUT("singOut"),
     FILTER_VACANCIES("filterVacancies"),
-    ERROR_PAGE("show_error"),
-    DEFAULT("main_page");
+    SEARCH_VACANCIES("searchVacancies"),
+    APPLY_FOR_VACANCY("applyForVacancy"),
+    ERROR_PAGE("showError"),
+    DEFAULT("mainPage");
 
     private final List<Role> allowedRoles;
     private final Command command;

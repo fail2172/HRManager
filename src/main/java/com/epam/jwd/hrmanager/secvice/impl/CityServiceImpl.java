@@ -1,5 +1,6 @@
 package com.epam.jwd.hrmanager.secvice.impl;
 
+import com.epam.jwd.hrmanager.dao.CityDao;
 import com.epam.jwd.hrmanager.dao.EntityDao;
 import com.epam.jwd.hrmanager.exception.EntityUpdateException;
 import com.epam.jwd.hrmanager.exception.NotFoundEntityException;
@@ -10,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class CityServiceImpl implements CityService {
@@ -18,13 +20,13 @@ public class CityServiceImpl implements CityService {
     private static final ReentrantLock lock = new ReentrantLock();
     private static CityServiceImpl instance;
 
-    private final EntityDao<City> cityDao;
+    private final CityDao cityDao;
 
-    private CityServiceImpl(EntityDao<City> cityDao) {
+    private CityServiceImpl(CityDao cityDao) {
         this.cityDao = cityDao;
     }
 
-    static CityServiceImpl getInstance(EntityDao<City> cityDao) {
+    static CityServiceImpl getInstance(CityDao cityDao) {
         if (instance == null) {
             lock.lock();
             {
@@ -84,5 +86,10 @@ public class CityServiceImpl implements CityService {
     @Transactional
     public boolean delete(Long id) {
         return cityDao.delete(id);
+    }
+
+    @Override
+    public Optional<City> receiveByName(String name) {
+        return cityDao.receiveByName(name);
     }
 }

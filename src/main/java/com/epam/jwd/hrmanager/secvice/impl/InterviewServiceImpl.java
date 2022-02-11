@@ -51,13 +51,13 @@ public class InterviewServiceImpl implements InterviewService {
     @Override
     @Transactional
     public Interview get(Long id) {
-        Interview interview = interviewDao.read(id).orElse(null);
+        final Interview interview = interviewDao.read(id).orElse(null);
         final Long addressId = interviewDao.receiveAddressId(interview);
         final Long userId = interviewDao.receiveUserId(interview);
         final Long vacancyId = interviewDao.receiveVacancyId(interview);
-        Address address = addressService.get(addressId);
-        User user = userService.get(userId);
-        Vacancy vacancy = vacancyService.get(vacancyId);
+        final Address address = addressService.get(addressId);
+        final User user = userService.get(userId);
+        final Vacancy vacancy = vacancyService.get(vacancyId);
         return Objects.requireNonNull(interview).withAddress(address).withUser(user).withVacancy(vacancy);
     }
 
@@ -73,10 +73,7 @@ public class InterviewServiceImpl implements InterviewService {
     @Transactional
     public Interview add(Interview interview) {
         try {
-            final Interview addedInterview = interviewDao.create(interview
-                    .withAddress(interview.getAddress())
-                    .withUser(interview.getUser())
-                    .withVacancy(interview.getVacancy()));
+            final Interview addedInterview = interviewDao.create(interview);
             return get(addedInterview.getId());
         } catch (EntityUpdateException e) {
             LOGGER.error("Error adding address to database", e);

@@ -68,9 +68,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User update(User user) {
         try {
-            User updatedUser = userDao.update(user
-                    .withFirstName(user.getFirstName())
-                    .withSecondName(user.getSecondName()));
+            User updatedUser = userDao.update(user);
             return get(updatedUser.getId());
         } catch (InterruptedException e) {
             LOGGER.warn("take connection interrupted");

@@ -82,6 +82,7 @@ public abstract class CommonDao<T extends Entity> implements EntityDao<T> {
             throw e;
         }
         return search(selectByUField, ps -> fillUniqueField(ps, t), this::extractResultCheckingException);
+//        return null;
     }
 
     @Override
@@ -100,7 +101,8 @@ public abstract class CommonDao<T extends Entity> implements EntityDao<T> {
     @Override
     public List<T> read() {
         try {
-            return searchList(selectAllExpression, st -> {}, this::extractResultCheckingException);
+            return searchList(selectAllExpression, st -> {
+            }, this::extractResultCheckingException);
         } catch (InterruptedException e) {
             logger.warn("take connection interrupted", e);
             Thread.currentThread().interrupt();
@@ -145,7 +147,7 @@ public abstract class CommonDao<T extends Entity> implements EntityDao<T> {
     }
 
     private <R> R search(String sql, StatementPreparator statementPreparation,
-                                   ResultSetExtractor<R> extractor) throws InterruptedException {
+                         ResultSetExtractor<R> extractor) throws InterruptedException {
         try (Connection conn = connectionPool.takeConnection();
              final PreparedStatement statement = conn.prepareStatement(sql)) {
             statementPreparation.accept(statement);
@@ -217,7 +219,7 @@ public abstract class CommonDao<T extends Entity> implements EntityDao<T> {
         }
     }
 
-    protected Object receiveEntityParam(Entity entity, String fieldName){
+    protected Object receiveEntityParam(Entity entity, String fieldName) {
         try {
             final String selectField = format(SELECT_FIELD, fieldName, getTableName()) + SPACE + format(WHERE_FIELD, getIdFieldName());
             return search(selectField, st -> st.setLong(1, entity.getId()), this::extractField);
@@ -228,13 +230,13 @@ public abstract class CommonDao<T extends Entity> implements EntityDao<T> {
         return null;
     }
 
-    protected Optional<T> receiveEntityByParam(String fieldName, Object param){
+    protected Optional<T> receiveEntityByParam(String fieldName, Object param) {
         final String selectByField = format(SELECT_ALL_FROM, join(COMMA, getFields()), getTableName()) + SPACE + format(WHERE_FIELD, fieldName);
         try {
             return Optional.ofNullable(
                     search(selectByField, st -> st.setObject(1, param), this::extractResultCheckingException)
             );
-        }  catch (InterruptedException e) {
+        } catch (InterruptedException e) {
             logger.warn("take connection interrupted");
             Thread.currentThread().interrupt();
         }

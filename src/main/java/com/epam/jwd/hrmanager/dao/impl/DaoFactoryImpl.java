@@ -52,6 +52,8 @@ public class DaoFactoryImpl implements DaoFactory {
                     return MethodInterviewDao.getInstance(connectionPool);
                 case "Account":
                     return MethodAccountDao.getInstance(connectionPool);
+                case "VacancyRequest":
+                    return MethodVacancyRequestDao.getInstance(connectionPool);
                 default:
                     throw new IllegalStateException(String.format(DAO_NOT_FOUND, className));
             }
