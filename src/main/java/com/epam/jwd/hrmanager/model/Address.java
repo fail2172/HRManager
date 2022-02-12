@@ -1,16 +1,14 @@
 package com.epam.jwd.hrmanager.model;
 
-import java.util.Optional;
-
 public class Address implements Entity {
 
     private final Long id;
     private final City city;
     private final Street street;
     private final int houseNumber;
-    private final Integer flatNumber;
+    private final int flatNumber;
 
-    public Address(Long id, City city, Street street, int hoseNumber, Integer flatNumber) {
+    public Address(Long id, City city, Street street, int hoseNumber, int flatNumber) {
         this.id = id;
         this.city = city;
         this.street = street;
@@ -44,8 +42,8 @@ public class Address implements Entity {
         return street;
     }
 
-    public Optional<Integer> getFlatNumber() {
-        return Optional.of(flatNumber);
+    public int getFlatNumber() {
+        return flatNumber;
     }
 
     public Address withCity(City city) {
@@ -72,10 +70,10 @@ public class Address implements Entity {
         Address address = (Address) o;
 
         if (houseNumber != address.houseNumber) return false;
+        if (flatNumber != address.flatNumber) return false;
         if (!id.equals(address.id)) return false;
         if (!city.equals(address.city)) return false;
-        if (!street.equals(address.street)) return false;
-        return flatNumber.equals(address.flatNumber);
+        return street.equals(address.street);
     }
 
     @Override
@@ -84,7 +82,7 @@ public class Address implements Entity {
         result = 31 * result + city.hashCode();
         result = 31 * result + street.hashCode();
         result = 31 * result + houseNumber;
-        result = 31 * result + flatNumber.hashCode();
+        result = 31 * result + flatNumber;
         return result;
     }
 
@@ -94,7 +92,7 @@ public class Address implements Entity {
                 "id=" + id +
                 ", city=" + city +
                 ", street=" + street +
-                ", hoseNumber=" + houseNumber +
+                ", houseNumber=" + houseNumber +
                 ", flatNumber=" + flatNumber +
                 '}';
     }

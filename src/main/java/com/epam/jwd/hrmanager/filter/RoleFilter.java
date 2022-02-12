@@ -18,7 +18,7 @@ public class RoleFilter implements Filter {
     private static final Logger LOGGER = LogManager.getLogger(RoleFilter.class);
     public static final String COMMAND_PARAM_NAME = "command";
     private static final String ERROR_PAGE_URL = "/controller?command=show_error";
-    public static final String ACCOUNT_SESSION_ATTRIBUTE_NAME = "account";
+    public static final String ACCOUNT_SESSION_ATTRIBUTE_NAME = "sessionAccount";
 
     private final Map<Role, Set<Command>> commandsByRoles;
 

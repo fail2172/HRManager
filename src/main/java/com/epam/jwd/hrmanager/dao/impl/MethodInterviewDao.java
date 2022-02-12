@@ -26,6 +26,7 @@ public class MethodInterviewDao extends CommonDao<Interview> implements Intervie
     private static final String INTERVIEW_TABLE_NAME = "interview";
     private static final String ID_FIELD_NAME = "id";
     private static final String DATE_FIELD_NAME = "i_date";
+    private static final String TIME_FIELD_NAME = "i_time";
     private static final String ADDRESS_ID_FIELD_NAME = "address_id";
     private static final String USER_ID_FIELD_NAME = "user_id";
     private static final String VACANCY_ID_FIELD_NAME = "vacancy_id";
@@ -33,7 +34,7 @@ public class MethodInterviewDao extends CommonDao<Interview> implements Intervie
     private static final String HASH = "i_hash";
     private static final Integer ZERO = 0;
     private static final List<String> FIELDS = Arrays.asList(
-            ID_FIELD_NAME, DATE_FIELD_NAME, ADDRESS_ID_FIELD_NAME,
+            ID_FIELD_NAME, DATE_FIELD_NAME, TIME_FIELD_NAME, ADDRESS_ID_FIELD_NAME,
             USER_ID_FIELD_NAME, VACANCY_ID_FIELD_NAME, STATUS_FIELD_NAME, HASH
     );
 
@@ -87,7 +88,7 @@ public class MethodInterviewDao extends CommonDao<Interview> implements Intervie
     protected void updateEntity(PreparedStatement statement, Interview interview) throws SQLException {
         fillFields(statement, interview);
         statement.setLong(1, interview.getId());
-        statement.setLong(8, interview.getId());
+        statement.setLong(9, interview.getId());
     }
 
     @Override
@@ -100,7 +101,8 @@ public class MethodInterviewDao extends CommonDao<Interview> implements Intervie
         return new Interview(
                 resultSet.getLong(ID_FIELD_NAME),
                 InterviewStatus.of(resultSet.getString(STATUS_FIELD_NAME)),
-                resultSet.getDate(DATE_FIELD_NAME)
+                resultSet.getDate(DATE_FIELD_NAME),
+                resultSet.getTime(TIME_FIELD_NAME)
         );
     }
 
@@ -122,18 +124,20 @@ public class MethodInterviewDao extends CommonDao<Interview> implements Intervie
     private void fillFields(PreparedStatement statement, Interview interview) throws SQLException {
         statement.setLong(1, ZERO);
         statement.setDate(2, interview.getDate());
-        statement.setLong(3, interview.getAddress().getId());
-        statement.setLong(4, interview.getUser().getId());
-        statement.setLong(5, interview.getVacancy().getId());
-        statement.setString(6, interview.getStatus().toString());
-        statement.setString(7, composeHashCode(interview));
+        statement.setTime(3, interview.getTime());
+        statement.setLong(4, interview.getAddress().getId());
+        statement.setLong(5, interview.getUser().getId());
+        statement.setLong(6, interview.getVacancy().getId());
+        statement.setString(7, interview.getStatus().toString());
+        statement.setString(8, composeHashCode(interview));
     }
 
     private String composeHashCode(Interview interview){
-        return String.valueOf(interview.getDate()) +
-                interview.getAddress().getId() +
-                interview.getUser().getId() +
-                interview.getVacancy().getId() +
-                interview.getStatus();
+        return String.valueOf(interview.getDate())
+                + interview.getTime()
+                + interview.getAddress().getId()
+                + interview.getUser().getId()
+                + interview.getVacancy().getId()
+                + interview.getStatus();
     }
 }

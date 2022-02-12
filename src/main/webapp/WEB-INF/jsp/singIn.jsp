@@ -38,7 +38,7 @@
             <label for="password">${password}</label>
         </div>
 
-        <c:if test="${not empty requestScope.errorLoginPassMessage}">
+        <c:if test="${not empty requestScope.authenticateError}">
             <div class="form-floating" role="alert">
                 <div class="alert alert-danger" role="alert">
                         ${loginPassErrorMessage}

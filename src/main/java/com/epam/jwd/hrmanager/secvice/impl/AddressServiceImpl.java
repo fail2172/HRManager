@@ -88,7 +88,7 @@ public class AddressServiceImpl implements AddressService {
                             .withCity(address.getCity())
                             .withStreet(address.getStreet())
                             .withHouseNumber(address.getHouseNumber())
-                            .withFlatNumber(address.getFlatNumber().orElse(null))
+                            .withFlatNumber(address.getFlatNumber())
                     );
             return get(updateAddress.getId());
         } catch (InterruptedException e) {

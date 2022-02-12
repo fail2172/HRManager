@@ -22,7 +22,7 @@ public class AuthorizedTag extends BodyTagSupport {
 
     boolean checkAuthorized() {
         Optional<Account> account = Optional.ofNullable(pageContext.getSession())
-                .map(s -> (Account) s.getAttribute("account"));
+                .map(s -> (Account) s.getAttribute("sessionAccount"));
         return account.isPresent() == auth;
     }
 

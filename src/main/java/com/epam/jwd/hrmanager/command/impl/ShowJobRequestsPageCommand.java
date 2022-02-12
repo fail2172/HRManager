@@ -13,32 +13,32 @@ import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
-public class ShowJobRequestsPage implements Command {
+public class ShowJobRequestsPageCommand implements Command {
 
     private static final String JOB_REQUESTS_PAGE = "page.jobRequests";
 
     private static final String VACANCIES_REQUEST_ATTRIBUTE_NAME = "jobInquiries";
     private static final ReentrantLock lock = new ReentrantLock();
-    private static ShowJobRequestsPage instance;
+    private static ShowJobRequestsPageCommand instance;
 
     private final RequestFactory requestFactory;
     private final JobRequestService jobRequestService;
     private final PropertyContext propertyContext;
 
-    private ShowJobRequestsPage(RequestFactory requestFactory, JobRequestService jobRequestService,
-                                PropertyContext propertyContext) {
+    private ShowJobRequestsPageCommand(RequestFactory requestFactory, JobRequestService jobRequestService,
+                                       PropertyContext propertyContext) {
         this.requestFactory = requestFactory;
         this.jobRequestService = jobRequestService;
         this.propertyContext = propertyContext;
     }
 
-    static ShowJobRequestsPage getInstance(RequestFactory requestFactory, JobRequestService jobRequestService,
-                                           PropertyContext propertyContext) {
+    static ShowJobRequestsPageCommand getInstance(RequestFactory requestFactory, JobRequestService jobRequestService,
+                                                  PropertyContext propertyContext) {
         if (instance == null) {
             lock.lock();
             {
                 if (instance == null) {
-                    instance = new ShowJobRequestsPage(requestFactory, jobRequestService, propertyContext);
+                    instance = new ShowJobRequestsPageCommand(requestFactory, jobRequestService, propertyContext);
                 }
             }
             lock.unlock();

@@ -23,7 +23,7 @@ public class SecurityTag extends BodyTagSupport {
 
     private boolean checkSecurityLevel() {
         Optional<Integer> securityLevel = Optional.ofNullable(pageContext.getSession())
-                .map(s -> (Account) s.getAttribute("account"))
+                .map(s -> (Account) s.getAttribute("sessionAccount"))
                 .map(Account::getRole)
                 .map(Role::getSecurityLevel);
         return securityLevel.isPresent() && securityLevel.get() >= level;

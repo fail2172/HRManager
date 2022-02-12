@@ -23,8 +23,8 @@ public class SingInCommand implements Command {
     private static final String POSSIBLE_TASK_PARAM_NAME = "task";
     private static final String TASK_PARAM = "taskParam";
     private static final String INVALID_LOGIN_PASSWORD_MESSAGE = "Invalid login or password";
-    private static final String AUTHENTICATE_ERROR_ATTRIBUTE = "errorLoginPassMessage";
-    private static final String ACCOUNT_SESSION_ATTRIBUTE = "account";
+    private static final String AUTHENTICATE_ERROR_ATTRIBUTE = "authenticateError";
+    private static final String SESSION_ACCOUNT_SESSION_ATTRIBUTE = "sessionAccount";
     private static final String EMAIL_REQUEST_PARAM_NAME = "email";
     private static final String PASSWORD_REQUEST_PARAM_NAME = "password";
     private static final ReentrantLock lock = new ReentrantLock();
@@ -57,7 +57,7 @@ public class SingInCommand implements Command {
 
     @Override
     public CommandResponse execute(CommandRequest request) {
-        if (request.sessionExist() && request.retrieveFromSession(ACCOUNT_SESSION_ATTRIBUTE).isPresent()) {
+        if (request.sessionExist() && request.retrieveFromSession(SESSION_ACCOUNT_SESSION_ATTRIBUTE).isPresent()) {
             return null;
         }
         Optional<Account> account;
@@ -85,7 +85,7 @@ public class SingInCommand implements Command {
         Optional<Object> possibleTask = request.retrieveFromSession(POSSIBLE_TASK_PARAM_NAME);
         Optional<Object> taskParam = request.retrieveFromSession(TASK_PARAM);
         request.createSession();
-        request.addToSession(ACCOUNT_SESSION_ATTRIBUTE, account);
+        request.addToSession(SESSION_ACCOUNT_SESSION_ATTRIBUTE, account);
         if (possibleTask.isPresent() && taskParam.isPresent()) {
             request.addToSession(TASK_PARAM, taskParam.get());
             return requestFactory.createRedirectResponse((String) possibleTask.get());

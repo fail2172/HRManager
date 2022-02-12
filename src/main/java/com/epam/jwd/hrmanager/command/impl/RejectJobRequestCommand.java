@@ -15,8 +15,9 @@ public class RejectJobRequestCommand implements Command {
 
     private static final String JOB_REQUESTS_PAGE = "page.jobRequests";
 
-    private static final String REJECT_PARAM_NAME = "reject";
+    private static final String JOB_REQUEST_ID_PARAM_NAME = "jobRequestId";
     private static final ReentrantLock lock = new ReentrantLock();
+    public static final String JOB_REQUESTS_PAGE_COMMAND = "/controller?command=jobRequestsPage";
     private static RejectJobRequestCommand instance;
 
     private final RequestFactory requestFactory;
@@ -46,9 +47,9 @@ public class RejectJobRequestCommand implements Command {
 
     @Override
     public CommandResponse execute(CommandRequest request) {
-        Long jobRequestId = Long.parseLong(request.getParameter(REJECT_PARAM_NAME));
+        Long jobRequestId = Long.parseLong(request.getParameter(JOB_REQUEST_ID_PARAM_NAME));
         JobRequest oldJobRequest = jobRequestService.get(jobRequestId);
         jobRequestService.update(oldJobRequest.withStatus(VacancyRequestStatus.DENIED));
-        return requestFactory.createRedirectResponse("/controller?command=jobRequestsPage");
+        return requestFactory.createRedirectResponse(JOB_REQUESTS_PAGE_COMMAND);
     }
 }

@@ -77,5 +77,7 @@ public class Controller extends HttpServlet {
 //                "Комплектование заказов согласно заявкам. Отбор товара на местах хранения, укладка в контейнеры, передача для последующей обработки. Раскладка товара на местах...\n" +
 //                        "Ищем к себе в команду таких же Энергичных, Позитивных и Нацеленных на результат ! Рассмотрим кандидатов без опыта работы, но желающих...");
 //        System.out.println(service.add(vacancy));
+        System.out.println(request.getParameter("date"));
+        System.out.println(request.getParameter("time"));
     }
 }

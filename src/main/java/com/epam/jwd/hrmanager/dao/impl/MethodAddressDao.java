@@ -113,10 +113,10 @@ public class MethodAddressDao extends CommonDao<Address> implements AddressDao {
     }
 
     private String composeHashCode(Address address) {
-        return String.valueOf(address.getCity().getId()) +
-                address.getStreet().getId() +
-                address.getHouseNumber() +
-                address.getFlatNumber();
+        return String.valueOf(address.getCity().getId())
+                + address.getStreet().getId()
+                + address.getHouseNumber()
+                + address.getFlatNumber();
     }
 
     private void fillFields(PreparedStatement statement, Address address) throws SQLException {
@@ -124,7 +124,7 @@ public class MethodAddressDao extends CommonDao<Address> implements AddressDao {
         statement.setLong(2, address.getCity().getId());
         statement.setLong(3, address.getStreet().getId());
         statement.setInt(4, address.getHouseNumber());
-        statement.setInt(5, address.getFlatNumber().orElse(0));
+        statement.setInt(5, address.getFlatNumber());
         statement.setString(6, composeHashCode(address));
     }
 }

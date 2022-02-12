@@ -31,6 +31,13 @@ public class CommandCreationFactoryImpl implements CommandCreationFactory {
                 return ShowSingInPageCommand.getInstance(requestFactory, PropertyContext.getInstance());
             case "singUpPage":
                 return ShowSingUpPageCommand.getInstance(requestFactory, PropertyContext.getInstance());
+            case "goToInterviewCreationPage":
+                return GoToInterviewCreationPageCommand.getInstance(requestFactory,
+                        (JobRequestService) serviceFactory.serviceFor(JobRequest.class));
+            case "interviewCreationPage":
+                return ShowInterviewCreationPageCommand.getInstance(
+                        requestFactory,
+                        PropertyContext.getInstance());
             case "userPage":
                 return ShowUsersPage.getInstance(
                         requestFactory,
@@ -49,7 +56,7 @@ public class CommandCreationFactoryImpl implements CommandCreationFactory {
                         PropertyContext.getInstance()
                 );
             case "jobRequestsPage":
-                return ShowJobRequestsPage.getInstance(
+                return ShowJobRequestsPageCommand.getInstance(
                         requestFactory,
                         (JobRequestService) serviceFactory.serviceFor(JobRequest.class),
                         PropertyContext.getInstance()
@@ -79,6 +86,16 @@ public class CommandCreationFactoryImpl implements CommandCreationFactory {
                         (VacancyService) serviceFactory.serviceFor(Vacancy.class),
                         (CityService) serviceFactory.serviceFor(City.class),
                         (EmployerService) serviceFactory.serviceFor(Employer.class),
+                        PropertyContext.getInstance()
+                );
+            case "creteAnInterview":
+                return CreatingInterviewCommand.getInstance(
+                        requestFactory,
+                        (JobRequestService) serviceFactory.serviceFor(JobRequest.class),
+                        (InterviewService) serviceFactory.serviceFor(Interview.class),
+                        (CityService) serviceFactory.serviceFor(City.class),
+                        (StreetService) serviceFactory.serviceFor(Street.class),
+                        (AddressService) serviceFactory.serviceFor(Address.class),
                         PropertyContext.getInstance()
                 );
             default:

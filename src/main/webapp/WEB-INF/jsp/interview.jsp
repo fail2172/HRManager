@@ -34,7 +34,8 @@
 
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                 <s:security level="2">
-                    <li><a href="#" class="nav-link px-2 text-secondary">Home</a></li>
+                    <li><a href="<c:url value="/controller?command=jobRequestsPage"/>"
+                           class="nav-link px-2 text-secondary">Home</a></li>
                     <li><a href="#" class="nav-link px-2 text-white">Features</a></li>
                     <li><a href="#" class="nav-link px-2 text-white">Pricing</a></li>
                     <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
@@ -88,66 +89,94 @@
 <div class="b-example-divider"></div>
 
 <main>
+    <br>
+    <br>
     <div class="container-fluid">
         <div class="row">
             <div class="col-3"></div>
             <div class="col-6">
-                <div class="container-fluid">
-                    <div class="list-group-flush border-bottom">
-                        <c:forEach var="jobRequest" items="${requestScope.jobInquiries}">
-                            <br>
-                            <div class="card" style="width: 44rem;">
-                                <div class="card-header">
-                                    <h1>${jobRequest.vacancy.title}</h1>
-                                </div>
-                                <div class="list-group-item py-3 lh-tight">
-                                    <div class="d-flex w-100 align-items-center justify-content-between">
-                                        <strong class="mb-1">${jobRequest.vacancy.salary}</strong>
-                                        <small>${jobRequest.account.user.firstName} ${jobRequest.account.user.secondName}</small>
-                                    </div>
-                                    <div class="col-10 mb-1 small">
-                                        <small class="text-muted">${jobRequest.vacancy.employer.name}</small><br>
-                                        <small class="text-muted">${jobRequest.vacancy.city.name}</small><br>
-                                        <label class="text">${jobRequest.vacancy.description.get()}</label><br>
-                                    </div>
-                                    <div class="row">
-                                        <br>
-                                        <form action="<c:url value="/controller?command=goToInterviewCreationPage"/>"
-                                              method="post">
-                                            <div class="col-4 form-floating">
-                                                <button class="w-100 btn btn-success" type="submit"
-                                                        name="jobRequestId" value="${jobRequest.id}">
-                                                    Принять
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <br>
-                                    <div class="row">
-                                        <br>
-                                        <form action="<c:url value="/controller?command=rejectApplication"/>"
-                                              method="post">
-                                            <div class="col-4 form-floating">
-                                                <button class="w-100 btn btn-danger" type="submit"
-                                                        name="jobRequestId" value="${jobRequest.id}">
-                                                    Отклонить
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </c:forEach>
-                        <br>
+                <form class="row g-3" action="<c:url value="/controller?command=creteAnInterview"/>" method="post">
+                    <div class="col-12">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="city" name="city" placeholder="Город">
+                            <label for="city">Город</label>
+                        </div>
                     </div>
-                </div>
-                <div class="col-3"></div>
+                    <div class="col-12">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="street" name="street" placeholder="Улица">
+                            <label for="street">Улица</label>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-floating">
+                            <input type="number" class="form-control" id="house" name="house" placeholder="Дом">
+                            <label for="house">Дом</label>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-floating">
+                            <input type="number" class="form-control" id="flat" name="flat" placeholder="Квартира">
+                            <label for="flat">Квартира</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-floating">
+                            <input class="btn-lg" type="date" id="date" name="date">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-floating">
+                            <input class="btn-lg" type="time" id="time" name="time">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-lg btn-primary">Войти в систему</button>
+                    </div>
+                </form>
+                <br>
+                <c:if test="${not empty requestScope.errorFillingOutTheFormMessage}">
+                    <c:if test="${requestScope.errorFillingOutTheFormMessage eq 'city name is empty'}">
+                        <div class="form-floating" role="alert">
+                            <div class="alert alert-danger" role="alert">
+                                    ${errorFillingOutTheFormMessage}
+                            </div>
+                        </div>
+                    </c:if>
+                    <c:if test="${requestScope.errorFillingOutTheFormMessage eq 'street name is empty'}">
+                        <div class="form-floating" role="alert">
+                            <div class="alert alert-danger" role="alert">
+                                    ${errorFillingOutTheFormMessage}
+                            </div>
+                        </div>
+                    </c:if>
+                    <c:if test="${requestScope.errorFillingOutTheFormMessage eq 'incorrect hose number'}">
+                        <div class="form-floating" role="alert">
+                            <div class="alert alert-danger" role="alert">
+                                    ${errorFillingOutTheFormMessage}
+                            </div>
+                        </div>
+                    </c:if>
+                    <c:if test="${requestScope.errorFillingOutTheFormMessage eq 'incorrect date'}">
+                        <div class="form-floating" role="alert">
+                            <div class="alert alert-danger" role="alert">
+                                    ${errorFillingOutTheFormMessage}
+                            </div>
+                        </div>
+                    </c:if>
+                    <c:if test="${requestScope.errorFillingOutTheFormMessage eq 'incorrect time'}">
+                        <div class="form-floating" role="alert">
+                            <div class="alert alert-danger" role="alert">
+                                    ${errorFillingOutTheFormMessage}
+                            </div>
+                        </div>
+                    </c:if>
+                </c:if>
             </div>
+            <div class="col-3"></div>
         </div>
     </div>
 </main>
-
-<div class="b-example-divider"></div>
 
 <script src="../../js/bootstrap.bundle.min.js"></script>
 <script src="../../js/locale.js"></script>
