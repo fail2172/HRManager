@@ -118,7 +118,7 @@
                     <div class="row">
                         <div class="col-3"></div>
                         <div class="col-6">
-                            <a href="<c:url value="/controller?command=singInPage"/>" type="button"
+                            <a href="<c:url value="/controller?command=editProfilePage"/>" type="button"
                                class="btn btn-lg btn-primary">Редактировать</a>
                         </div>
                         <div class="col-3"></div>

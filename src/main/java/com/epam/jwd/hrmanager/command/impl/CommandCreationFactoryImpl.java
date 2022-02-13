@@ -32,13 +32,13 @@ public class CommandCreationFactoryImpl implements CommandCreationFactory {
                 return ShowSingInPageCommand.getInstance(requestFactory, PropertyContext.getInstance());
             case "singUpPage":
                 return ShowSingUpPageCommand.getInstance(requestFactory, PropertyContext.getInstance());
+            case "interviewCreationPage":
+                return ShowInterviewCreationPageCommand.getInstance(requestFactory, PropertyContext.getInstance());
+            case "editProfilePage":
+                return ShowEditProfilePageCommand.getInstance(requestFactory, PropertyContext.getInstance());
             case "goToInterviewCreationPage":
                 return GoToInterviewCreationPageCommand.getInstance(requestFactory,
                         (JobRequestService) serviceFactory.serviceFor(JobRequest.class));
-            case "interviewCreationPage":
-                return ShowInterviewCreationPageCommand.getInstance(
-                        requestFactory,
-                        PropertyContext.getInstance());
             case "userPage":
                 return ShowUsersPage.getInstance(
                         requestFactory,
@@ -87,6 +87,13 @@ public class CommandCreationFactoryImpl implements CommandCreationFactory {
                         (VacancyService) serviceFactory.serviceFor(Vacancy.class),
                         (CityService) serviceFactory.serviceFor(City.class),
                         (EmployerService) serviceFactory.serviceFor(Employer.class),
+                        PropertyContext.getInstance()
+                );
+            case "editProfile":
+                return EditProfileCommand.getInstance(
+                        requestFactory,
+                        (AccountService) serviceFactory.serviceFor(Account.class),
+                        (UserService) serviceFactory.serviceFor(User.class),
                         PropertyContext.getInstance()
                 );
             case "creteAnInterview":
