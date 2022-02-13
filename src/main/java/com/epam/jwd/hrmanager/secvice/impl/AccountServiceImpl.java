@@ -6,6 +6,7 @@ import com.epam.jwd.hrmanager.dao.EntityDao;
 import com.epam.jwd.hrmanager.exception.EntityUpdateException;
 import com.epam.jwd.hrmanager.exception.NotFoundEntityException;
 import com.epam.jwd.hrmanager.model.Account;
+import com.epam.jwd.hrmanager.model.AccountStatus;
 import com.epam.jwd.hrmanager.model.User;
 import com.epam.jwd.hrmanager.secvice.AccountService;
 import com.epam.jwd.hrmanager.transaction.Transactional;
@@ -127,6 +128,7 @@ public class AccountServiceImpl implements AccountService {
                     .getPassword()
                     .getBytes(StandardCharsets.UTF_8);
             return verifier.verify(enteredPassword, hashedPassword).verified
+                    && readAccount.get().getStatus().equals(AccountStatus.UNBANNED)
                     ? Optional.of(get(readAccount.get().getId()))
                     : Optional.empty();
         } else {

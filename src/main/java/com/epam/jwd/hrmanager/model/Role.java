@@ -5,7 +5,7 @@ import java.util.List;
 
 public enum Role {
     ADMINISTRATOR(2),
-    EMPLOYEE(1),
+    MANAGER(1),
     ASPIRANT(0),
     UNAUTHORIZED(0);
 

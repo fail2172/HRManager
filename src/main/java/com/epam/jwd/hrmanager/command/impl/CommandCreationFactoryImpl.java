@@ -26,7 +26,7 @@ public class CommandCreationFactoryImpl implements CommandCreationFactory {
         switch (name) {
             case "singOut":
                 return SingOutCommand.getInstance(requestFactory, PropertyContext.getInstance());
-            case "showError":
+            case "show_error":
                 return ShowErrorPageCommand.getInstance(requestFactory, PropertyContext.getInstance());
             case "singInPage":
                 return ShowSingInPageCommand.getInstance(requestFactory, PropertyContext.getInstance());
@@ -41,10 +41,25 @@ public class CommandCreationFactoryImpl implements CommandCreationFactory {
             case "goToInterviewCreationPage":
                 return GoToInterviewCreationPageCommand.getInstance(requestFactory,
                         (JobRequestService) serviceFactory.serviceFor(JobRequest.class));
-            case "userPage":
-                return ShowUsersPage.getInstance(
+            case "ban":
+                return BanCommand.getInstance(
                         requestFactory,
-                        (UserService) serviceFactory.serviceFor(User.class),
+                        (AccountService) serviceFactory.serviceFor(Account.class),
+                        PropertyContext.getInstance());
+            case "unBan":
+                return UnBanCommand.getInstance(
+                        requestFactory,
+                        (AccountService) serviceFactory.serviceFor(Account.class),
+                        PropertyContext.getInstance());
+            case "aspirantToManager":
+                return AspirantToManagerCommand.getInstance(
+                        requestFactory,
+                        (AccountService) serviceFactory.serviceFor(Account.class),
+                        PropertyContext.getInstance());
+            case "usersPage":
+                return ShowUsersPageCommand.getInstance(
+                        requestFactory,
+                        (AccountService) serviceFactory.serviceFor(Account.class),
                         PropertyContext.getInstance());
             case "singIn":
                 return SingInCommand.getInstance(
@@ -81,6 +96,14 @@ public class CommandCreationFactoryImpl implements CommandCreationFactory {
                         requestFactory,
                         (JobRequestService) serviceFactory.serviceFor(JobRequest.class),
                         (VacancyService) serviceFactory.serviceFor(Vacancy.class),
+                        PropertyContext.getInstance()
+                );
+            case "deleteAccount":
+                return DeleteAccountCommand.getInstance(
+                        requestFactory,
+                        (AccountService) serviceFactory.serviceFor(Account.class),
+                        (InterviewService) serviceFactory.serviceFor(Interview.class),
+                        (JobRequestService) serviceFactory.serviceFor(JobRequest.class),
                         PropertyContext.getInstance()
                 );
             case "searchVacancies":

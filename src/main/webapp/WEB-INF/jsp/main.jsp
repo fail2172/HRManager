@@ -21,7 +21,8 @@
                     <li><a href="<c:url value="/"/>" class="nav-link px-2 text-white">Home</a></li>
                     <li><a href="<c:url value="/controller?command=jobRequestsPage"/>"
                            class="nav-link px-2 text-white">Job requests</a></li>
-                    <li><a href="#" class="nav-link px-2 text-white">Pricing</a></li>
+                    <li><a href="<c:url value="/controller?command=usersPage"/>"
+                           class="nav-link px-2 text-white">Users</a></li>
                     <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
                     <li><a href="#" class="nav-link px-2 text-white">About</a></li>
                 </s:security>

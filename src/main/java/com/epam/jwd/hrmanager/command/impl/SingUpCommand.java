@@ -6,6 +6,7 @@ import com.epam.jwd.hrmanager.controller.CommandResponse;
 import com.epam.jwd.hrmanager.controller.PropertyContext;
 import com.epam.jwd.hrmanager.controller.RequestFactory;
 import com.epam.jwd.hrmanager.model.Account;
+import com.epam.jwd.hrmanager.model.AccountStatus;
 import com.epam.jwd.hrmanager.model.Role;
 import com.epam.jwd.hrmanager.model.User;
 import com.epam.jwd.hrmanager.secvice.AccountService;
@@ -83,11 +84,6 @@ public class SingUpCommand implements Command {
         return checkForTasks(request, accountService.add(createAccount(login, email, firstName, secondName, password)));
     }
 
-    private Account createAccount(String login, String email, String firstName, String secondName, String password){
-        final User user = userService.add(new User(firstName, secondName));
-        return accountService.add(new Account(login, email, password, user, Role.ASPIRANT));
-    }
-
     private Optional<String> validate(String login, String email, String password, String repeatPassword) {
         if (accountService.findByEmail(email).isPresent()){
             return Optional.of(EMAIL_BUSY_ERROR);
@@ -100,6 +96,11 @@ public class SingUpCommand implements Command {
         } else {
             return Optional.empty();
         }
+    }
+
+    private Account createAccount(String login, String email, String firstName, String secondName, String password){
+        final User user = userService.add(new User(firstName, secondName));
+        return accountService.add(new Account(login, email, password, user, Role.ASPIRANT, AccountStatus.UNBANNED));
     }
 
     private CommandResponse checkForTasks(CommandRequest request, Account account){

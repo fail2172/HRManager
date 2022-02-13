@@ -7,13 +7,17 @@ import java.util.List;
 
 public enum CommandRegistry {
     VACANCY_CREATION("vacancyCreation", Role.ADMINISTRATOR),
-    DELETE_VACANCY("deleteVacancy"),
-    USER_PAGE("userPage", Role.ADMINISTRATOR, Role.EMPLOYEE),
-    JOB_REQUESTS_PAGE("jobRequestsPage", Role.ADMINISTRATOR, Role.EMPLOYEE),
-    INTERVIEW_CREATION_PAGE("interviewCreationPage", Role.ADMINISTRATOR, Role.EMPLOYEE),
-    CREATE_AN_INTERVIEW("creteAnInterview", Role.ADMINISTRATOR, Role.EMPLOYEE),
-    GO_TO_INTERVIEW_CREATION_PAGE("goToInterviewCreationPage", Role.ADMINISTRATOR, Role.EMPLOYEE),
-    REJECT_APPLICATION("rejectApplication", Role.ADMINISTRATOR, Role.EMPLOYEE),
+    DELETE_VACANCY("deleteVacancy", Role.ADMINISTRATOR),
+    USER_PAGE("usersPage", Role.ADMINISTRATOR),
+    ASPIRANT_TO_MANAGER("aspirantToManager", Role.ADMINISTRATOR),
+    BAN("ban", Role.ADMINISTRATOR),
+    UNBAN("unBan", Role.ADMINISTRATOR),
+    DELETE_ACCOUNT("deleteAccount"),
+    JOB_REQUESTS_PAGE("jobRequestsPage", Role.ADMINISTRATOR, Role.MANAGER),
+    INTERVIEW_CREATION_PAGE("interviewCreationPage", Role.ADMINISTRATOR, Role.MANAGER),
+    CREATE_AN_INTERVIEW("creteAnInterview", Role.ADMINISTRATOR, Role.MANAGER),
+    GO_TO_INTERVIEW_CREATION_PAGE("goToInterviewCreationPage", Role.ADMINISTRATOR, Role.MANAGER),
+    REJECT_APPLICATION("rejectApplication", Role.ADMINISTRATOR, Role.MANAGER),
     VACANCY_CREATION_PAGE("vacancyCreationPage", Role.ADMINISTRATOR),
     MAIN_PAGE("mainPage"),
     SING_IN_PAGE("singInPage"),
@@ -27,7 +31,7 @@ public enum CommandRegistry {
     PERSONAL_AREA_PAGE("personalAreaPage"),
     EDIT_PROFILE_PAGE("editProfilePage"),
     EDIT_PROFILE("editProfile"),
-    ERROR_PAGE("showError"),
+    ERROR_PAGE("show_error"),
     DEFAULT("mainPage");
 
     private final List<Role> allowedRoles;
