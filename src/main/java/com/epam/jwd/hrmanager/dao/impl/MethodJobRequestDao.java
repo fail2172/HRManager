@@ -3,8 +3,9 @@ package com.epam.jwd.hrmanager.dao.impl;
 import com.epam.jwd.hrmanager.dao.CommonDao;
 import com.epam.jwd.hrmanager.dao.JobRequestDao;
 import com.epam.jwd.hrmanager.db.ConnectionPool;
+import com.epam.jwd.hrmanager.model.Account;
 import com.epam.jwd.hrmanager.model.JobRequest;
-import com.epam.jwd.hrmanager.model.VacancyRequestStatus;
+import com.epam.jwd.hrmanager.model.JobRequestStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -89,7 +90,7 @@ public class MethodJobRequestDao extends CommonDao<JobRequest> implements JobReq
     protected JobRequest extractResultSet(ResultSet resultSet) throws SQLException {
         return new JobRequest(
                 resultSet.getLong(ID_FIELD_NAME),
-                VacancyRequestStatus.of(resultSet.getString(VR_STATUS_FIELD_NAME))
+                JobRequestStatus.of(resultSet.getString(VR_STATUS_FIELD_NAME))
         );
     }
 
@@ -101,6 +102,11 @@ public class MethodJobRequestDao extends CommonDao<JobRequest> implements JobReq
     @Override
     public Long receiveAccountId(JobRequest jobRequest) {
         return ((Number) receiveEntityParam(jobRequest, ACCOUNT_ID_FIELD_NAME)).longValue();
+    }
+
+    @Override
+    public List<JobRequest> jobRequestsByAccount(Account account) {
+        return receiveEntitiesByParam(ACCOUNT_ID_FIELD_NAME, account.getId());
     }
 
     private void fillFields(PreparedStatement statement, JobRequest jobRequest) throws SQLException {

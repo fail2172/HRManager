@@ -5,20 +5,20 @@ public class JobRequest implements Entity{
     private final Long id;
     private final Vacancy vacancy;
     private final Account account;
-    private final VacancyRequestStatus status;
+    private final JobRequestStatus status;
 
-    public JobRequest(Long id, Vacancy vacancy, Account account, VacancyRequestStatus status) {
+    public JobRequest(Long id, Vacancy vacancy, Account account, JobRequestStatus status) {
         this.id = id;
         this.vacancy = vacancy;
         this.account = account;
         this.status = status;
     }
 
-    public JobRequest(Vacancy vacancy, Account account, VacancyRequestStatus status) {
+    public JobRequest(Vacancy vacancy, Account account, JobRequestStatus status) {
         this(null, vacancy, account, status);
     }
 
-    public JobRequest(Long id, VacancyRequestStatus status) {
+    public JobRequest(Long id, JobRequestStatus status) {
         this(id, null, null, status);
     }
 
@@ -30,7 +30,7 @@ public class JobRequest implements Entity{
         return account;
     }
 
-    public VacancyRequestStatus getStatus() {
+    public JobRequestStatus getStatus() {
         return status;
     }
 
@@ -42,7 +42,7 @@ public class JobRequest implements Entity{
         return new JobRequest(id, vacancy, account, status);
     }
 
-    public JobRequest withStatus(VacancyRequestStatus status){
+    public JobRequest withStatus(JobRequestStatus status){
         return new JobRequest(id, vacancy, account, status);
     }
 

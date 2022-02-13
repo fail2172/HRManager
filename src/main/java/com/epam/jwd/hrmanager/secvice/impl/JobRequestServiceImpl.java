@@ -106,4 +106,11 @@ public class JobRequestServiceImpl implements JobRequestService {
     public boolean delete(Long id) {
         return jobRequestDao.delete(id);
     }
+
+    @Override
+    public List<JobRequest> findByAccount(Account account) {
+        return jobRequestDao.jobRequestsByAccount(account).stream()
+                .map(jr -> get(jr.getId()))
+                .collect(Collectors.toList());
+    }
 }

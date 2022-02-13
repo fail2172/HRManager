@@ -3,19 +3,17 @@ package com.epam.jwd.hrmanager.dao.impl;
 import com.epam.jwd.hrmanager.dao.CommonDao;
 import com.epam.jwd.hrmanager.dao.InterviewDao;
 import com.epam.jwd.hrmanager.db.ConnectionPool;
-import com.epam.jwd.hrmanager.model.Address;
 import com.epam.jwd.hrmanager.model.Interview;
 import com.epam.jwd.hrmanager.model.InterviewStatus;
+import com.epam.jwd.hrmanager.model.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class MethodInterviewDao extends CommonDao<Interview> implements InterviewDao {
@@ -119,6 +117,11 @@ public class MethodInterviewDao extends CommonDao<Interview> implements Intervie
     @Override
     public Long receiveVacancyId(Interview interview) {
         return ((Number) receiveEntityParam(interview, VACANCY_ID_FIELD_NAME)).longValue();
+    }
+
+    @Override
+    public List<Interview> receiveInterviewsByUser(User user) {
+        return receiveEntitiesByParam(USER_ID_FIELD_NAME, user.getId());
     }
 
     private void fillFields(PreparedStatement statement, Interview interview) throws SQLException {

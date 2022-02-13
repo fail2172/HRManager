@@ -82,7 +82,6 @@ public abstract class CommonDao<T extends Entity> implements EntityDao<T> {
             throw e;
         }
         return search(selectByUField, ps -> fillUniqueField(ps, t), this::extractResultCheckingException);
-//        return null;
     }
 
     @Override
@@ -231,7 +230,9 @@ public abstract class CommonDao<T extends Entity> implements EntityDao<T> {
     }
 
     protected Optional<T> receiveEntityByParam(String fieldName, Object param) {
-        final String selectByField = format(SELECT_ALL_FROM, join(COMMA, getFields()), getTableName()) + SPACE + format(WHERE_FIELD, fieldName);
+        final String selectByField = format(
+                SELECT_ALL_FROM, join(COMMA, getFields()), getTableName()) + SPACE + format(WHERE_FIELD, fieldName
+        );
         try {
             return Optional.ofNullable(
                     search(selectByField, st -> st.setObject(1, param), this::extractResultCheckingException)
@@ -241,6 +242,19 @@ public abstract class CommonDao<T extends Entity> implements EntityDao<T> {
             Thread.currentThread().interrupt();
         }
         return Optional.empty();
+    }
+
+    protected List<T> receiveEntitiesByParam(String fieldName, Object param) {
+        final String selectByField = format(
+                SELECT_ALL_FROM, join(COMMA, getFields()), getTableName()) + SPACE + format(WHERE_FIELD, fieldName
+        );
+        try {
+            return searchList(selectByField, st -> st.setObject(1, param), this::extractResultCheckingException);
+        } catch (InterruptedException e) {
+            logger.warn("take connection interrupted");
+            Thread.currentThread().interrupt();
+        }
+        return Collections.emptyList();
     }
 
     protected abstract String getTableName();

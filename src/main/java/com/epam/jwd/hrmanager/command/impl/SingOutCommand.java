@@ -12,7 +12,7 @@ public class SingOutCommand implements Command {
 
     private static final String INDEX_PAGE = "page.index";
 
-    private static final String ACCOUNT_SESSION_ATTRIBUTE = "account";
+    private static final String ACCOUNT_SESSION_ATTRIBUTE = "sessionAccount";
     private static final ReentrantLock lock = new ReentrantLock();
     private static SingOutCommand instance;
 

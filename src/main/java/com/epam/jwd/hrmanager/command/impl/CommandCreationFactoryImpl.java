@@ -2,6 +2,7 @@ package com.epam.jwd.hrmanager.command.impl;
 
 import com.epam.jwd.hrmanager.command.Command;
 import com.epam.jwd.hrmanager.command.CommandCreationFactory;
+import com.epam.jwd.hrmanager.command.impl.page.*;
 import com.epam.jwd.hrmanager.controller.RequestFactory;
 import com.epam.jwd.hrmanager.controller.PropertyContext;
 import com.epam.jwd.hrmanager.model.*;
@@ -96,6 +97,13 @@ public class CommandCreationFactoryImpl implements CommandCreationFactory {
                         (CityService) serviceFactory.serviceFor(City.class),
                         (StreetService) serviceFactory.serviceFor(Street.class),
                         (AddressService) serviceFactory.serviceFor(Address.class),
+                        PropertyContext.getInstance()
+                );
+            case "personalAreaPage":
+                return ShowPersonalAreaPageCommand.getInstance(
+                        requestFactory,
+                        (JobRequestService) serviceFactory.serviceFor(JobRequest.class),
+                        (InterviewService) serviceFactory.serviceFor(Interview.class),
                         PropertyContext.getInstance()
                 );
             default:

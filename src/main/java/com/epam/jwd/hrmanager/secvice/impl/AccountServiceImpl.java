@@ -127,7 +127,7 @@ public class AccountServiceImpl implements AccountService {
                     .getPassword()
                     .getBytes(StandardCharsets.UTF_8);
             return verifier.verify(enteredPassword, hashedPassword).verified
-                    ? readAccount
+                    ? Optional.of(get(readAccount.get().getId()))
                     : Optional.empty();
         } else {
             protectFromTimingAttack(password.getBytes(StandardCharsets.UTF_8));

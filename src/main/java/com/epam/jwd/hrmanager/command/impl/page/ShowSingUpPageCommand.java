@@ -1,4 +1,4 @@
-package com.epam.jwd.hrmanager.command.impl;
+package com.epam.jwd.hrmanager.command.impl.page;
 
 import com.epam.jwd.hrmanager.command.Command;
 import com.epam.jwd.hrmanager.controller.CommandRequest;
@@ -8,27 +8,26 @@ import com.epam.jwd.hrmanager.controller.RequestFactory;
 
 import java.util.concurrent.locks.ReentrantLock;
 
-public class ShowInterviewCreationPageCommand implements Command {
-
-    private static final String INTERVIEW_CREATION_PAGE = "page.interviewCreation";
+public class ShowSingUpPageCommand implements Command {
+    public static final String SING_UP_PAGE = "page.singUp";
 
     private static final ReentrantLock lock = new ReentrantLock();
-    private static ShowInterviewCreationPageCommand instance;
+    private static ShowSingUpPageCommand instance;
 
     private final RequestFactory requestFactory;
     private final PropertyContext propertyContext;
 
-    private ShowInterviewCreationPageCommand(RequestFactory requestFactory, PropertyContext propertyContext) {
+    private ShowSingUpPageCommand(RequestFactory requestFactory, PropertyContext propertyContext) {
         this.requestFactory = requestFactory;
         this.propertyContext = propertyContext;
     }
 
-    static ShowInterviewCreationPageCommand getInstance(RequestFactory requestFactory, PropertyContext propertyContext) {
-        if (instance == null) {
+    public static ShowSingUpPageCommand getInstance(RequestFactory requestFactory, PropertyContext propertyContext){
+        if(instance == null){
             lock.lock();
             {
-                if (instance == null) {
-                    instance = new ShowInterviewCreationPageCommand(requestFactory, propertyContext);
+                if(instance == null){
+                    instance = new ShowSingUpPageCommand(requestFactory, propertyContext);
                 }
             }
             lock.unlock();
@@ -38,6 +37,6 @@ public class ShowInterviewCreationPageCommand implements Command {
 
     @Override
     public CommandResponse execute(CommandRequest request) {
-        return requestFactory.createForwardResponse(propertyContext.get(INTERVIEW_CREATION_PAGE));
+        return requestFactory.createForwardResponse(propertyContext.get(SING_UP_PAGE));
     }
 }

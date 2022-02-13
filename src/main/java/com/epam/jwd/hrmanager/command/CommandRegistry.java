@@ -21,6 +21,7 @@ public enum CommandRegistry {
     FILTER_VACANCIES("filterVacancies"),
     SEARCH_VACANCIES("searchVacancies"),
     APPLY_FOR_VACANCY("applyForVacancy"),
+    PERSONAL_AREA_PAGE("personalAreaPage"),
     ERROR_PAGE("showError"),
     DEFAULT("mainPage");
 

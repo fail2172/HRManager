@@ -103,7 +103,9 @@
                                 <div class="list-group-item py-3 lh-tight">
                                     <div class="d-flex w-100 align-items-center justify-content-between">
                                         <strong class="mb-1">${jobRequest.vacancy.salary}</strong>
-                                        <small>${jobRequest.account.user.firstName} ${jobRequest.account.user.secondName}</small>
+                                        <small>
+                                                ${jobRequest.account.user.firstName} ${jobRequest.account.user.secondName}
+                                        </small>
                                     </div>
                                     <div class="col-10 mb-1 small">
                                         <small class="text-muted">${jobRequest.vacancy.employer.name}</small><br>

@@ -34,7 +34,7 @@
 
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                 <s:security level="2">
-                    <li><a href="<c:url value="/controller?command=jobRequestsPage"/>" class="nav-link px-2 text-secondary">Home</a></li>
+                    <li><a href="<c:url value="/"/>" class="nav-link px-2 text-white">Home</a></li>
                     <li><a href="#" class="nav-link px-2 text-white">Features</a></li>
                     <li><a href="#" class="nav-link px-2 text-white">Pricing</a></li>
                     <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
@@ -72,7 +72,7 @@
                     <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
                         <li><a class="dropdown-item" href="#">New project...</a></li>
                         <li><a class="dropdown-item" href="#">Settings</a></li>
-                        <li><a class="dropdown-item" href="#">Profile</a></li>
+                        <li><a class="dropdown-item" href="<c:url value="/controller?command=personalAreaPage"/>">Profile</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>

@@ -93,7 +93,7 @@ public class CreatingInterviewCommand implements Command {
             return requestFactory.createForwardResponse(propertyContext.get(INTERVIEW_CREATION_PAGE));
         }
         final Optional<Object> jobRequest = request.retrieveFromSession(JOB_REQUEST_PARAM_NAME);
-        jobRequestService.update(((JobRequest) jobRequest.get()).withStatus(VacancyRequestStatus.APPROVED));
+        jobRequestService.update(((JobRequest) jobRequest.get()).withStatus(JobRequestStatus.APPROVED));
         return requestFactory.createRedirectResponse(SHOW_JOB_REQUESTS_COMMAND);
     }
 

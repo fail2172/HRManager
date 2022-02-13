@@ -1,4 +1,4 @@
-package com.epam.jwd.hrmanager.command.impl;
+package com.epam.jwd.hrmanager.command.impl.page;
 
 import com.epam.jwd.hrmanager.command.Command;
 import com.epam.jwd.hrmanager.controller.CommandRequest;
@@ -27,9 +27,9 @@ public class ShowUsersPage implements Command {
         this.propertyContext = propertyContext;
     }
 
-    static ShowUsersPage getInstance(RequestFactory requestFactory,
-                                     UserService userService,
-                                     PropertyContext propertyContext){
+    public static ShowUsersPage getInstance(RequestFactory requestFactory,
+                                            UserService userService,
+                                            PropertyContext propertyContext){
         if(instance == null){
             lock.lock();
             {

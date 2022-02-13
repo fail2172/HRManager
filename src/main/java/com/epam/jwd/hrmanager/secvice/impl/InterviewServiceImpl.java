@@ -64,9 +64,9 @@ public class InterviewServiceImpl implements InterviewService {
     @Override
     @Transactional
     public List<Interview> findAll() {
-            return interviewDao.read().stream()
-                    .map(interview -> get(interview.getId()))
-                    .collect(Collectors.toList());
+        return interviewDao.read().stream()
+                .map(interview -> get(interview.getId()))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -109,5 +109,12 @@ public class InterviewServiceImpl implements InterviewService {
     @Transactional
     public boolean delete(Long id) {
         return interviewDao.delete(id);
+    }
+
+    @Override
+    public List<Interview> findInterviewsByUser(User user) {
+        return interviewDao.receiveInterviewsByUser(user).stream()
+                .map(i -> get(i.getId()))
+                .collect(Collectors.toList());
     }
 }

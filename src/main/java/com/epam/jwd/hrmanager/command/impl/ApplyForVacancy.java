@@ -8,7 +8,7 @@ import com.epam.jwd.hrmanager.controller.RequestFactory;
 import com.epam.jwd.hrmanager.model.Account;
 import com.epam.jwd.hrmanager.model.Vacancy;
 import com.epam.jwd.hrmanager.model.JobRequest;
-import com.epam.jwd.hrmanager.model.VacancyRequestStatus;
+import com.epam.jwd.hrmanager.model.JobRequestStatus;
 import com.epam.jwd.hrmanager.secvice.JobRequestService;
 import com.epam.jwd.hrmanager.secvice.VacancyService;
 
@@ -64,7 +64,7 @@ public class ApplyForVacancy implements Command {
         }
         final Vacancy vacancy = vacancyService.get(receiveVacancyId(request));
         final Account account = (Account) checkAccount.get();
-        jobRequestService.add(new JobRequest(vacancy, account, VacancyRequestStatus.FIELD));
+        jobRequestService.add(new JobRequest(vacancy, account, JobRequestStatus.FIELD));
         return requestFactory.createRedirectResponse(propertyContext.get(INDEX_PAGE));
     }
 

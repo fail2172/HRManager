@@ -1,4 +1,4 @@
-package com.epam.jwd.hrmanager.command.impl;
+package com.epam.jwd.hrmanager.command.impl.page;
 
 import com.epam.jwd.hrmanager.command.Command;
 import com.epam.jwd.hrmanager.controller.CommandRequest;
@@ -8,27 +8,27 @@ import com.epam.jwd.hrmanager.controller.PropertyContext;
 
 import java.util.concurrent.locks.ReentrantLock;
 
-public class ShowErrorPageCommand implements Command {
+public class ShowSingInPageCommand implements Command {
 
-    private static final String ERROR_PAGE = "page.error";
+    public static final String SING_IN_PAGE = "page.singIn";
 
     private static final ReentrantLock lock = new ReentrantLock();
-    private static ShowErrorPageCommand instance;
+    private static ShowSingInPageCommand instance;
 
     private final RequestFactory requestFactory;
     private final PropertyContext propertyContext;
 
-    private ShowErrorPageCommand(RequestFactory requestFactory, PropertyContext propertyContext) {
+    private ShowSingInPageCommand(RequestFactory requestFactory, PropertyContext propertyContext) {
         this.requestFactory = requestFactory;
         this.propertyContext = propertyContext;
     }
 
-    static ShowErrorPageCommand getInstance(RequestFactory requestFactory, PropertyContext propertyContext){
+    public static ShowSingInPageCommand getInstance(RequestFactory requestFactory, PropertyContext propertyContext){
         if(instance == null){
             lock.lock();
             {
                 if(instance == null){
-                    instance = new ShowErrorPageCommand(requestFactory, propertyContext);
+                    instance = new ShowSingInPageCommand(requestFactory, propertyContext);
                 }
             }
             lock.unlock();
@@ -38,6 +38,6 @@ public class ShowErrorPageCommand implements Command {
 
     @Override
     public CommandResponse execute(CommandRequest request) {
-        return requestFactory.createForwardResponse(propertyContext.get(ERROR_PAGE));
+        return requestFactory.createForwardResponse(propertyContext.get(SING_IN_PAGE));
     }
 }

@@ -6,7 +6,7 @@ import com.epam.jwd.hrmanager.controller.CommandResponse;
 import com.epam.jwd.hrmanager.controller.PropertyContext;
 import com.epam.jwd.hrmanager.controller.RequestFactory;
 import com.epam.jwd.hrmanager.model.JobRequest;
-import com.epam.jwd.hrmanager.model.VacancyRequestStatus;
+import com.epam.jwd.hrmanager.model.JobRequestStatus;
 import com.epam.jwd.hrmanager.secvice.JobRequestService;
 
 import java.util.concurrent.locks.ReentrantLock;
@@ -49,7 +49,7 @@ public class RejectJobRequestCommand implements Command {
     public CommandResponse execute(CommandRequest request) {
         Long jobRequestId = Long.parseLong(request.getParameter(JOB_REQUEST_ID_PARAM_NAME));
         JobRequest oldJobRequest = jobRequestService.get(jobRequestId);
-        jobRequestService.update(oldJobRequest.withStatus(VacancyRequestStatus.DENIED));
+        jobRequestService.update(oldJobRequest.withStatus(JobRequestStatus.DENIED));
         return requestFactory.createRedirectResponse(JOB_REQUESTS_PAGE_COMMAND);
     }
 }

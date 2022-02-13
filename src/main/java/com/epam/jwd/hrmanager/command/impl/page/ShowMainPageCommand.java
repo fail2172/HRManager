@@ -1,4 +1,4 @@
-package com.epam.jwd.hrmanager.command.impl;
+package com.epam.jwd.hrmanager.command.impl.page;
 
 import com.epam.jwd.hrmanager.command.Command;
 import com.epam.jwd.hrmanager.controller.CommandRequest;
@@ -36,8 +36,8 @@ public class ShowMainPageCommand implements Command {
         this.propertyContext = propertyContext;
     }
 
-    static ShowMainPageCommand getInstance(RequestFactory requestFactory, VacancyService vacancyService,
-                                           CityService cityService, PropertyContext propertyContext) {
+    public static ShowMainPageCommand getInstance(RequestFactory requestFactory, VacancyService vacancyService,
+                                                  CityService cityService, PropertyContext propertyContext) {
         if (instance == null) {
             lock.lock();
             {

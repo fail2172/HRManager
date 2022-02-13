@@ -1,4 +1,4 @@
-package com.epam.jwd.hrmanager.command.impl;
+package com.epam.jwd.hrmanager.command.impl.page;
 
 import com.epam.jwd.hrmanager.command.Command;
 import com.epam.jwd.hrmanager.controller.CommandRequest;
@@ -6,7 +6,7 @@ import com.epam.jwd.hrmanager.controller.CommandResponse;
 import com.epam.jwd.hrmanager.controller.PropertyContext;
 import com.epam.jwd.hrmanager.controller.RequestFactory;
 import com.epam.jwd.hrmanager.model.JobRequest;
-import com.epam.jwd.hrmanager.model.VacancyRequestStatus;
+import com.epam.jwd.hrmanager.model.JobRequestStatus;
 import com.epam.jwd.hrmanager.secvice.JobRequestService;
 
 import java.util.List;
@@ -32,8 +32,8 @@ public class ShowJobRequestsPageCommand implements Command {
         this.propertyContext = propertyContext;
     }
 
-    static ShowJobRequestsPageCommand getInstance(RequestFactory requestFactory, JobRequestService jobRequestService,
-                                                  PropertyContext propertyContext) {
+    public static ShowJobRequestsPageCommand getInstance(RequestFactory requestFactory, JobRequestService jobRequestService,
+                                                         PropertyContext propertyContext) {
         if (instance == null) {
             lock.lock();
             {
@@ -49,7 +49,7 @@ public class ShowJobRequestsPageCommand implements Command {
     @Override
     public CommandResponse execute(CommandRequest request) {
         List<JobRequest> jobRequests = jobRequestService.findAll().stream()
-                .filter(vacancyRequest -> vacancyRequest.getStatus().equals(VacancyRequestStatus.FIELD))
+                .filter(vacancyRequest -> vacancyRequest.getStatus().equals(JobRequestStatus.FIELD))
                 .collect(Collectors.toList());
         request.addAttributeToJsp(VACANCIES_REQUEST_ATTRIBUTE_NAME, jobRequests);
         return requestFactory.createForwardResponse(propertyContext.get(JOB_REQUESTS_PAGE));
