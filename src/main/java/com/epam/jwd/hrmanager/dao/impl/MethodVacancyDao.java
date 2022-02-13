@@ -29,13 +29,14 @@ public class MethodVacancyDao extends CommonDao<Vacancy> implements VacancyDao {
     private static final String EMPLOYER_ID_FIELD_NAME = "employer_id";
     private static final String EMPLOYMENT_ID_FIELD_NAME = "employment";
     private static final String EXPERIENCE_ID_FIELD_NAME = "experience";
+    private static final String DATE_FIELD_NAME = "v_date";
     private static final String HASH = "v_hash";
     private static final String EMPTY_LINE = "";
     private static final Integer ZERO = 0;
     private static final List<String> FIELDS = Arrays.asList(
             ID_FIELD_NAME, TITLE_NAME_FIELD, SALARY_FIELD_NAME,
             DESCRIPTION_FIELD_NAME, CITY_ID_FIELD_NAME, EMPLOYER_ID_FIELD_NAME,
-            EMPLOYMENT_ID_FIELD_NAME, EXPERIENCE_ID_FIELD_NAME, HASH
+            EMPLOYMENT_ID_FIELD_NAME, EXPERIENCE_ID_FIELD_NAME, DATE_FIELD_NAME, HASH
     );
 
 
@@ -89,7 +90,7 @@ public class MethodVacancyDao extends CommonDao<Vacancy> implements VacancyDao {
     protected void updateEntity(PreparedStatement statement, Vacancy vacancy) throws SQLException {
         fillFields(statement, vacancy);
         statement.setLong(1, vacancy.getId());
-        statement.setLong(10, vacancy.getId());
+        statement.setLong(11, vacancy.getId());
     }
 
     @Override
@@ -105,8 +106,8 @@ public class MethodVacancyDao extends CommonDao<Vacancy> implements VacancyDao {
                 resultSet.getBigDecimal(SALARY_FIELD_NAME),
                 Employment.of(resultSet.getString(EMPLOYMENT_ID_FIELD_NAME)),
                 resultSet.getInt(EXPERIENCE_ID_FIELD_NAME),
-                resultSet.getString(DESCRIPTION_FIELD_NAME)
-        );
+                resultSet.getDate(DATE_FIELD_NAME),
+                resultSet.getString(DESCRIPTION_FIELD_NAME));
     }
 
     @Override
@@ -128,7 +129,8 @@ public class MethodVacancyDao extends CommonDao<Vacancy> implements VacancyDao {
         statement.setLong(6, vacancy.getEmployer().getId());
         statement.setString(7, vacancy.getEmployment().name());
         statement.setInt(8, vacancy.getExperience());
-        statement.setString(9, composeHashCode(vacancy));
+        statement.setDate(9, vacancy.getDate());
+        statement.setString(10, composeHashCode(vacancy));
     }
 
     private String composeHashCode(Vacancy vacancy) {
@@ -137,6 +139,7 @@ public class MethodVacancyDao extends CommonDao<Vacancy> implements VacancyDao {
                 + vacancy.getCity().getId()
                 + vacancy.getEmployer().getId()
                 + vacancy.getEmployment()
-                + vacancy.getExperience();
+                + vacancy.getExperience()
+                + vacancy.getDate();
     }
 }

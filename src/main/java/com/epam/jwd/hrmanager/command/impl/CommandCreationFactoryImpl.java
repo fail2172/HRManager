@@ -36,6 +36,8 @@ public class CommandCreationFactoryImpl implements CommandCreationFactory {
                 return ShowInterviewCreationPageCommand.getInstance(requestFactory, PropertyContext.getInstance());
             case "editProfilePage":
                 return ShowEditProfilePageCommand.getInstance(requestFactory, PropertyContext.getInstance());
+            case "vacancyCreationPage":
+                return ShowVacancyCreationCommand.getInstance(requestFactory, PropertyContext.getInstance());
             case "goToInterviewCreationPage":
                 return GoToInterviewCreationPageCommand.getInstance(requestFactory,
                         (JobRequestService) serviceFactory.serviceFor(JobRequest.class));
@@ -94,6 +96,22 @@ public class CommandCreationFactoryImpl implements CommandCreationFactory {
                         requestFactory,
                         (AccountService) serviceFactory.serviceFor(Account.class),
                         (UserService) serviceFactory.serviceFor(User.class),
+                        PropertyContext.getInstance()
+                );
+            case "deleteVacancy":
+                return DeleteVacancyCommand.getInstance(
+                        requestFactory,
+                        (VacancyService) serviceFactory.serviceFor(Vacancy.class),
+                        (InterviewService) serviceFactory.serviceFor(Interview.class),
+                        (JobRequestService) serviceFactory.serviceFor(JobRequest.class),
+                        PropertyContext.getInstance()
+                );
+            case "vacancyCreation":
+                return CreationVacancyCommand.getInstance(
+                        requestFactory,
+                        (VacancyService) serviceFactory.serviceFor(Vacancy.class),
+                        (EmployerService) serviceFactory.serviceFor(Employer.class),
+                        (CityService) serviceFactory.serviceFor(City.class),
                         PropertyContext.getInstance()
                 );
             case "creteAnInterview":

@@ -6,12 +6,15 @@ import java.util.Arrays;
 import java.util.List;
 
 public enum CommandRegistry {
+    VACANCY_CREATION("vacancyCreation", Role.ADMINISTRATOR),
+    DELETE_VACANCY("deleteVacancy"),
     USER_PAGE("userPage", Role.ADMINISTRATOR, Role.EMPLOYEE),
     JOB_REQUESTS_PAGE("jobRequestsPage", Role.ADMINISTRATOR, Role.EMPLOYEE),
     INTERVIEW_CREATION_PAGE("interviewCreationPage", Role.ADMINISTRATOR, Role.EMPLOYEE),
+    CREATE_AN_INTERVIEW("creteAnInterview", Role.ADMINISTRATOR, Role.EMPLOYEE),
     GO_TO_INTERVIEW_CREATION_PAGE("goToInterviewCreationPage", Role.ADMINISTRATOR, Role.EMPLOYEE),
     REJECT_APPLICATION("rejectApplication", Role.ADMINISTRATOR, Role.EMPLOYEE),
-    CREATE_AN_INTERVIEW("creteAnInterview"),
+    VACANCY_CREATION_PAGE("vacancyCreationPage", Role.ADMINISTRATOR),
     MAIN_PAGE("mainPage"),
     SING_IN_PAGE("singInPage"),
     SING_UP_PAGE("singUpPage"),

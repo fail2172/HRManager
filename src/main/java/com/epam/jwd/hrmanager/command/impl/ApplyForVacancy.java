@@ -20,10 +20,10 @@ public class ApplyForVacancy implements Command {
     public static final String TASK_PARAM_NAME = "task";
     private static final String INDEX_PAGE = "page.index";
 
-    private static final String ACCOUNT_PARAM_NAME = "account";
+    private static final String ACCOUNT_PARAM_NAME = "sessionAccount";
     private static final String APPLY_FOR_VACANCY_COMMAND = "/controller?command=applyForVacancy";
     private static final String TASK_PARAM = "taskParam";
-    private static final String APPLY_PARAM_NAME = "apply";
+    private static final String APPLY_PARAM_NAME = "vacancyId";
     private static final String SING_IN_COMMAND = "controller?command=singInPage";
     private static final ReentrantLock lock = new ReentrantLock();
     private static ApplyForVacancy instance;

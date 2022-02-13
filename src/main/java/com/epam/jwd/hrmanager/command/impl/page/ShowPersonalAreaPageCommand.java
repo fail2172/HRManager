@@ -8,10 +8,8 @@ import com.epam.jwd.hrmanager.controller.RequestFactory;
 import com.epam.jwd.hrmanager.model.Account;
 import com.epam.jwd.hrmanager.model.Interview;
 import com.epam.jwd.hrmanager.model.JobRequest;
-import com.epam.jwd.hrmanager.secvice.CityService;
 import com.epam.jwd.hrmanager.secvice.InterviewService;
 import com.epam.jwd.hrmanager.secvice.JobRequestService;
-import com.epam.jwd.hrmanager.secvice.VacancyService;
 
 import java.util.List;
 import java.util.Optional;
@@ -65,7 +63,7 @@ public class ShowPersonalAreaPageCommand implements Command {
 
     private void addAttributes(CommandRequest request, Account account){
         List<JobRequest> jobRequests = jobRequestService.findByAccount(account);
-        List<Interview> interviews = interviewService.findInterviewsByUser(account.getUser());
+        List<Interview> interviews = interviewService.findByUser(account.getUser());
         request.addAttributeToJsp("jobRequests", jobRequests);
         request.addAttributeToJsp("interviews", interviews);
     }

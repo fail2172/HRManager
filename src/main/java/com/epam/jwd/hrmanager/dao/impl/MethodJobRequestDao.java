@@ -6,6 +6,7 @@ import com.epam.jwd.hrmanager.db.ConnectionPool;
 import com.epam.jwd.hrmanager.model.Account;
 import com.epam.jwd.hrmanager.model.JobRequest;
 import com.epam.jwd.hrmanager.model.JobRequestStatus;
+import com.epam.jwd.hrmanager.model.Vacancy;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,7 +22,7 @@ public class MethodJobRequestDao extends CommonDao<JobRequest> implements JobReq
     private static MethodJobRequestDao instance;
     private static final ReentrantLock lock = new ReentrantLock();
     private static final Logger LOGGER = LogManager.getLogger(MethodJobRequestDao.class);
-    private static final String VACANCY_REQUEST_TABLE_NAME = "vacancy_request";
+    private static final String VACANCY_REQUEST_TABLE_NAME = "job_request";
     private static final String ID_FIELD_NAME = "id";
     private static final String VACANCY_ID_FIELD_NAME = "vacancy_id";
     private static final String ACCOUNT_ID_FIELD_NAME = "account_id";
@@ -105,8 +106,13 @@ public class MethodJobRequestDao extends CommonDao<JobRequest> implements JobReq
     }
 
     @Override
-    public List<JobRequest> jobRequestsByAccount(Account account) {
+    public List<JobRequest> receiveJobRequestsByAccount(Account account) {
         return receiveEntitiesByParam(ACCOUNT_ID_FIELD_NAME, account.getId());
+    }
+
+    @Override
+    public List<JobRequest> receiveJobRequestsByVacancy(Vacancy vacancy) {
+        return receiveEntitiesByParam(VACANCY_ID_FIELD_NAME, vacancy.getId());
     }
 
     private void fillFields(PreparedStatement statement, JobRequest jobRequest) throws SQLException {

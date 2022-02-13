@@ -2,6 +2,7 @@ package com.epam.jwd.hrmanager.dao;
 
 import com.epam.jwd.hrmanager.model.Interview;
 import com.epam.jwd.hrmanager.model.User;
+import com.epam.jwd.hrmanager.model.Vacancy;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,5 +16,7 @@ public interface InterviewDao extends EntityDao<Interview> {
     Long receiveVacancyId(Interview interview);
 
     List<Interview> receiveInterviewsByUser(User user);
+
+    List<Interview> receiveInterviewsByVacancy(Vacancy vacancy);
 
 }

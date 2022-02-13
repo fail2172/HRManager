@@ -109,7 +109,14 @@ public class JobRequestServiceImpl implements JobRequestService {
 
     @Override
     public List<JobRequest> findByAccount(Account account) {
-        return jobRequestDao.jobRequestsByAccount(account).stream()
+        return jobRequestDao.receiveJobRequestsByAccount(account).stream()
+                .map(jr -> get(jr.getId()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<JobRequest> findByVacancy(Vacancy vacancy) {
+        return jobRequestDao.receiveJobRequestsByVacancy(vacancy).stream()
                 .map(jr -> get(jr.getId()))
                 .collect(Collectors.toList());
     }

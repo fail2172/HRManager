@@ -112,8 +112,15 @@ public class InterviewServiceImpl implements InterviewService {
     }
 
     @Override
-    public List<Interview> findInterviewsByUser(User user) {
+    public List<Interview> findByUser(User user) {
         return interviewDao.receiveInterviewsByUser(user).stream()
+                .map(i -> get(i.getId()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Interview> findByVacancy(Vacancy vacancy) {
+        return interviewDao.receiveInterviewsByVacancy(vacancy).stream()
                 .map(i -> get(i.getId()))
                 .collect(Collectors.toList());
     }

@@ -6,6 +6,7 @@ import com.epam.jwd.hrmanager.db.ConnectionPool;
 import com.epam.jwd.hrmanager.model.Interview;
 import com.epam.jwd.hrmanager.model.InterviewStatus;
 import com.epam.jwd.hrmanager.model.User;
+import com.epam.jwd.hrmanager.model.Vacancy;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -122,6 +123,11 @@ public class MethodInterviewDao extends CommonDao<Interview> implements Intervie
     @Override
     public List<Interview> receiveInterviewsByUser(User user) {
         return receiveEntitiesByParam(USER_ID_FIELD_NAME, user.getId());
+    }
+
+    @Override
+    public List<Interview> receiveInterviewsByVacancy(Vacancy vacancy) {
+        return receiveEntitiesByParam(VACANCY_ID_FIELD_NAME, vacancy.getId());
     }
 
     private void fillFields(PreparedStatement statement, Interview interview) throws SQLException {

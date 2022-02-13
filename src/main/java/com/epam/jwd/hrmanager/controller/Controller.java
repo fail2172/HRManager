@@ -1,6 +1,9 @@
 package com.epam.jwd.hrmanager.controller;
 
 import com.epam.jwd.hrmanager.command.Command;
+import com.epam.jwd.hrmanager.model.Vacancy;
+import com.epam.jwd.hrmanager.secvice.ServiceFactory;
+import com.epam.jwd.hrmanager.secvice.VacancyService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -66,18 +69,7 @@ public class Controller extends HttpServlet {
     }
 
     private void main(HttpServletRequest request){
-//        VacancyService service = (VacancyService) ServiceFactory.getInstance().serviceFor(Vacancy.class);
-//        EmployerService employerService = (EmployerService) ServiceFactory.getInstance().serviceFor(Employer.class);
-//        CityService cityService = (CityService) ServiceFactory.getInstance().serviceFor(City.class);
-//
-//        final Employer employer = employerService.add(new Employer("Группа Компаний Армтек", ""));
-//        final City city = cityService.add(new City("Минск"));
-//
-//        Vacancy vacancy = new Vacancy("Комплектовщик товара", new BigDecimal(2000), employer, city, Employment.PART_TIME_EMPLOYMENT,1,
-//                "Комплектование заказов согласно заявкам. Отбор товара на местах хранения, укладка в контейнеры, передача для последующей обработки. Раскладка товара на местах...\n" +
-//                        "Ищем к себе в команду таких же Энергичных, Позитивных и Нацеленных на результат ! Рассмотрим кандидатов без опыта работы, но желающих...");
-//        System.out.println(service.add(vacancy));
-        System.out.println(request.getParameter("date"));
-        System.out.println(request.getParameter("time"));
+        VacancyService vacancyService = (VacancyService) ServiceFactory.getInstance().serviceFor(Vacancy.class);
+        vacancyService.delete(19L);
     }
 }
