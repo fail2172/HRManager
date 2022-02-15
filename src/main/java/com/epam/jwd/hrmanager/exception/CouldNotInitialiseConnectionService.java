@@ -1,9 +1,8 @@
 package com.epam.jwd.hrmanager.exception;
 
+public class CouldNotInitialiseConnectionService extends RuntimeException {
 
-public class CouldNotInitialiseConnectionService extends Error {
-
-    private static final long serialVersionUID = 7944332529441314649L;
+    private static final long serialVersionUID = 6838433404928178510L;
 
     public CouldNotInitialiseConnectionService(String message, Throwable cause) {
         super(message, cause);

@@ -13,6 +13,14 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
     <filter>
+        <filter-name>ControllerFilter</filter-name>
+        <filter-class>com.epam.jwd.hrmanager.filter.ControllerFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>ControllerFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter>
         <filter-name>LangFilter</filter-name>
         <filter-class>com.epam.jwd.hrmanager.filter.LanguageFilter</filter-class>
     </filter>
@@ -35,4 +43,5 @@
             <taglib-location>WEB-INF/tld/customTagLib.tld</taglib-location>
         </taglib>
     </jsp-config>
+
 </web-app>
