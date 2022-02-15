@@ -1,5 +1,6 @@
 package com.epam.jwd.hrmanager.command.impl.page;
 
+import com.epam.jwd.hrmanager.command.Authorized;
 import com.epam.jwd.hrmanager.command.Command;
 import com.epam.jwd.hrmanager.controller.CommandRequest;
 import com.epam.jwd.hrmanager.controller.CommandResponse;
@@ -17,7 +18,8 @@ public class ShowJobRequestsPageCommand implements Command {
 
     private static final String JOB_REQUESTS_PAGE = "page.jobRequests";
 
-    private static final String VACANCIES_REQUEST_ATTRIBUTE_NAME = "jobInquiries";
+    private static final String JOB_REQUEST_ATTRIBUTE = "jobRequests";
+
     private static final ReentrantLock lock = new ReentrantLock();
     private static ShowJobRequestsPageCommand instance;
 
@@ -47,11 +49,12 @@ public class ShowJobRequestsPageCommand implements Command {
     }
 
     @Override
+    @Authorized
     public CommandResponse execute(CommandRequest request) {
         List<JobRequest> jobRequests = jobRequestService.findAll().stream()
                 .filter(vacancyRequest -> vacancyRequest.getStatus().equals(JobRequestStatus.FIELD))
                 .collect(Collectors.toList());
-        request.addAttributeToJsp(VACANCIES_REQUEST_ATTRIBUTE_NAME, jobRequests);
+        request.addAttributeToJsp(JOB_REQUEST_ATTRIBUTE, jobRequests);
         return requestFactory.createForwardResponse(propertyContext.get(JOB_REQUESTS_PAGE));
     }
 }

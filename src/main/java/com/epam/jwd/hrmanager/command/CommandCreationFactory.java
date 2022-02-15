@@ -6,7 +6,7 @@ public interface CommandCreationFactory {
 
     Command createCommand(String name);
 
-    static CommandCreationFactory getInstance(){
+    static CommandCreationFactory getInstance() {
         return CommandCreationFactoryImpl.getInstance();
     }
 

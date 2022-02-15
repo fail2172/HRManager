@@ -14,7 +14,7 @@ public class TransactionManagerFactoryImpl implements TransactionManagerFactory 
 
     private final Map<TransactionManagerType, TransactionManager> managerByType = new ConcurrentHashMap<>();
 
-    public static TransactionManagerFactoryImpl getInstance(){
+    public static TransactionManagerFactoryImpl getInstance() {
         return Holder.INSTANCE;
     }
 

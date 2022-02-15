@@ -5,10 +5,10 @@ public enum InterviewStatus {
     SUCCESSFULLY,
     UNSUCCESSFULLY;
 
-    public static InterviewStatus of(String name){
+    public static InterviewStatus of(String name) {
         for (InterviewStatus status : values()
-             ) {
-            if(status.toString().equalsIgnoreCase(name)){
+        ) {
+            if (status.toString().equalsIgnoreCase(name)) {
                 return status;
             }
         }

@@ -7,4 +7,5 @@ public class UserNotExtractException extends Exception {
     public UserNotExtractException(String message) {
         super(message);
     }
+
 }

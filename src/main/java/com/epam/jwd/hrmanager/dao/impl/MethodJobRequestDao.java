@@ -19,16 +19,17 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class MethodJobRequestDao extends CommonDao<JobRequest> implements JobRequestDao {
 
-    private static MethodJobRequestDao instance;
-    private static final ReentrantLock lock = new ReentrantLock();
-    private static final Logger LOGGER = LogManager.getLogger(MethodJobRequestDao.class);
     private static final String VACANCY_REQUEST_TABLE_NAME = "job_request";
     private static final String ID_FIELD_NAME = "id";
     private static final String VACANCY_ID_FIELD_NAME = "vacancy_id";
     private static final String ACCOUNT_ID_FIELD_NAME = "account_id";
     private static final String VR_STATUS_FIELD_NAME = "vr_status";
     private static final String HASH = "vr_hash";
+
+    private static final Logger LOGGER = LogManager.getLogger(MethodJobRequestDao.class);
+    private static final ReentrantLock lock = new ReentrantLock();
     private static final Integer ZERO = 0;
+    private static MethodJobRequestDao instance;
     private static final List<String> FIELDS = Arrays.asList(
             ID_FIELD_NAME, VACANCY_ID_FIELD_NAME, ACCOUNT_ID_FIELD_NAME, VR_STATUS_FIELD_NAME, HASH
     );

@@ -1,5 +1,6 @@
 package com.epam.jwd.hrmanager.tag;
 
+import com.epam.jwd.hrmanager.controller.PropertyContext;
 import com.epam.jwd.hrmanager.model.Account;
 
 import javax.servlet.jsp.JspException;
@@ -8,7 +9,11 @@ import java.util.Optional;
 
 public class AuthorizedTag extends BodyTagSupport {
 
-    private static final long serialVersionUID = 806778638157690100L;
+    private static final long serialVersionUID = 5307504689564917463L;
+
+    private static final String SESSION_ACCOUNT_PROPERTY = "session.account";
+
+    private static final PropertyContext propertyContext = PropertyContext.getInstance();
 
     private boolean auth;
 
@@ -22,7 +27,7 @@ public class AuthorizedTag extends BodyTagSupport {
 
     boolean checkAuthorized() {
         Optional<Account> account = Optional.ofNullable(pageContext.getSession())
-                .map(s -> (Account) s.getAttribute("sessionAccount"));
+                .map(s -> (Account) s.getAttribute(propertyContext.get(SESSION_ACCOUNT_PROPERTY)));
         return account.isPresent() == auth;
     }
 

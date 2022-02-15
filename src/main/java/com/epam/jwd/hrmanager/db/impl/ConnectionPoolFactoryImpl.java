@@ -13,11 +13,11 @@ public class ConnectionPoolFactoryImpl implements ConnectionPoolFactory {
 
     private final Map<ConnectionPoolType, ConnectionPool> connectionPoolByType;
 
-    private ConnectionPoolFactoryImpl(){
+    private ConnectionPoolFactoryImpl() {
         connectionPoolByType = new ConcurrentHashMap<>();
     }
 
-    public static ConnectionPoolFactoryImpl getInstance(){
+    public static ConnectionPoolFactoryImpl getInstance() {
         return Holder.INSTANCE;
     }
 
@@ -26,9 +26,9 @@ public class ConnectionPoolFactoryImpl implements ConnectionPoolFactory {
         return connectionPoolByType.computeIfAbsent(type, createConnectionPool());
     }
 
-    private Function<ConnectionPoolType, ConnectionPool> createConnectionPool(){
+    private Function<ConnectionPoolType, ConnectionPool> createConnectionPool() {
         return type -> {
-            switch (type){
+            switch (type) {
                 case SIMPLE_CONNECTION_POOL:
                     return ConnectionService.getInstance();
                 case TRANSACTION_CONNECTION_POOL:

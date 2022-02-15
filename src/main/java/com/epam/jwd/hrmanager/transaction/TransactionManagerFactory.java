@@ -6,7 +6,7 @@ public interface TransactionManagerFactory {
 
     TransactionManager managerFor(TransactionManagerType type);
 
-    static TransactionManagerFactory getInstance(){
+    static TransactionManagerFactory getInstance() {
         return TransactionManagerFactoryImpl.getInstance();
     }
 

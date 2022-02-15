@@ -1,6 +1,6 @@
 package com.epam.jwd.hrmanager.model;
 
-public class JobRequest implements Entity{
+public class JobRequest implements Entity {
 
     private final Long id;
     private final Vacancy vacancy;
@@ -34,15 +34,15 @@ public class JobRequest implements Entity{
         return status;
     }
 
-    public JobRequest withVacancy(Vacancy vacancy){
+    public JobRequest withVacancy(Vacancy vacancy) {
         return new JobRequest(id, vacancy, account, status);
     }
 
-    public JobRequest withAccount(Account account){
+    public JobRequest withAccount(Account account) {
         return new JobRequest(id, vacancy, account, status);
     }
 
-    public JobRequest withStatus(JobRequestStatus status){
+    public JobRequest withStatus(JobRequestStatus status) {
         return new JobRequest(id, vacancy, account, status);
     }
 
@@ -75,7 +75,7 @@ public class JobRequest implements Entity{
 
     @Override
     public String toString() {
-        return "VacancyRequest{" +
+        return "JobRequest{" +
                 "id=" + id +
                 ", vacancy=" + vacancy +
                 ", account=" + account +

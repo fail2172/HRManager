@@ -1,6 +1,6 @@
 package com.epam.jwd.hrmanager.model;
 
-public class User implements Entity{
+public class User implements Entity {
 
     private final Long id;
     private final String firstName;
@@ -29,15 +29,15 @@ public class User implements Entity{
         return secondName;
     }
 
-    public User withRole(Role role){
+    public User withRole(Role role) {
         return new User(id, firstName, secondName);
     }
 
-    public User withFirstName(String firstName){
+    public User withFirstName(String firstName) {
         return new User(id, firstName, secondName);
     }
 
-    public User withSecondName(String secondName){
+    public User withSecondName(String secondName) {
         return new User(id, firstName, secondName);
     }
 

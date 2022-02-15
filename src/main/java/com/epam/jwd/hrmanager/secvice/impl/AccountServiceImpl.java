@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class AccountServiceImpl implements AccountService {
 
     private static final byte[] DUMMY_PASSWORD = "password".getBytes(StandardCharsets.UTF_8);
-    private static final Logger LOGGER = LogManager.getLogger(AddressServiceImpl.class);
+    private static final Logger LOGGER = LogManager.getLogger(AccountServiceImpl.class);
     private static final ReentrantLock lock = new ReentrantLock();
     private static AccountServiceImpl instance;
 

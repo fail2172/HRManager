@@ -10,7 +10,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class ShowSingInPageCommand implements Command {
 
-    public static final String SING_IN_PAGE = "page.singIn";
+    private static final String SING_IN_PAGE_PROPERTY = "page.singIn";
 
     private static final ReentrantLock lock = new ReentrantLock();
     private static ShowSingInPageCommand instance;
@@ -23,11 +23,11 @@ public class ShowSingInPageCommand implements Command {
         this.propertyContext = propertyContext;
     }
 
-    public static ShowSingInPageCommand getInstance(RequestFactory requestFactory, PropertyContext propertyContext){
-        if(instance == null){
+    public static ShowSingInPageCommand getInstance(RequestFactory requestFactory, PropertyContext propertyContext) {
+        if (instance == null) {
             lock.lock();
             {
-                if(instance == null){
+                if (instance == null) {
                     instance = new ShowSingInPageCommand(requestFactory, propertyContext);
                 }
             }
@@ -38,6 +38,6 @@ public class ShowSingInPageCommand implements Command {
 
     @Override
     public CommandResponse execute(CommandRequest request) {
-        return requestFactory.createForwardResponse(propertyContext.get(SING_IN_PAGE));
+        return requestFactory.createForwardResponse(propertyContext.get(SING_IN_PAGE_PROPERTY));
     }
 }

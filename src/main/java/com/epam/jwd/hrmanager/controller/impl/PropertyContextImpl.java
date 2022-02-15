@@ -16,10 +16,14 @@ import static java.lang.String.format;
 public class PropertyContextImpl implements PropertyContext {
 
     private static final Logger LOGGER = LogManager.getLogger(PropertyContextImpl.class);
-    private static final String PAGE_PROPERTIES_PATH = "D:\\JWD_курсы\\HRManager\\src\\main\\resources\\path\\page.properties";
-    private static final String CONFIG_PROPERTIES_PATH = "D:\\JWD_курсы\\HRManager\\src\\main\\resources\\config\\db.properties";
+    private static final String PAGE_PROPERTIES_PATH = "D:\\JWD_курсы\\HRManager\\src\\main\\resources\\property\\page.properties";
+    private static final String CONFIG_PROPERTIES_PATH = "D:\\JWD_курсы\\HRManager\\src\\main\\resources\\property\\config.properties";
+    private static final String COMMAND_PROPERTIES_PATH = "D:\\JWD_курсы\\HRManager\\src\\main\\resources\\property\\command.properties";
+    private static final String SESSION_PROPERTIES_PATH = "D:\\JWD_курсы\\HRManager\\src\\main\\resources\\property\\session.properties";
     private static final String PAGE_ATTRIBUTE = "page.";
     private static final String DB_ATTRIBUTE = "db.";
+    private static final String SESSION_ATTRIBUTE = "session.";
+    private static final String COMMAND_ATTRIBUTE = "command/";
     private static final String EMPTY_STRING = "";
 
     private final Map<String, String> propertyByKeys;
@@ -55,6 +59,10 @@ public class PropertyContextImpl implements PropertyContext {
             return PAGE_PROPERTIES_PATH;
         } else if (name.startsWith(DB_ATTRIBUTE)) {
             return CONFIG_PROPERTIES_PATH;
+        } else if (name.startsWith(COMMAND_ATTRIBUTE)) {
+            return COMMAND_PROPERTIES_PATH;
+        } else if (name.startsWith(SESSION_ATTRIBUTE)) {
+            return SESSION_PROPERTIES_PATH;
         } else {
             throw new FileNotFoundException(format("No such file for: %s", name));
         }

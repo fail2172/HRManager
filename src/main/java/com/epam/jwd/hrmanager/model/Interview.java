@@ -3,7 +3,7 @@ package com.epam.jwd.hrmanager.model;
 import java.sql.Date;
 import java.sql.Time;
 
-public class Interview implements Entity{
+public class Interview implements Entity {
 
     private final Long id;
     private final InterviewStatus status;
@@ -80,7 +80,7 @@ public class Interview implements Entity{
         return new Interview(id, status, address, user, vacancy, date, time);
     }
 
-    public Interview withTime(Time time)  {
+    public Interview withTime(Time time) {
         return new Interview(id, status, address, user, vacancy, date, time);
     }
 

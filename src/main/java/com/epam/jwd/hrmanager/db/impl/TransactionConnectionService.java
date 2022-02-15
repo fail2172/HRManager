@@ -51,7 +51,7 @@ public final class TransactionConnectionService implements ConnectionPool {
     @Override
     public void returnConnection(Connection connection) {
         Optional<TransactionId> transactionId = transactionManager.getTransactionId();
-        if (!transactionId.isPresent()){
+        if (!transactionId.isPresent()) {
             connectionPool.returnConnection(((ProxyConnection) connection).getConnection());
         }
     }

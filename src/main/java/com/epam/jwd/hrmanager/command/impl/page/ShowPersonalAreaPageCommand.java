@@ -1,5 +1,6 @@
 package com.epam.jwd.hrmanager.command.impl.page;
 
+import com.epam.jwd.hrmanager.command.Authorized;
 import com.epam.jwd.hrmanager.command.Command;
 import com.epam.jwd.hrmanager.controller.CommandRequest;
 import com.epam.jwd.hrmanager.controller.CommandResponse;
@@ -17,7 +18,12 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class ShowPersonalAreaPageCommand implements Command {
 
+    private static final String SESSION_ACCOUNT_PROPERTY = "session.account";
+
     private static final String PERSONAL_AREA_PAGE = "page.personalArea";
+
+    private static final String JOB_REQUESTS_PARAM = "jobRequests";
+    private static final String INTERVIEWS_PARAM = "interviews";
 
     private static final ReentrantLock lock = new ReentrantLock();
     private static ShowPersonalAreaPageCommand instance;
@@ -51,20 +57,17 @@ public class ShowPersonalAreaPageCommand implements Command {
     }
 
     @Override
+    @Authorized
     public CommandResponse execute(CommandRequest request) {
-        Optional<Object> account = request.retrieveFromSession("sessionAccount");
-        if (account.isPresent()) {
-            addAttributes(request, (Account) account.get());
-            return requestFactory.createForwardResponse(propertyContext.get(PERSONAL_AREA_PAGE));
-        }
-
+        Optional<Object> account = request.retrieveFromSession(propertyContext.get(SESSION_ACCOUNT_PROPERTY));
+        account.ifPresent(a -> addAttributes(request, (Account) a));
         return requestFactory.createForwardResponse(propertyContext.get(PERSONAL_AREA_PAGE));
     }
 
-    private void addAttributes(CommandRequest request, Account account){
+    private void addAttributes(CommandRequest request, Account account) {
         List<JobRequest> jobRequests = jobRequestService.findByAccount(account);
         List<Interview> interviews = interviewService.findByUser(account.getUser());
-        request.addAttributeToJsp("jobRequests", jobRequests);
-        request.addAttributeToJsp("interviews", interviews);
+        request.addAttributeToJsp(JOB_REQUESTS_PARAM, jobRequests);
+        request.addAttributeToJsp(INTERVIEWS_PARAM, interviews);
     }
 }

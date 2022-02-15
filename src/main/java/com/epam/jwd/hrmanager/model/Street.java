@@ -2,7 +2,7 @@ package com.epam.jwd.hrmanager.model;
 
 import java.util.Optional;
 
-public class Street implements Entity{
+public class Street implements Entity {
 
     private final Long id;
     private final String name;
@@ -12,7 +12,7 @@ public class Street implements Entity{
         this.name = name;
     }
 
-    public Street(String name){
+    public Street(String name) {
         this(null, name);
     }
 

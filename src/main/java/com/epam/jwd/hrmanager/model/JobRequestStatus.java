@@ -5,9 +5,9 @@ public enum JobRequestStatus {
     APPROVED,
     DENIED;
 
-    public static JobRequestStatus of(String name){
-        for(JobRequestStatus status : values()){
-            if(status.name().equalsIgnoreCase(name)){
+    public static JobRequestStatus of(String name) {
+        for (JobRequestStatus status : values()) {
+            if (status.name().equalsIgnoreCase(name)) {
                 return status;
             }
         }

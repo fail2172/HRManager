@@ -4,17 +4,17 @@ import java.util.Optional;
 
 public interface CommandRequest {
 
-    void addAttributeToJsp(String name, Object value);
+    Optional<Object> retrieveFromSession(String name);
 
     String getParameter(String name);
+
+    String getPath();
 
     boolean sessionExist();
 
     boolean addToSession(String name, Object value);
 
-    Optional<Object> retrieveFromSession(String name);
-
-    String getPath();
+    void addAttributeToJsp(String name, Object value);
 
     void removeFromSession(String name);
 

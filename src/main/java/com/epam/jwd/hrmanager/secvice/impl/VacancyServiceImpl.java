@@ -1,5 +1,7 @@
 package com.epam.jwd.hrmanager.secvice.impl;
 
+import com.epam.jwd.hrmanager.dao.CityDao;
+import com.epam.jwd.hrmanager.dao.EmployerDao;
 import com.epam.jwd.hrmanager.dao.EntityDao;
 import com.epam.jwd.hrmanager.dao.VacancyDao;
 import com.epam.jwd.hrmanager.exception.EntityUpdateException;
@@ -22,16 +24,16 @@ public class VacancyServiceImpl implements VacancyService {
     private static VacancyServiceImpl instance;
 
     private final VacancyDao vacancyDao;
-    private final EntityDao<Employer> employerDao;
-    private final EntityDao<City> cityDao;
+    private final EmployerDao employerDao;
+    private final CityDao cityDao;
 
-    private VacancyServiceImpl(VacancyDao vacancyDao, EntityDao<Employer> employerDao, EntityDao<City> cityDao) {
+    private VacancyServiceImpl(VacancyDao vacancyDao, EmployerDao employerDao, CityDao cityDao) {
         this.vacancyDao = vacancyDao;
         this.employerDao = employerDao;
         this.cityDao = cityDao;
     }
 
-    static VacancyServiceImpl getInstance(VacancyDao vacancyDao, EntityDao<Employer> employerDao, EntityDao<City> cityDao) {
+    static VacancyServiceImpl getInstance(VacancyDao vacancyDao, EmployerDao employerDao, CityDao cityDao) {
         if (instance == null) {
             lock.lock();
             {

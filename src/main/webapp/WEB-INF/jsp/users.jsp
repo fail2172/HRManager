@@ -102,7 +102,7 @@
                                         <br>
                                         <div class="container-fluid">
                                             <div class="row">
-                                                <div class="col-2">
+                                                <div class="col-4">
                                                     <form action="<c:url value="/controller?command=unBan"/>"
                                                           method="post">
                                                         <button type="submit" class="btn btn-success" name="accountId"
@@ -110,7 +110,7 @@
                                                         </button>
                                                     </form>
                                                 </div>
-                                                <div class="col-2">
+                                                <div class="col-4">
                                                     <form action="<c:url value="/controller?command=deleteAccount"/>"
                                                           method="post">
                                                         <button type="submit" class="btn btn-primary" name="accountId"
@@ -118,7 +118,7 @@
                                                         </button>
                                                     </form>
                                                 </div>
-                                                <div class="col-2">
+                                                <div class="col-4">
                                                     <c:if test="${account.role eq Role.ASPIRANT}">
                                                         <form action="<c:url value="/controller?command=aspirantToManager"/>"
                                                               method="post">
@@ -143,7 +143,7 @@
                                         <br>
                                         <div class="container-fluid">
                                             <div class="row">
-                                                <div class="col-2">
+                                                <div class="col-4">
                                                     <form action="<c:url value="/controller?command=ban"/>"
                                                           method="post">
                                                         <button type="submit" class="btn btn-danger" name="accountId"
@@ -151,7 +151,7 @@
                                                         </button>
                                                     </form>
                                                 </div>
-                                                <div class="col-2">
+                                                <div class="col-4">
                                                     <form action="<c:url value="/controller?command=deleteAccount"/>"
                                                           method="post">
                                                         <button type="submit" class="btn btn-primary" name="accountId"
@@ -159,7 +159,7 @@
                                                         </button>
                                                     </form>
                                                 </div>
-                                                <div class="col-2">
+                                                <div class="col-4">
                                                     <c:if test="${account.role eq Role.ASPIRANT}">
                                                         <form action="<c:url value="/controller?command=aspirantToManager"/>"
                                                               method="post">

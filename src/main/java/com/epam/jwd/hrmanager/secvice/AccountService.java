@@ -11,4 +11,5 @@ public interface AccountService extends EntityService<Account> {
     Optional<Account> findByEmail(String email);
 
     Optional<Account> findByLogin(String login);
+
 }

@@ -1,7 +1,8 @@
 package com.epam.jwd.hrmanager.secvice.impl;
 
 import com.epam.jwd.hrmanager.dao.AddressDao;
-import com.epam.jwd.hrmanager.dao.EntityDao;
+import com.epam.jwd.hrmanager.dao.CityDao;
+import com.epam.jwd.hrmanager.dao.StreetDao;
 import com.epam.jwd.hrmanager.exception.EntityUpdateException;
 import com.epam.jwd.hrmanager.exception.NotFoundEntityException;
 import com.epam.jwd.hrmanager.model.Address;
@@ -24,16 +25,16 @@ public class AddressServiceImpl implements AddressService {
     private static AddressServiceImpl instance;
 
     private final AddressDao addressDao;
-    private final EntityDao<City> cityDao;
-    private final EntityDao<Street> streetDao;
+    private final CityDao cityDao;
+    private final StreetDao streetDao;
 
-    private AddressServiceImpl(AddressDao addressDao, EntityDao<City> cityDao, EntityDao<Street> streetDao) {
+    private AddressServiceImpl(AddressDao addressDao, CityDao cityDao, StreetDao streetDao) {
         this.addressDao = addressDao;
         this.cityDao = cityDao;
         this.streetDao = streetDao;
     }
 
-    static AddressServiceImpl getInstance(AddressDao addressDao, EntityDao<City> cityDao, EntityDao<Street> streetDao) {
+    static AddressServiceImpl getInstance(AddressDao addressDao, CityDao cityDao, StreetDao streetDao) {
         if (instance == null) {
             lock.lock();
             {

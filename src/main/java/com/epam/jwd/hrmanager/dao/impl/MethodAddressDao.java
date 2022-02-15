@@ -12,16 +12,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.locks.ReentrantLock;
-
-import static java.lang.String.join;
 
 public class MethodAddressDao extends CommonDao<Address> implements AddressDao {
 
-    private static MethodAddressDao instance;
-    private static final ReentrantLock lock = new ReentrantLock();
-    private static final Logger LOGGER = LogManager.getLogger(MethodAddressDao.class);
     private static final String ADDRESS_TABLE_NAME = "address";
     private static final String ID_FIELD_NAME = "id";
     private static final String HOUSE_NUMBER_FIELD_NAME = "house_number";
@@ -29,7 +23,11 @@ public class MethodAddressDao extends CommonDao<Address> implements AddressDao {
     private static final String CITY_ID_FIELD_NAME = "city_id";
     private static final String STREET_ID_FIELD_NAME = "street_id";
     private static final String HASH = "a_hash";
+
+    private static final Logger LOGGER = LogManager.getLogger(MethodAddressDao.class);
+    private static final ReentrantLock lock = new ReentrantLock();
     private static final Integer ZERO = 0;
+    private static MethodAddressDao instance;
     private static final List<String> FIELDS = Arrays.asList(
             ID_FIELD_NAME, CITY_ID_FIELD_NAME, STREET_ID_FIELD_NAME,
             HOUSE_NUMBER_FIELD_NAME, FLAT_NUMBER_FIELD_NAME, HASH
@@ -72,10 +70,6 @@ public class MethodAddressDao extends CommonDao<Address> implements AddressDao {
         return FIELDS;
     }
 
-    /**
-     * При создании сущности, id подбирается автоматически, поэтому нет разницы
-     * какое число туда подставлять. Здесть подставляется нуль
-     */
     @Override
     protected void fillEntity(PreparedStatement statement, Address address) throws SQLException {
         fillFields(statement, address);

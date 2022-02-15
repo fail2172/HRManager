@@ -2,7 +2,7 @@ package com.epam.jwd.hrmanager.model;
 
 import java.util.Optional;
 
-public class Employer implements Entity{
+public class Employer implements Entity {
 
     private final Long id;
     private final String name;
@@ -14,7 +14,7 @@ public class Employer implements Entity{
         this.description = description;
     }
 
-    public Employer(String name, String description){
+    public Employer(String name, String description) {
         this(null, name, description);
     }
 
@@ -49,14 +49,5 @@ public class Employer implements Entity{
         result = 31 * result + name.hashCode();
         result = 31 * result + description.hashCode();
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return "Employer{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                '}';
     }
 }

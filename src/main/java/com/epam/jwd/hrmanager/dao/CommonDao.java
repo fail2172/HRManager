@@ -29,12 +29,14 @@ public abstract class CommonDao<T extends Entity> implements EntityDao<T> {
     private static final String DELETE_FROM = "delete from %s";
     private static final String COMMA = ", ";
     private static final String SPACE = " ";
+    private static final String PREPARE_STATEMENT_PARAM = "?";
+    private static final String UPDATE_PARAM = "=?";
 
     private final Logger logger;
-    private final String selectByUField;
+    private final String selectByUFExpression;
     private final String selectByIdExpression;
     private final String selectAllExpression;
-    private final String insertSql;
+    private final String insertExpression;
     private final String updateExpression;
     private final String deleteExpression;
 
@@ -45,21 +47,21 @@ public abstract class CommonDao<T extends Entity> implements EntityDao<T> {
         this.connectionPool = connectionPool;
         this.selectAllExpression = format(SELECT_ALL_FROM, join(COMMA, getFields()), getTableName());
         this.selectByIdExpression = this.selectAllExpression + SPACE + format(WHERE_FIELD, getIdFieldName());
-        this.insertSql = format(INSERT_INTO, getTableName(), join(COMMA, getFields()), join(COMMA, insertParams()));
-        this.selectByUField = this.selectAllExpression + SPACE + format(WHERE_FIELD, getUniqueFieldName());
-        this.updateExpression = format(UPDATE_SET, getTableName(), join(COMMA, updateParams())) + SPACE + format(WHERE_FIELD, getIdFieldName());
+        this.insertExpression = format(INSERT_INTO, getTableName(), join(COMMA, getFields()), join(COMMA, insertParams()));
+        this.selectByUFExpression = this.selectAllExpression + SPACE + format(WHERE_FIELD, getUniqueFieldName());
         this.deleteExpression = format(DELETE_FROM, getTableName()) + SPACE + format(WHERE_FIELD, getIdFieldName());
+        this.updateExpression = format(UPDATE_SET, getTableName(), join(COMMA, updateParams())) + SPACE + format(WHERE_FIELD, getIdFieldName());
     }
 
     private List<String> insertParams() {
         final List<String> parameters = new ArrayList<>();
-        getFields().forEach(param -> parameters.add("?"));
+        getFields().forEach(param -> parameters.add(PREPARE_STATEMENT_PARAM));
         return parameters;
     }
 
     private List<String> updateParams() {
         final List<String> parameters = new ArrayList<>();
-        getFields().forEach(param -> parameters.add(param + "=?"));
+        getFields().forEach(param -> parameters.add(param + UPDATE_PARAM));
         return parameters;
     }
 
@@ -70,18 +72,18 @@ public abstract class CommonDao<T extends Entity> implements EntityDao<T> {
      */
     @Override
     public T create(T t) throws EntityUpdateException, InterruptedException {
-        T checkEntity = search(selectByUField, ps -> fillUniqueField(ps, t), this::extractResultCheckingException);
+        T checkEntity = search(selectByUFExpression, ps -> fillUniqueField(ps, t), this::extractResultCheckingException);
         if (checkEntity != null) {
             return checkEntity;
         }
         try {
-            update(insertSql, st -> fillEntity(st, t));
+            update(insertExpression, st -> fillEntity(st, t));
         } catch (InterruptedException e) {
             logger.info("take connection interrupted", e);
             Thread.currentThread().interrupt();
             throw e;
         }
-        return search(selectByUField, ps -> fillUniqueField(ps, t), this::extractResultCheckingException);
+        return search(selectByUFExpression, ps -> fillUniqueField(ps, t), this::extractResultCheckingException);
     }
 
     @Override
@@ -125,7 +127,7 @@ public abstract class CommonDao<T extends Entity> implements EntityDao<T> {
                 throw new NotFoundEntityException(format("Entity with id=%s not found", t.getId()));
             }
             update(updateExpression, ps -> updateEntity(ps, t));
-            return search(selectByUField, st -> fillUniqueField(st, t), this::extractResultCheckingException);
+            return search(selectByUFExpression, st -> fillUniqueField(st, t), this::extractResultCheckingException);
         } catch (InterruptedException e) {
             logger.warn("take connection interrupted");
             Thread.currentThread().interrupt();
