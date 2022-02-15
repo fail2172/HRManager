@@ -1,5 +1,6 @@
 package com.epam.jwd.hrmanager.command.impl.page;
 
+import com.epam.jwd.hrmanager.command.Authorized;
 import com.epam.jwd.hrmanager.command.Command;
 import com.epam.jwd.hrmanager.controller.CommandRequest;
 import com.epam.jwd.hrmanager.controller.CommandResponse;
@@ -10,7 +11,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class ShowVacancyCreationCommand implements Command {
 
-    private static final String VACANCY_CREATION_PAGE = "page.vacancyCreation";
+    private static final String VACANCY_CREATION_PAGE_PROPERTY = "page.vacancyCreation";
 
     private static final ReentrantLock lock = new ReentrantLock();
     private static ShowVacancyCreationCommand instance;
@@ -37,7 +38,8 @@ public class ShowVacancyCreationCommand implements Command {
     }
 
     @Override
+    @Authorized
     public CommandResponse execute(CommandRequest request) {
-        return requestFactory.createForwardResponse(propertyContext.get(VACANCY_CREATION_PAGE));
+        return requestFactory.createForwardResponse(propertyContext.get(VACANCY_CREATION_PAGE_PROPERTY));
     }
 }

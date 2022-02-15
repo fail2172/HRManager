@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 public class InterviewServiceImpl implements InterviewService {
 
-    private static final Logger LOGGER = LogManager.getLogger(AddressServiceImpl.class);
+    private static final Logger LOGGER = LogManager.getLogger(InterviewServiceImpl.class);
     private static final ReentrantLock lock = new ReentrantLock();
     private static InterviewServiceImpl instance;
 
@@ -92,7 +92,8 @@ public class InterviewServiceImpl implements InterviewService {
                     .withAddress(interview.getAddress())
                     .withUser(interview.getUser())
                     .withVacancy(interview.getVacancy())
-                    .withData(interview.getDate()));
+                    .withData(interview.getDate())
+                    .withTime(interview.getTime()));
             return get(updatedInterview.getId());
         } catch (InterruptedException e) {
             LOGGER.warn("take connection interrupted");

@@ -9,7 +9,8 @@ import com.epam.jwd.hrmanager.controller.RequestFactory;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class ShowSingUpPageCommand implements Command {
-    public static final String SING_UP_PAGE = "page.singUp";
+
+    private static final String SING_UP_PAGE_PROPERTY = "page.singUp";
 
     private static final ReentrantLock lock = new ReentrantLock();
     private static ShowSingUpPageCommand instance;
@@ -22,11 +23,11 @@ public class ShowSingUpPageCommand implements Command {
         this.propertyContext = propertyContext;
     }
 
-    public static ShowSingUpPageCommand getInstance(RequestFactory requestFactory, PropertyContext propertyContext){
-        if(instance == null){
+    public static ShowSingUpPageCommand getInstance(RequestFactory requestFactory, PropertyContext propertyContext) {
+        if (instance == null) {
             lock.lock();
             {
-                if(instance == null){
+                if (instance == null) {
                     instance = new ShowSingUpPageCommand(requestFactory, propertyContext);
                 }
             }
@@ -37,6 +38,6 @@ public class ShowSingUpPageCommand implements Command {
 
     @Override
     public CommandResponse execute(CommandRequest request) {
-        return requestFactory.createForwardResponse(propertyContext.get(SING_UP_PAGE));
+        return requestFactory.createForwardResponse(propertyContext.get(SING_UP_PAGE_PROPERTY));
     }
 }

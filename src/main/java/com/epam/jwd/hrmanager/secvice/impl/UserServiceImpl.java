@@ -1,6 +1,6 @@
 package com.epam.jwd.hrmanager.secvice.impl;
 
-import com.epam.jwd.hrmanager.dao.EntityDao;
+import com.epam.jwd.hrmanager.dao.UserDao;
 import com.epam.jwd.hrmanager.exception.EntityUpdateException;
 import com.epam.jwd.hrmanager.exception.NotFoundEntityException;
 import com.epam.jwd.hrmanager.model.User;
@@ -16,17 +16,15 @@ public class UserServiceImpl implements UserService {
 
     private static final Logger LOGGER = LogManager.getLogger(UserServiceImpl.class);
     private static final ReentrantLock lock = new ReentrantLock();
-
-
     private static UserServiceImpl instance;
 
-    private final EntityDao<User> userDao;
+    private final UserDao userDao;
 
-    UserServiceImpl(EntityDao<User> userDao) {
+    UserServiceImpl(UserDao userDao) {
         this.userDao = userDao;
     }
 
-    static UserServiceImpl getInstance(EntityDao<User> userDao) {
+    static UserServiceImpl getInstance(UserDao userDao) {
         if (instance == null) {
             lock.lock();
             {

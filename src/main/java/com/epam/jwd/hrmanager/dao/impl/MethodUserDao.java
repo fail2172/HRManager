@@ -1,9 +1,8 @@
 package com.epam.jwd.hrmanager.dao.impl;
 
 import com.epam.jwd.hrmanager.dao.CommonDao;
-import com.epam.jwd.hrmanager.dao.EntityDao;
+import com.epam.jwd.hrmanager.dao.UserDao;
 import com.epam.jwd.hrmanager.db.ConnectionPool;
-import com.epam.jwd.hrmanager.model.Role;
 import com.epam.jwd.hrmanager.model.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,18 +14,18 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class MethodUserDao extends CommonDao<User> implements EntityDao<User> {
+public class MethodUserDao extends CommonDao<User> implements UserDao {
 
-    private static MethodUserDao instance;
-    private static final ReentrantLock lock = new ReentrantLock();
-    private static final Logger LOGGER = LogManager.getLogger(MethodUserDao.class);
     private static final String USER_TABLE_NAME = "hr_user";
     private static final String ID_FIELD_NAME = "id";
     private static final String FIRST_NAME_FIELD_NAME = "first_name";
     private static final String SECOND_NAME_FIELD_NAME = "second_name";
-    private static final String U_ROLE_FIELD_NAME = "r_name";
     private static final String HASH = "u_hash";
+
+    private static final Logger LOGGER = LogManager.getLogger(MethodUserDao.class);
+    private static final ReentrantLock lock = new ReentrantLock();
     private static final Integer ZERO = 0;
+    private static MethodUserDao instance;
     private static final List<String> FIELDS = Arrays.asList(
             ID_FIELD_NAME, FIRST_NAME_FIELD_NAME, SECOND_NAME_FIELD_NAME, HASH
     );
@@ -69,10 +68,6 @@ public class MethodUserDao extends CommonDao<User> implements EntityDao<User> {
         return FIELDS;
     }
 
-    /**
-     * При создании сущности, id подбирается автоматически, поэтому нет разницы
-     * какое число туда подставлять. Здесть подставляется нуль
-     */
     @Override
     protected void fillEntity(PreparedStatement statement, User user) throws SQLException {
         fillFields(statement, user);

@@ -17,7 +17,7 @@ public class RequestFactoryImpl implements RequestFactory {
 
     }
 
-    public static RequestFactoryImpl getInstance(){
+    public static RequestFactoryImpl getInstance() {
         return Holder.INSTANCE;
     }
 

@@ -17,15 +17,16 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class MethodEmployerDao extends CommonDao<Employer> implements EmployerDao {
 
-    private static MethodEmployerDao instance;
-    private static final ReentrantLock lock = new ReentrantLock();
-    private static final Logger LOGGER = LogManager.getLogger(MethodEmployerDao.class);
     private static final String EMPLOYER_TABLE_NAME = "employer";
     private static final String ID_FIELD_NAME = "id";
     private static final String EMPLOYER_NAME_FIELD = "e_name";
     private static final String DESCRIPTION_FIELD_NAME = "description";
     private static final String EMPTY_LINE = "";
+
+    private static final Logger LOGGER = LogManager.getLogger(MethodEmployerDao.class);
+    private static final ReentrantLock lock = new ReentrantLock();
     private static final Integer ZERO = 0;
+    private static MethodEmployerDao instance;
     private static final List<String> FIELDS = Arrays.asList(ID_FIELD_NAME, EMPLOYER_NAME_FIELD, DESCRIPTION_FIELD_NAME);
 
     private MethodEmployerDao(ConnectionPool connectionPool) {
@@ -65,10 +66,6 @@ public class MethodEmployerDao extends CommonDao<Employer> implements EmployerDa
         return FIELDS;
     }
 
-    /**
-     * При создании сущности, id подбирается автоматически, поэтому нет разницы
-     * какое число туда подставлять. Здесть подставляется нуль
-     */
     @Override
     protected void fillEntity(PreparedStatement statement, Employer employer) throws SQLException {
         statement.setLong(1, ZERO);

@@ -7,7 +7,7 @@ public interface DaoFactory {
 
     <T extends Entity> EntityDao<T> daoFor(Class<T> modelDao);
 
-    static DaoFactory getInstance(){
+    static DaoFactory getInstance() {
         return DaoFactoryImpl.getInstance();
     }
 

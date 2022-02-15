@@ -1,6 +1,6 @@
 package com.epam.jwd.hrmanager.secvice.impl;
 
-import com.epam.jwd.hrmanager.dao.EntityDao;
+import com.epam.jwd.hrmanager.dao.StreetDao;
 import com.epam.jwd.hrmanager.exception.EntityUpdateException;
 import com.epam.jwd.hrmanager.exception.NotFoundEntityException;
 import com.epam.jwd.hrmanager.model.Street;
@@ -18,13 +18,13 @@ public class StreetServiceImpl implements StreetService {
     private static final ReentrantLock lock = new ReentrantLock();
     private static StreetServiceImpl instance;
 
-    private final EntityDao<Street> streetDao;
+    private final StreetDao streetDao;
 
-    private StreetServiceImpl(EntityDao<Street> streetDao) {
+    private StreetServiceImpl(StreetDao streetDao) {
         this.streetDao = streetDao;
     }
 
-    static StreetServiceImpl getInstance(EntityDao<Street> streetDao) {
+    static StreetServiceImpl getInstance(StreetDao streetDao) {
         if (instance == null) {
             lock.lock();
             {

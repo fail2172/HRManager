@@ -2,6 +2,12 @@ package com.epam.jwd.hrmanager.command.impl;
 
 import com.epam.jwd.hrmanager.command.Command;
 import com.epam.jwd.hrmanager.command.CommandCreationFactory;
+import com.epam.jwd.hrmanager.command.ProxyWithAuthorization;
+import com.epam.jwd.hrmanager.command.impl.action.*;
+import com.epam.jwd.hrmanager.command.impl.error.ForbiddenErrorPage;
+import com.epam.jwd.hrmanager.command.impl.error.NotFoundErrorPage;
+import com.epam.jwd.hrmanager.command.impl.error.ServerErrorPage;
+import com.epam.jwd.hrmanager.command.impl.error.UnauthorizedErrorPage;
 import com.epam.jwd.hrmanager.command.impl.page.*;
 import com.epam.jwd.hrmanager.controller.RequestFactory;
 import com.epam.jwd.hrmanager.controller.PropertyContext;
@@ -12,6 +18,7 @@ public class CommandCreationFactoryImpl implements CommandCreationFactory {
 
     private final RequestFactory requestFactory = RequestFactory.getInstance();
     private final ServiceFactory serviceFactory = ServiceFactory.getInstance();
+    private final PropertyContext propertyContext = PropertyContext.getInstance();
 
     private CommandCreationFactoryImpl() {
 
@@ -23,80 +30,117 @@ public class CommandCreationFactoryImpl implements CommandCreationFactory {
 
     @Override
     public Command createCommand(String name) {
+        return withAuthorization(commandWithoutAuthorizationAnnotation(name));
+    }
+
+    private Command commandWithoutAuthorizationAnnotation(String name) {
         switch (name) {
             case "singOut":
-                return SingOutCommand.getInstance(requestFactory, PropertyContext.getInstance());
-            case "show_error":
-                return ShowErrorPageCommand.getInstance(requestFactory, PropertyContext.getInstance());
+                return SingOutCommand.getInstance(requestFactory, propertyContext);
+            case "unauthorizedError":
+                return UnauthorizedErrorPage.getInstance(requestFactory, propertyContext);
+            case "forbiddenError":
+                return ForbiddenErrorPage.getInstance(requestFactory, propertyContext);
+            case "serverError":
+                return ServerErrorPage.getInstance(requestFactory, propertyContext);
             case "singInPage":
-                return ShowSingInPageCommand.getInstance(requestFactory, PropertyContext.getInstance());
+                return ShowSingInPageCommand.getInstance(requestFactory, propertyContext);
             case "singUpPage":
-                return ShowSingUpPageCommand.getInstance(requestFactory, PropertyContext.getInstance());
+                return ShowSingUpPageCommand.getInstance(requestFactory, propertyContext);
             case "interviewCreationPage":
-                return ShowInterviewCreationPageCommand.getInstance(requestFactory, PropertyContext.getInstance());
+                return ShowInterviewCreationPageCommand.getInstance(requestFactory, propertyContext);
             case "editProfilePage":
-                return ShowEditProfilePageCommand.getInstance(requestFactory, PropertyContext.getInstance());
+                return ShowEditProfilePageCommand.getInstance(requestFactory, propertyContext);
             case "vacancyCreationPage":
-                return ShowVacancyCreationCommand.getInstance(requestFactory, PropertyContext.getInstance());
+                return ShowVacancyCreationCommand.getInstance(requestFactory, propertyContext);
             case "goToInterviewCreationPage":
-                return GoToInterviewCreationPageCommand.getInstance(requestFactory,
-                        (JobRequestService) serviceFactory.serviceFor(JobRequest.class));
+                return GoToInterviewCreationPageCommand.getInstance(
+                        requestFactory,
+                        (JobRequestService) serviceFactory.serviceFor(JobRequest.class),
+                        propertyContext
+                );
             case "ban":
                 return BanCommand.getInstance(
                         requestFactory,
                         (AccountService) serviceFactory.serviceFor(Account.class),
-                        PropertyContext.getInstance());
+                        propertyContext
+                );
             case "unBan":
                 return UnBanCommand.getInstance(
                         requestFactory,
                         (AccountService) serviceFactory.serviceFor(Account.class),
-                        PropertyContext.getInstance());
+                        propertyContext
+                );
             case "aspirantToManager":
                 return AspirantToManagerCommand.getInstance(
                         requestFactory,
                         (AccountService) serviceFactory.serviceFor(Account.class),
-                        PropertyContext.getInstance());
+                        propertyContext
+                );
             case "usersPage":
                 return ShowUsersPageCommand.getInstance(
                         requestFactory,
                         (AccountService) serviceFactory.serviceFor(Account.class),
-                        PropertyContext.getInstance());
+                        propertyContext
+                );
             case "singIn":
                 return SingInCommand.getInstance(
                         requestFactory,
                         (AccountService) serviceFactory.serviceFor(Account.class),
-                        PropertyContext.getInstance()
+                        propertyContext
                 );
             case "filterVacancies":
                 return FilterVacanciesCommand.getInstance(
                         requestFactory,
                         (VacancyService) serviceFactory.serviceFor(Vacancy.class),
-                        PropertyContext.getInstance()
+                        propertyContext
                 );
             case "jobRequestsPage":
                 return ShowJobRequestsPageCommand.getInstance(
                         requestFactory,
                         (JobRequestService) serviceFactory.serviceFor(JobRequest.class),
-                        PropertyContext.getInstance()
+                        propertyContext
                 );
             case "rejectApplication":
                 return RejectJobRequestCommand.getInstance(
                         requestFactory,
                         (JobRequestService) serviceFactory.serviceFor(JobRequest.class),
-                        PropertyContext.getInstance()
+                        propertyContext
                 );
             case "singUp":
                 return SingUpCommand.getInstance(
                         requestFactory,
                         (AccountService) serviceFactory.serviceFor(Account.class),
                         (UserService) serviceFactory.serviceFor(User.class),
-                        PropertyContext.getInstance());
-            case "applyForVacancy":
-                return ApplyForVacancy.getInstance(
+                        propertyContext
+                );
+            case "applyVacancy":
+                return ApplyVacancy.getInstance(
                         requestFactory,
                         (JobRequestService) serviceFactory.serviceFor(JobRequest.class),
                         (VacancyService) serviceFactory.serviceFor(Vacancy.class),
-                        PropertyContext.getInstance()
+                        propertyContext
+                );
+            case "editProfile":
+                return EditProfileCommand.getInstance(
+                        requestFactory,
+                        (AccountService) serviceFactory.serviceFor(Account.class),
+                        (UserService) serviceFactory.serviceFor(User.class),
+                        propertyContext
+                );
+            case "mainPage":
+                return ShowMainPageCommand.getInstance(
+                        requestFactory,
+                        (VacancyService) serviceFactory.serviceFor(Vacancy.class),
+                        (CityService) serviceFactory.serviceFor(City.class),
+                        propertyContext
+                );
+            case "personalAreaPage":
+                return ShowPersonalAreaPageCommand.getInstance(
+                        requestFactory,
+                        (JobRequestService) serviceFactory.serviceFor(JobRequest.class),
+                        (InterviewService) serviceFactory.serviceFor(Interview.class),
+                        propertyContext
                 );
             case "deleteAccount":
                 return DeleteAccountCommand.getInstance(
@@ -104,7 +148,7 @@ public class CommandCreationFactoryImpl implements CommandCreationFactory {
                         (AccountService) serviceFactory.serviceFor(Account.class),
                         (InterviewService) serviceFactory.serviceFor(Interview.class),
                         (JobRequestService) serviceFactory.serviceFor(JobRequest.class),
-                        PropertyContext.getInstance()
+                        propertyContext
                 );
             case "searchVacancies":
                 return SearchVacanciesCommand.getInstance(
@@ -112,14 +156,7 @@ public class CommandCreationFactoryImpl implements CommandCreationFactory {
                         (VacancyService) serviceFactory.serviceFor(Vacancy.class),
                         (CityService) serviceFactory.serviceFor(City.class),
                         (EmployerService) serviceFactory.serviceFor(Employer.class),
-                        PropertyContext.getInstance()
-                );
-            case "editProfile":
-                return EditProfileCommand.getInstance(
-                        requestFactory,
-                        (AccountService) serviceFactory.serviceFor(Account.class),
-                        (UserService) serviceFactory.serviceFor(User.class),
-                        PropertyContext.getInstance()
+                        propertyContext
                 );
             case "deleteVacancy":
                 return DeleteVacancyCommand.getInstance(
@@ -127,7 +164,7 @@ public class CommandCreationFactoryImpl implements CommandCreationFactory {
                         (VacancyService) serviceFactory.serviceFor(Vacancy.class),
                         (InterviewService) serviceFactory.serviceFor(Interview.class),
                         (JobRequestService) serviceFactory.serviceFor(JobRequest.class),
-                        PropertyContext.getInstance()
+                        propertyContext
                 );
             case "vacancyCreation":
                 return CreationVacancyCommand.getInstance(
@@ -135,9 +172,9 @@ public class CommandCreationFactoryImpl implements CommandCreationFactory {
                         (VacancyService) serviceFactory.serviceFor(Vacancy.class),
                         (EmployerService) serviceFactory.serviceFor(Employer.class),
                         (CityService) serviceFactory.serviceFor(City.class),
-                        PropertyContext.getInstance()
+                        propertyContext
                 );
-            case "creteAnInterview":
+            case "creteInterview":
                 return CreatingInterviewCommand.getInstance(
                         requestFactory,
                         (JobRequestService) serviceFactory.serviceFor(JobRequest.class),
@@ -145,23 +182,15 @@ public class CommandCreationFactoryImpl implements CommandCreationFactory {
                         (CityService) serviceFactory.serviceFor(City.class),
                         (StreetService) serviceFactory.serviceFor(Street.class),
                         (AddressService) serviceFactory.serviceFor(Address.class),
-                        PropertyContext.getInstance()
-                );
-            case "personalAreaPage":
-                return ShowPersonalAreaPageCommand.getInstance(
-                        requestFactory,
-                        (JobRequestService) serviceFactory.serviceFor(JobRequest.class),
-                        (InterviewService) serviceFactory.serviceFor(Interview.class),
-                        PropertyContext.getInstance()
+                        propertyContext
                 );
             default:
-                return ShowMainPageCommand.getInstance(
-                        requestFactory,
-                        (VacancyService) serviceFactory.serviceFor(Vacancy.class),
-                        (CityService) serviceFactory.serviceFor(City.class),
-                        PropertyContext.getInstance()
-                );
+                return NotFoundErrorPage.getInstance(requestFactory, propertyContext);
         }
+    }
+
+    private Command withAuthorization(Command command) {
+        return ProxyWithAuthorization.of(command);
     }
 
     private static class Holder {

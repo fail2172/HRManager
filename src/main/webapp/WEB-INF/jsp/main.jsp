@@ -6,10 +6,8 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Headers · Bootstrap v5.0</title>
-
     <link href="../../css/bootstrap.min.css" rel="stylesheet">
     <link href="../../css/headers.css" rel="stylesheet">
-
 </head>
 <body>
 
@@ -17,14 +15,14 @@
     <div class="container">
         <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                <s:security level="2">
-                    <li><a href="<c:url value="/"/>" class="nav-link px-2 text-white">Home</a></li>
+                <li><a href="<c:url value="/"/>" class="nav-link px-2 text-white">Home</a></li>
+                <s:security level="1">
                     <li><a href="<c:url value="/controller?command=jobRequestsPage"/>"
                            class="nav-link px-2 text-white">Job requests</a></li>
+                </s:security>
+                <s:security level="2">
                     <li><a href="<c:url value="/controller?command=usersPage"/>"
                            class="nav-link px-2 text-white">Users</a></li>
-                    <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
-                    <li><a href="#" class="nav-link px-2 text-white">About</a></li>
                 </s:security>
             </ul>
 
@@ -52,18 +50,16 @@
                 <div class="dropdown text-end">
                     <a href="#" class="d-block link-light text-decoration-none dropdown-toggle"
                        id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32"
-                             class="rounded-circle">
                     </a>
                     <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
-                        <li><a class="dropdown-item" href="#">New project...</a></li>
-                        <li><a class="dropdown-item" href="#">Settings</a></li>
-                        <li><a class="dropdown-item" href="<c:url value="/controller?command=personalAreaPage"/>">Profile</a>
+                        <li>
+                            <a class="dropdown-item" href="<c:url value="/controller?command=personalAreaPage"/>">Profile</a>
                         </li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" href="<c:url value="/controller?command=singOut"/>">Sign out</a>
+                        <li>
+                            <a class="dropdown-item" href="<c:url value="/controller?command=singOut"/>">Sign out</a>
                         </li>
                     </ul>
                 </div>
@@ -87,7 +83,6 @@
                             <div class="list-group-item py-3 lh-tight" aria-current="true">
                                 <div class="d-flex w-100 align-items-center justify-content-between">
                                     <strong class="mb-1">Города</strong>
-                                    <small>Wed</small>
                                 </div>
                                 <div class="col-10 mb-1 small">
                                     <select class="form-select" id="cityVacancies" name="cityVacancies">
@@ -101,7 +96,6 @@
                             <div class="list-group-item py-3 lh-tight" aria-current="true">
                                 <div class="d-flex w-100 align-items-center justify-content-between">
                                     <strong class="mb-1">Тип занятости</strong>
-                                    <small>Wed</small>
                                 </div>
                                 <div class="col-10 mb-1 small">
                                     <select class="form-select" id="employmentType" name="employmentType">
@@ -117,7 +111,6 @@
                             <div class="list-group-item py-3 lh-tight" aria-current="true">
                                 <div class="d-flex w-100 align-items-center justify-content-between">
                                     <strong class="mb-1">Опыт работы</strong>
-                                    <small>Wed</small>
                                 </div>
                                 <div class="col-10 mb-1 small">
                                     <select class="form-select" id="experience" name="experience">
@@ -130,8 +123,7 @@
                             </div>
                             <div class="list-group-item py-3 lh-tight" aria-current="true">
                                 <div class="d-flex w-100 align-items-center justify-content-between">
-                                    <strong class="mb-1">Уровень дохода</strong>
-                                    <small>Wed</small>
+                                    <strong class="mb-1">Уровень дохода $</strong>
                                 </div>
                                 <div class="col-10 mb-1 small">
                                     <div class="input-group input-group-sm mb-3">
@@ -175,13 +167,14 @@
                                     <div class="list-group-item py-3 lh-tight">
                                         <div class="d-flex w-100 align-items-center justify-content-between">
                                             <strong class="mb-1">${vacancy.salary}</strong>
+                                            <small>${vacancy.date}</small>
                                         </div>
                                         <div class="col-10 mb-1 small">
                                             <small class="text-muted">${vacancy.employer.name}</small><br>
                                             <small class="text-muted">${vacancy.city.name}</small><br>
                                             <label class="text">${vacancy.description.get()}</label><br>
                                         </div>
-                                        <form action="<c:url value="/controller?command=applyForVacancy"/>"
+                                        <form action="<c:url value="/controller?command=applyVacancy"/>"
                                               method="post">
                                             <div class="col-4 form-floating">
                                                 <button class="w-100 btn btn-success" type="submit"
@@ -205,6 +198,7 @@
                                     </div>
                                 </div>
                             </c:forEach>
+                            <br>
                         </div>
                         <br>
                     </div>

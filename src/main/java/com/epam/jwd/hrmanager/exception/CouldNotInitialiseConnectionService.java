@@ -8,4 +8,5 @@ public class CouldNotInitialiseConnectionService extends Error {
     public CouldNotInitialiseConnectionService(String message, Throwable cause) {
         super(message, cause);
     }
+
 }

@@ -7,7 +7,7 @@ public interface ServiceFactory {
 
     <T extends Entity> EntityService<T> serviceFor(Class<T> modelClass);
 
-    static ServiceFactory getInstance(){
+    static ServiceFactory getInstance() {
         return ServiceFactoryImpl.getInstance();
     }
 

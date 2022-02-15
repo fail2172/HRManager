@@ -94,7 +94,7 @@
             <div class="col-6">
                 <div class="container-fluid">
                     <div class="list-group-flush border-bottom">
-                        <c:forEach var="jobRequest" items="${requestScope.jobInquiries}">
+                        <c:forEach var="jobRequest" items="${requestScope.jobRequests}">
                             <br>
                             <div class="card" style="width: 44rem;">
                                 <div class="card-header">

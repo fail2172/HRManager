@@ -13,7 +13,8 @@ public class LanguageFilter implements Filter {
     private static final String DEFAULT_PATH = "/";
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
         if (doesNotContainLangCookie((HttpServletRequest) request)) {
             addLangCookie((HttpServletResponse) response);
         }

@@ -95,7 +95,7 @@
         <div class="row">
             <div class="col-3"></div>
             <div class="col-6">
-                <form class="row g-3" action="<c:url value="/controller?command=creteAnInterview"/>" method="post">
+                <form class="row g-3" action="<c:url value="/controller?command=creteInterview"/>" method="post">
                     <div class="col-12">
                         <div class="form-floating">
                             <input type="text" class="form-control" id="city" name="city" placeholder="Город">
@@ -135,39 +135,39 @@
                     </div>
                 </form>
                 <br>
-                <c:if test="${not empty requestScope.errorFillingOutTheFormMessage}">
-                    <c:if test="${requestScope.errorFillingOutTheFormMessage eq 'city name is empty'}">
+                <c:if test="${not empty sessionScope.errorMessage}">
+                    <c:if test="${sessionScope.errorMessage eq 'city name is empty'}">
                         <div class="form-floating" role="alert">
                             <div class="alert alert-danger" role="alert">
-                                    ${errorFillingOutTheFormMessage}
+                                    ${errorMessage}
                             </div>
                         </div>
                     </c:if>
-                    <c:if test="${requestScope.errorFillingOutTheFormMessage eq 'street name is empty'}">
+                    <c:if test="${sessionScope.errorMessage eq 'street name is empty'}">
                         <div class="form-floating" role="alert">
                             <div class="alert alert-danger" role="alert">
-                                    ${errorFillingOutTheFormMessage}
+                                    ${errorMessage}
                             </div>
                         </div>
                     </c:if>
-                    <c:if test="${requestScope.errorFillingOutTheFormMessage eq 'incorrect hose number'}">
+                    <c:if test="${sessionScope.errorMessage eq 'incorrect hose number'}">
                         <div class="form-floating" role="alert">
                             <div class="alert alert-danger" role="alert">
-                                    ${errorFillingOutTheFormMessage}
+                                    ${errorMessage}
                             </div>
                         </div>
                     </c:if>
-                    <c:if test="${requestScope.errorFillingOutTheFormMessage eq 'incorrect date'}">
+                    <c:if test="${sessionScope.errorMessage eq 'incorrect date'}">
                         <div class="form-floating" role="alert">
                             <div class="alert alert-danger" role="alert">
-                                    ${errorFillingOutTheFormMessage}
+                                    ${errorMessage}
                             </div>
                         </div>
                     </c:if>
-                    <c:if test="${requestScope.errorFillingOutTheFormMessage eq 'incorrect time'}">
+                    <c:if test="${sessionScope.errorMessage eq 'incorrect time'}">
                         <div class="form-floating" role="alert">
                             <div class="alert alert-danger" role="alert">
-                                    ${errorFillingOutTheFormMessage}
+                                    ${errorMessage}
                             </div>
                         </div>
                     </c:if>

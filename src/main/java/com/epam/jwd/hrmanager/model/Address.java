@@ -54,11 +54,11 @@ public class Address implements Entity {
         return new Address(id, city, street, houseNumber, flatNumber);
     }
 
-    public Address withHouseNumber(int houseNumber){
+    public Address withHouseNumber(int houseNumber) {
         return new Address(id, city, street, houseNumber, flatNumber);
     }
 
-    public Address withFlatNumber(Integer flatNumber){
+    public Address withFlatNumber(Integer flatNumber) {
         return new Address(id, city, street, houseNumber, flatNumber);
     }
 

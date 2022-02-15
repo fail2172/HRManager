@@ -14,7 +14,7 @@ public interface TransactionManager {
 
     boolean isTransaction();
 
-    static TransactionManager getInstance(){
+    static TransactionManager getInstance() {
         return ThreadLocalTransactionManager.getInstance();
     }
 

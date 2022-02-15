@@ -7,7 +7,7 @@ public class PlainCommandResponse implements CommandResponse {
     private final boolean redirect;
     private final String path;
 
-    public PlainCommandResponse(String path){
+    public PlainCommandResponse(String path) {
         this(false, path);
     }
 

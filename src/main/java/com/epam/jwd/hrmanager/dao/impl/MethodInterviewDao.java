@@ -19,9 +19,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class MethodInterviewDao extends CommonDao<Interview> implements InterviewDao {
 
-    private static MethodInterviewDao instance;
-    private static final ReentrantLock lock = new ReentrantLock();
-    private static final Logger LOGGER = LogManager.getLogger(MethodInterviewDao.class);
     private static final String INTERVIEW_TABLE_NAME = "interview";
     private static final String ID_FIELD_NAME = "id";
     private static final String DATE_FIELD_NAME = "i_date";
@@ -31,21 +28,25 @@ public class MethodInterviewDao extends CommonDao<Interview> implements Intervie
     private static final String VACANCY_ID_FIELD_NAME = "vacancy_id";
     private static final String STATUS_FIELD_NAME = "i_status";
     private static final String HASH = "i_hash";
+
+    private static final Logger LOGGER = LogManager.getLogger(MethodInterviewDao.class);
+    private static final ReentrantLock lock = new ReentrantLock();
     private static final Integer ZERO = 0;
+    private static MethodInterviewDao instance;
     private static final List<String> FIELDS = Arrays.asList(
             ID_FIELD_NAME, DATE_FIELD_NAME, TIME_FIELD_NAME, ADDRESS_ID_FIELD_NAME,
             USER_ID_FIELD_NAME, VACANCY_ID_FIELD_NAME, STATUS_FIELD_NAME, HASH
     );
 
-    private MethodInterviewDao(ConnectionPool connectionPool){
+    private MethodInterviewDao(ConnectionPool connectionPool) {
         super(LOGGER, connectionPool);
     }
 
-    static MethodInterviewDao getInstance(ConnectionPool connectionPool){
-        if(instance == null){
+    static MethodInterviewDao getInstance(ConnectionPool connectionPool) {
+        if (instance == null) {
             lock.lock();
             {
-                if(instance == null){
+                if (instance == null) {
                     instance = new MethodInterviewDao(connectionPool);
                 }
             }
@@ -74,10 +75,6 @@ public class MethodInterviewDao extends CommonDao<Interview> implements Intervie
         return FIELDS;
     }
 
-    /**
-     * При создании сущности, id подбирается автоматически, поэтому нет разницы
-     * какое число туда подставлять. Здесть подставляется нуль
-     */
     @Override
     protected void fillEntity(PreparedStatement statement, Interview interview) throws SQLException {
         fillFields(statement, interview);
@@ -141,7 +138,7 @@ public class MethodInterviewDao extends CommonDao<Interview> implements Intervie
         statement.setString(8, composeHashCode(interview));
     }
 
-    private String composeHashCode(Interview interview){
+    private String composeHashCode(Interview interview) {
         return String.valueOf(interview.getDate())
                 + interview.getTime()
                 + interview.getAddress().getId()

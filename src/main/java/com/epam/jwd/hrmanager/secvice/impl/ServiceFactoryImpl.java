@@ -36,12 +36,12 @@ public class ServiceFactoryImpl implements ServiceFactory {
             final String className = clazz.getSimpleName();
             switch (className) {
                 case "User":
-                    EntityDao<User> userDao = daoFactory.daoFor(User.class);
+                    UserDao userDao = (UserDao) daoFactory.daoFor(User.class);
                     return withTransactions(UserServiceImpl.getInstance(userDao));
                 case "Address":
                     AddressDao addressDao = (AddressDao) daoFactory.daoFor(Address.class);
                     CityDao cityDao = (CityDao) daoFactory.daoFor(City.class);
-                    EntityDao<Street> streetDao = daoFactory.daoFor(Street.class);
+                    StreetDao streetDao = (StreetDao) daoFactory.daoFor(Street.class);
                     return withTransactions(AddressServiceImpl.getInstance(addressDao, cityDao, streetDao));
                 case "Vacancy":
                     VacancyDao vacancyDao = (VacancyDao) daoFactory.daoFor(Vacancy.class);
@@ -65,7 +65,7 @@ public class ServiceFactoryImpl implements ServiceFactory {
                     );
                 case "Account":
                     AccountDao accountDao = (AccountDao) daoFactory.daoFor(Account.class);
-                    userDao = daoFactory.daoFor(User.class);
+                    userDao = (UserDao) daoFactory.daoFor(User.class);
                     return withTransactions(
                             AccountServiceImpl.getInstance(accountDao, userDao, BCrypt.withDefaults(), BCrypt.verifyer())
                     );
@@ -73,7 +73,7 @@ public class ServiceFactoryImpl implements ServiceFactory {
                     cityDao = (CityDao) daoFactory.daoFor(City.class);
                     return withTransactions(CityServiceImpl.getInstance(cityDao));
                 case "Street":
-                    streetDao = daoFactory.daoFor(Street.class);
+                    streetDao = (StreetDao) daoFactory.daoFor(Street.class);
                     return withTransactions(StreetServiceImpl.getInstance(streetDao));
                 case "Employer":
                     employerDao = (EmployerDao) daoFactory.daoFor(Employer.class);

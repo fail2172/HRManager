@@ -1,7 +1,6 @@
 package com.epam.jwd.hrmanager.secvice.impl;
 
 import com.epam.jwd.hrmanager.dao.EmployerDao;
-import com.epam.jwd.hrmanager.dao.EntityDao;
 import com.epam.jwd.hrmanager.exception.EntityUpdateException;
 import com.epam.jwd.hrmanager.exception.NotFoundEntityException;
 import com.epam.jwd.hrmanager.model.Employer;
@@ -16,7 +15,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class EmployerServiceImpl implements EmployerService {
 
-    private static final Logger LOGGER = LogManager.getLogger(AddressServiceImpl.class);
+    private static final Logger LOGGER = LogManager.getLogger(EmployerServiceImpl.class);
     private static final ReentrantLock lock = new ReentrantLock();
     private static EmployerServiceImpl instance;
 

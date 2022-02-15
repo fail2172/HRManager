@@ -8,8 +8,8 @@ public enum Employment {
     VOLUNTEERING;
 
     public static Employment of(String name) {
-        for (Employment employment : values()){
-            if(employment.name().equalsIgnoreCase(name)){
+        for (Employment employment : values()) {
+            if (employment.name().equalsIgnoreCase(name)) {
                 return employment;
             }
         }

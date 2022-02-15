@@ -18,9 +18,11 @@ public class ShowMainPageCommand implements Command {
 
     private static final String MAIN_PAGE = "page.main";
 
-    private static final String VACANCIES_ATTRIBUTE_NAME = "vacancies";
-    private static final String CITIES_ATTRIBUTE_NAME = "cities";
+    private static final String VACANCIES_ATTRIBUTE = "vacancies";
+    private static final String CITIES_ATTRIBUTE = "cities";
+
     private static final ReentrantLock lock = new ReentrantLock();
+    private static final String SESSION_VARIABLE_PROPERTY = "session.variable";
     private static ShowMainPageCommand instance;
 
     private final RequestFactory requestFactory;
@@ -52,16 +54,16 @@ public class ShowMainPageCommand implements Command {
 
     @Override
     public CommandResponse execute(CommandRequest request) {
-        Optional<Object> parameterizedVacancies = request.retrieveFromSession(VACANCIES_ATTRIBUTE_NAME);
+        Optional<Object> parameterizedVacancies = request.retrieveFromSession(propertyContext.get(SESSION_VARIABLE_PROPERTY));
         if (parameterizedVacancies.isPresent()) {
-            request.addAttributeToJsp(VACANCIES_ATTRIBUTE_NAME, parameterizedVacancies.get());
-            request.removeFromSession(VACANCIES_ATTRIBUTE_NAME);
+            request.addAttributeToJsp(VACANCIES_ATTRIBUTE, parameterizedVacancies.get());
+            request.removeFromSession(propertyContext.get(SESSION_VARIABLE_PROPERTY));
         } else {
             List<Vacancy> vacancies = vacancyService.findAll();
-            request.addAttributeToJsp(VACANCIES_ATTRIBUTE_NAME, vacancies);
+            request.addAttributeToJsp(VACANCIES_ATTRIBUTE, vacancies);
         }
         List<City> cities = cityService.findAll();
-        request.addAttributeToJsp(CITIES_ATTRIBUTE_NAME, cities);
+        request.addAttributeToJsp(CITIES_ATTRIBUTE, cities);
         return requestFactory.createForwardResponse(propertyContext.get(MAIN_PAGE));
     }
 }

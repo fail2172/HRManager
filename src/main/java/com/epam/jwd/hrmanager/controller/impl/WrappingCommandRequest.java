@@ -31,7 +31,7 @@ public class WrappingCommandRequest implements CommandRequest {
 
     @Override
     public boolean addToSession(String name, Object value) {
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(false);
         if (session != null) {
             session.setAttribute(name, value);
             return true;
@@ -52,7 +52,7 @@ public class WrappingCommandRequest implements CommandRequest {
 
     @Override
     public void removeFromSession(String name) {
-        if(request.getSession(false) != null){
+        if (request.getSession(false) != null) {
             request.getSession(false).removeAttribute(name);
         }
     }
@@ -65,7 +65,7 @@ public class WrappingCommandRequest implements CommandRequest {
 
     @Override
     public void clearSession() {
-        if(request.getSession(false) != null){
+        if (request.getSession(false) != null) {
             request.getSession(false).invalidate();
         }
     }

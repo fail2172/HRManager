@@ -19,9 +19,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class MethodAccountDao extends CommonDao<Account> implements AccountDao {
 
-    private static MethodAccountDao instance;
-    private static final ReentrantLock lock = new ReentrantLock();
-    private static final Logger LOGGER = LogManager.getLogger(MethodAccountDao.class);
     private static final String ACCOUNT_TABLE_NAME = "account";
     private static final String ID_FIELD_NAME = "id";
     private static final String USER_ID_FIELD_NAME = "user_id";
@@ -30,7 +27,11 @@ public class MethodAccountDao extends CommonDao<Account> implements AccountDao {
     private static final String PASSWORD_FIELD_NAME = "a_password";
     private static final String ROLE_FIELD_NAME = "a_role";
     private static final String STATUS_FIELD_NAME = "a_status";
+
+    private static final Logger LOGGER = LogManager.getLogger(MethodAccountDao.class);
+    private static final ReentrantLock lock = new ReentrantLock();
     private static final Integer ZERO = 0;
+    private static MethodAccountDao instance;
     private static final List<String> FIELDS = Arrays.asList(
             ID_FIELD_NAME, USER_ID_FIELD_NAME,
             LOGIN_FIELD_NAME, EMAIL_FIELD_NAME,
@@ -94,10 +95,6 @@ public class MethodAccountDao extends CommonDao<Account> implements AccountDao {
         return FIELDS;
     }
 
-    /**
-     * При создании сущности, id подбирается автоматически, поэтому нет разницы
-     * какое число туда подставлять. Здесь подставляется нуль
-     */
     @Override
     protected void fillEntity(PreparedStatement statement, Account account) throws SQLException {
         fillFields(statement, account);

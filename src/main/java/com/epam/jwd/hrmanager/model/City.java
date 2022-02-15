@@ -1,8 +1,6 @@
 package com.epam.jwd.hrmanager.model;
 
-import java.util.Optional;
-
-public class City implements Entity{
+public class City implements Entity {
 
     private final Long id;
     private final String name;
@@ -25,7 +23,7 @@ public class City implements Entity{
         return name;
     }
 
-    public City withName(String name){
+    public City withName(String name) {
         return new City(id, name);
     }
 

@@ -19,6 +19,7 @@ import java.io.IOException;
 public class Controller extends HttpServlet {
 
     private static final long serialVersionUID = -1303640745642398238L;
+
     private static final Logger LOGGER = LogManager.getLogger(Controller.class);
     public static final String COMMAND_NAME_PARAM = "command";
 
@@ -28,14 +29,12 @@ public class Controller extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         LOGGER.trace("caught req and resp in doGet method");
         processRequest(req, resp);
-        main(req);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         LOGGER.trace("caught req and resp in doPost method");
         processRequest(req, resp);
-        main(req);
     }
 
     private void processRequest(HttpServletRequest req, HttpServletResponse resp) {
@@ -66,10 +65,5 @@ public class Controller extends HttpServlet {
             final RequestDispatcher dispatcher = req.getRequestDispatcher(desiredPath);
             dispatcher.forward(req, resp);
         }
-    }
-
-    private void main(HttpServletRequest request){
-        VacancyService vacancyService = (VacancyService) ServiceFactory.getInstance().serviceFor(Vacancy.class);
-        vacancyService.delete(19L);
     }
 }

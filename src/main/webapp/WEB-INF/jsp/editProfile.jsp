@@ -125,39 +125,46 @@
                     </div>
                 </form>
                 <br>
-                <c:if test="${not empty requestScope.errorFillingOutTheFormMessage}">
-                    <c:if test="${requestScope.errorFillingOutTheFormMessage eq 'city name is empty'}">
+                <c:if test="${not empty sessionScope.errorMessage}">
+                    <c:if test="${sessionScope.errorMessage eq 'login is empty'}">
                         <div class="form-floating" role="alert">
                             <div class="alert alert-danger" role="alert">
-                                    ${errorFillingOutTheFormMessage}
+                                    ${errorMessage}
                             </div>
                         </div>
                     </c:if>
-                    <c:if test="${requestScope.errorFillingOutTheFormMessage eq 'street name is empty'}">
+                    <c:if test="${sessionScope.errorMessage eq 'email is empty'}">
                         <div class="form-floating" role="alert">
                             <div class="alert alert-danger" role="alert">
-                                    ${errorFillingOutTheFormMessage}
+                                    ${errorMessage}
                             </div>
                         </div>
                     </c:if>
-                    <c:if test="${requestScope.errorFillingOutTheFormMessage eq 'incorrect hose number'}">
+                    <c:if test="${sessionScope.errorMessage eq 'first name is empty'}">
                         <div class="form-floating" role="alert">
                             <div class="alert alert-danger" role="alert">
-                                    ${errorFillingOutTheFormMessage}
+                                    ${errorMessage}
                             </div>
                         </div>
                     </c:if>
-                    <c:if test="${requestScope.errorFillingOutTheFormMessage eq 'incorrect date'}">
+                    <c:if test="${sessionScope.errorMessage eq 'second name is empty'}">
                         <div class="form-floating" role="alert">
                             <div class="alert alert-danger" role="alert">
-                                    ${errorFillingOutTheFormMessage}
+                                    ${errorMessage}
                             </div>
                         </div>
                     </c:if>
-                    <c:if test="${requestScope.errorFillingOutTheFormMessage eq 'incorrect time'}">
+                    <c:if test="${sessionScope.errorMessage eq 'login is busy'}">
                         <div class="form-floating" role="alert">
                             <div class="alert alert-danger" role="alert">
-                                    ${errorFillingOutTheFormMessage}
+                                    ${errorMessage}
+                            </div>
+                        </div>
+                    </c:if>
+                    <c:if test="${sessionScope.errorMessage eq 'email is busy'}">
+                        <div class="form-floating" role="alert">
+                            <div class="alert alert-danger" role="alert">
+                                    ${errorMessage}
                             </div>
                         </div>
                     </c:if>

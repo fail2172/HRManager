@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.Optional;
 
-public class Vacancy implements Entity{
+public class Vacancy implements Entity {
 
     private final Long id;
     private final String title;
@@ -30,12 +30,12 @@ public class Vacancy implements Entity{
     }
 
     public Vacancy(String title, BigDecimal salary, Employer employer, City city, Employment employment,
-                   Integer experience,  Date date, String description) {
+                   Integer experience, Date date, String description) {
         this(null, title, salary, employer, city, employment, experience, date, description);
     }
 
     public Vacancy(Long id, String title, BigDecimal salary, Employment employment,
-                   Integer experience,  Date date, String description) {
+                   Integer experience, Date date, String description) {
         this(id, title, salary, null, null, employment, experience, date, description);
     }
 
@@ -76,35 +76,35 @@ public class Vacancy implements Entity{
         return date;
     }
 
-    public Vacancy withTitle(String title){
+    public Vacancy withTitle(String title) {
         return new Vacancy(id, title, salary, employer, city, employment, experience, date, description);
     }
 
-    public Vacancy withSalary(BigDecimal salary){
+    public Vacancy withSalary(BigDecimal salary) {
         return new Vacancy(id, title, salary, employer, city, employment, experience, date, description);
     }
 
-    public Vacancy withEmployer(Employer employer){
+    public Vacancy withEmployer(Employer employer) {
         return new Vacancy(id, title, salary, employer, city, employment, experience, date, description);
     }
 
-    public Vacancy withCity(City city){
+    public Vacancy withCity(City city) {
         return new Vacancy(id, title, salary, employer, city, employment, experience, date, description);
     }
 
-    public Vacancy withEmployment(Employment employment){
+    public Vacancy withEmployment(Employment employment) {
         return new Vacancy(id, title, salary, employer, city, employment, experience, date, description);
     }
 
-    public Vacancy withExperience(Integer experience){
+    public Vacancy withExperience(Integer experience) {
         return new Vacancy(id, title, salary, employer, city, employment, experience, date, description);
     }
 
-    public Vacancy withDate(Date date){
+    public Vacancy withDate(Date date) {
         return new Vacancy(id, title, salary, employer, city, employment, experience, date, description);
     }
 
-    public Vacancy withDescription(String description){
+    public Vacancy withDescription(String description) {
         return new Vacancy(id, title, salary, employer, city, employment, experience, date, description);
     }
 

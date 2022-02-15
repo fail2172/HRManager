@@ -17,9 +17,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class MethodVacancyDao extends CommonDao<Vacancy> implements VacancyDao {
 
-    private static MethodVacancyDao instance;
-    private static final ReentrantLock lock = new ReentrantLock();
-    private static final Logger LOGGER = LogManager.getLogger(MethodVacancyDao.class);
     private static final String VACANCY_TABLE_NAME = "vacancy";
     private static final String ID_FIELD_NAME = "id";
     private static final String TITLE_NAME_FIELD = "title";
@@ -32,7 +29,11 @@ public class MethodVacancyDao extends CommonDao<Vacancy> implements VacancyDao {
     private static final String DATE_FIELD_NAME = "v_date";
     private static final String HASH = "v_hash";
     private static final String EMPTY_LINE = "";
+
+    private static final ReentrantLock lock = new ReentrantLock();
+    private static final Logger LOGGER = LogManager.getLogger(MethodVacancyDao.class);
     private static final Integer ZERO = 0;
+    private static MethodVacancyDao instance;
     private static final List<String> FIELDS = Arrays.asList(
             ID_FIELD_NAME, TITLE_NAME_FIELD, SALARY_FIELD_NAME,
             DESCRIPTION_FIELD_NAME, CITY_ID_FIELD_NAME, EMPLOYER_ID_FIELD_NAME,
@@ -77,10 +78,6 @@ public class MethodVacancyDao extends CommonDao<Vacancy> implements VacancyDao {
         return FIELDS;
     }
 
-    /**
-     * При создании сущности, id подбирается автоматически, поэтому нет разницы
-     * какое число туда подставлять. Здесть подставляется нуль
-     */
     @Override
     protected void fillEntity(PreparedStatement statement, Vacancy vacancy) throws SQLException {
         fillFields(statement, vacancy);
