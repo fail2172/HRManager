@@ -17,9 +17,10 @@ import java.util.stream.Collectors;
 
 public class FilterVacanciesCommand implements Command {
 
+    private static final String SESSION_VARIABLE_PROPERTY = "session.variable";
+
     private static final String COMMAND_MAIN_PAGE_PROPERTY = "command/main_page";
 
-    private static final String VACANCIES_ATTRIBUTE_PARAM = "vacancies";
     private static final String CITY_VACANCIES_PARAM = "cityVacancies";
     private static final String EMPLOYMENT_TYPE_REQUEST_PARAM = "employmentType";
     private static final String EXPERIENCE_REQUEST_PARAM = "experience";
@@ -58,7 +59,7 @@ public class FilterVacanciesCommand implements Command {
     @Override
     public CommandResponse execute(CommandRequest request) {
         List<Vacancy> vacancies = findVacancies(request);
-        request.addToSession(VACANCIES_ATTRIBUTE_PARAM, vacancies);
+        request.addToSession(propertyContext.get(SESSION_VARIABLE_PROPERTY), vacancies);
         return requestFactory.createRedirectResponse(propertyContext.get(COMMAND_MAIN_PAGE_PROPERTY));
     }
 

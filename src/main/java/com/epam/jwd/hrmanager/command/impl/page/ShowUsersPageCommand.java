@@ -55,6 +55,6 @@ public class ShowUsersPageCommand implements Command {
                 .filter(a -> !a.getRole().equals(Role.ADMINISTRATOR))
                 .collect(Collectors.toList());
         request.addAttributeToJsp(ACCOUNTS_ATTRIBUTE, accounts);
-        return requestFactory.createForwardResponse(propertyContext.get(propertyContext.get(USER_PAGE)));
+        return requestFactory.createForwardResponse(propertyContext.get(USER_PAGE));
     }
 }

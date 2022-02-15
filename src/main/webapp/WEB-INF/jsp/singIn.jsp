@@ -9,9 +9,8 @@
 <fmt:message bundle="${loc}" key="label.emailAddress" var="emailAddress"/>
 <fmt:message bundle="${loc}" key="label.password" var="password"/>
 <fmt:message bundle="${loc}" key="label.forTheFirstTimeWithUs" var="forTheFirstTimeWithUs"/>
-<fmt:message bundle="${loc}" key="link.register" var="register"/>
-<fmt:message bundle="${loc}" key="button.singIn" var="singInButton"/>
-<fmt:message bundle="${loc}" key="error.LoginPassMessage" var="loginPassErrorMessage"/>
+<fmt:message bundle="${loc}" key="label.register" var="register"/>
+<fmt:message bundle="${loc}" key="label.singIn" var="singInButton"/>
 
 <!doctype html>
 <html lang="ru">
@@ -38,10 +37,10 @@
             <label for="password">${password}</label>
         </div>
 
-        <c:if test="${not empty requestScope.authenticateError}">
+        <c:if test="${not empty sessionScope.errorMessage}">
             <div class="form-floating" role="alert">
                 <div class="alert alert-danger" role="alert">
-                        ${loginPassErrorMessage}
+                        ${sessionScope.errorMessage}
                 </div>
             </div>
         </c:if>

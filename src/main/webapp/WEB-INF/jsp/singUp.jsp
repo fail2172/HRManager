@@ -12,11 +12,7 @@
 <fmt:message bundle="${loc}" key="label.secondName" var="secondName"/>
 <fmt:message bundle="${loc}" key="label.password" var="password"/>
 <fmt:message bundle="${loc}" key="label.repeatPassword" var="repeatPassword"/>
-<fmt:message bundle="${loc}" key="button.singUp" var="singUp"/>
-<fmt:message bundle="${loc}" key="error.passwordMismatch" var="passwordMismatch"/>
-<fmt:message bundle="${loc}" key="error.passwordLength" var="passwordLength"/>
-<fmt:message bundle="${loc}" key="error.emailBusy" var="emailBusy"/>
-<fmt:message bundle="${loc}" key="error.loginBusy" var="loginBusy"/>
+<fmt:message bundle="${loc}" key="label.singUp" var="singUp"/>
 
 <!doctype html>
 <html lang="en">
@@ -28,38 +24,14 @@
     <meta name="generator" content="Hugo 0.84.0">
     <title>${title}</title>
 
-    <%--    <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sign-in/">--%>
-
-
-    <!-- Bootstrap core CSS -->
     <link href="../../css/bootstrap.min.css" rel="stylesheet">
-
-    <style>
-        .bd-placeholder-img {
-            font-size: 1.125rem;
-            text-anchor: middle;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            user-select: none;
-        }
-
-        @media (min-width: 768px) {
-            .bd-placeholder-img-lg {
-                font-size: 3.5rem;
-            }
-        }
-    </style>
-
-
-    <!-- Custom styles for this template -->
-    <%--    <link href="../../css/sticky-footer-navbar.css" rel="stylesheet">--%>
     <link href="../../css/singin.css" rel="stylesheet">
 </head>
 <body class="text-center">
 
 <main class="form-signin">
     <form action="<c:url value="/controller?command=singUp"/>" method="post">
-        <img class="mb-4" src="../../svg/bootstrap-logo.svg" alt="" width="72" height="57">
+        <img class="mb-4" src="../../svg/logo.svg" alt="" width="100" height="80">
         <h1 class="h3 mb-3 fw-normal">${registration}</h1>
 
         <div class="form-floating">
@@ -88,35 +60,12 @@
             <label for="repeatPassword">${repeatPassword}</label>
         </div>
 
-        <c:if test="${not empty requestScope.errorRegistrationMessage}">
-            <c:if test="${requestScope.errorRegistrationMessage eq 'password length'}">
-                <div class="form-floating" role="alert">
-                    <div class="alert alert-danger" role="alert">
-                            ${passwordLength}
-                    </div>
+        <c:if test="${not empty sessionScope.errorMessage}">
+            <div class="form-floating" role="alert">
+                <div class="alert alert-danger" role="alert">
+                        ${sessionScope.errorMessage}
                 </div>
-            </c:if>
-            <c:if test="${requestScope.errorRegistrationMessage eq 'password mismatch'}">
-                <div class="form-floating" role="alert">
-                    <div class="alert alert-danger" role="alert">
-                            ${passwordMismatch}
-                    </div>
-                </div>
-            </c:if>
-            <c:if test="${requestScope.errorRegistrationMessage eq 'login busy'}">
-                <div class="form-floating" role="alert">
-                    <div class="alert alert-danger" role="alert">
-                            ${loginBusy}
-                    </div>
-                </div>
-            </c:if>
-            <c:if test="${requestScope.errorRegistrationMessage eq 'email busy'}">
-                <div class="form-floating" role="alert">
-                    <div class="alert alert-danger" role="alert">
-                            ${emailBusy}
-                    </div>
-                </div>
-            </c:if>
+            </div>
         </c:if>
 
         <button class="w-100 btn btn-lg btn-dark" type="submit">${singUp}</button>

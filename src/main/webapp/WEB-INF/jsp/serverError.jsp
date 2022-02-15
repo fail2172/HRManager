@@ -3,15 +3,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <fmt:setLocale value="${cookie.lang.value}"/>
-<fmt:setBundle basename="l10n.page.singIn" var="loc"/>
+<fmt:setBundle basename="l10n.page.serverErrorPage" var="loc"/>
 <fmt:message bundle="${loc}" key="label.title" var="title"/>
-<fmt:message bundle="${loc}" key="label.pleaseLogIn" var="pleaseSingIn"/>
-<fmt:message bundle="${loc}" key="label.emailAddress" var="emailAddress"/>
-<fmt:message bundle="${loc}" key="label.password" var="password"/>
-<fmt:message bundle="${loc}" key="label.forTheFirstTimeWithUs" var="forTheFirstTimeWithUs"/>
-<fmt:message bundle="${loc}" key="link.register" var="register"/>
-<fmt:message bundle="${loc}" key="button.singIn" var="singInButton"/>
-<fmt:message bundle="${loc}" key="error.LoginPassMessage" var="loginPassErrorMessage"/>
+<fmt:message bundle="${loc}" key="label.message" var="message"/>
 
 <!doctype html>
 <html lang="ru">
@@ -31,7 +25,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-4"></div>
-            <div class="col-4"><h4>500: Что-то пошло не так</h4>
+            <div class="col-4"><h4>500: ${message}</h4>
                 <img class="mb-4" src="../../svg/sadCat.svg" alt="" width="300" height="300">
             </div>
             <div class="col-4"></div>
